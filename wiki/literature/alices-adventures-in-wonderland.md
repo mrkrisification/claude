@@ -16,7 +16,7 @@ Alice is sitting bored by a riverbank when she spots a White Rabbit checking a p
 The story progresses through a series of encounters:
 - **Caucus-Race** — the Dodo runs everyone in a circle to get dry; "Everybody has won, and all must have prizes."
 - **The White Rabbit's house** — Alice drinks another bottle, grows enormous, fills the house; a lizard named Bill is kicked up the chimney.
-- **The Caterpillar** — smoking a hookah on a mushroom, asks "Who are *you*?"; gives Alice pieces of mushroom to control her size.
+- **The Caterpillar** — a large blue caterpillar sitting atop a mushroom with arms folded, quietly smoking a long hookah, exactly three inches high; asks "Who are *you*?"; gives Alice pieces of mushroom to control her size.
 - **The Duchess's kitchen** — overloaded with pepper; the Duchess's baby turns into a pig; the Cheshire Cat appears and vanishes.
 - **Mad Tea-Party** — the Hatter, March Hare, and Dormouse at a permanent tea party, because the Hatter offended Time and it is always six o'clock.
 - **The Queen's Croquet-Ground** — croquet played with flamingo mallets and hedgehog balls; the Queen perpetually orders "Off with their heads!"
@@ -32,7 +32,7 @@ The story progresses through a series of encounters:
 | Cheshire Cat | Philosophical guide; disappears leaving only its grin |
 | Mad Hatter | Frozen in time at tea; famous for "Why is a raven like a writing-desk?" |
 | Queen of Hearts | Authoritarian ruler; "Off with their heads!" is her answer to everything |
-| Caterpillar | Dismissive philosopher; teaches Alice to use the mushroom |
+| Caterpillar | Large, blue, sits on a mushroom with arms folded smoking a long hookah; exactly three inches high; dismissive philosopher who teaches Alice to use the mushroom |
 | Mock Turtle | Melancholy; parodies Victorian school subjects |
 
 ## Major Themes
