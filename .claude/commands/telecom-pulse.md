@@ -23,6 +23,7 @@ Supported markets and their operators:
 
 Baseline files live at: `baselines/<country>/baseline.md`
 Current-year log lives at: `baselines/<country>/<YYYY>.md`
+Source log lives at: `baselines/<country>/sources.md`
 
 ---
 
@@ -73,6 +74,30 @@ Write the output to `baselines/<country>/<YYYY>.md`. If the file exists, replace
 ### Outlook to year-end
 [3 bullet points max. Each: one pending event or decision, when it is expected, and which direction it would push competition if it lands. Be explicit about uncertainty.]
 ```
+
+---
+
+## Source logging
+
+After writing the pulse output, append a dated block to `baselines/<country>/sources.md`. Create the file if it does not exist.
+
+Each block lists every URL returned by the search agents, deduplicated. Mark primary documents (earnings PDFs, regulator notices, official press releases) with `[PRIMARY]` — these are most likely to move or go behind a paywall and worth downloading manually if needed later.
+
+```markdown
+## <YYYY-MM> — <Month Name>
+
+### Pricing & retail competition
+- [Title](URL) — Publication, YYYY-MM-DD
+- [PRIMARY] [Title](URL) — Source, YYYY-MM-DD
+
+### M&A, earnings & executive commentary
+- [Title](URL) — Publication, YYYY-MM-DD
+
+### Regulatory & infrastructure
+- [PRIMARY] [Title](URL) — Regulator/Source, YYYY-MM-DD
+```
+
+Do not include URLs that returned no usable content.
 
 ---
 
