@@ -2,6 +2,27 @@
 
 ---
 
+## 2026-06 — June (pulse run)
+
+### Pricing & retail competition
+- [Bulgarian Mobile Users Face Price Hike as A1, Vivacom, and Yettel Raise Monthly Fees](https://www.novinite.com/articles/224329/Bulgarian+Mobile+Users+Face+Price+Hike+as+A1,+Vivacom,+and+Yettel+Raise+Monthly+Fees) — Novinite, 2025
+- [Bulgarians Brace for Higher Telecom Costs as Operators Raise Prices](https://www.novinite.com/articles/230168/Bulgarians+Brace+for+Higher+Telecom+Costs+as+Operators+Raise+Prices) — Novinite
+
+### M&A, earnings & executive commentary
+- [Bulgaria court confirms United Group's Bulsatcom infrastructure deal not subject to merger notification](https://www.broadbandtvnews.com/2026/02/20/bulgaria-court-confirms-united-groups-bulsatcom-infrastructure-deal-not-subject-to-merger-notification/) — Broadband TV News, 2026-02-20
+- [Bulgaria's Mobile Operators See Continued Drop in Subscribers and Revenue](https://www.novinite.com/articles/233561/Bulgaria%E2%80%99s+Mobile+Operators+See+Continued+Drop+in+Subscribers+and+Revenue) — Novinite, 2026
+- [Bulgaria's Telecoms Drive Investment and Jobs, Outpacing National Average](https://www.novinite.com/articles/235842/Bulgaria%E2%80%99s+Telecoms+Drive+Investment+and+Jobs,+Outpacing+National+Average) — Novinite, 2026
+
+### Regulatory & infrastructure
+- [PRIMARY] [Bulgaria spectrum consolidation on 900 MHz and 1800 MHz](https://www.spectrum-tracker.com/news/52) — Spectrum Tracker, 2026
+- [PRIMARY] [A1, Vivacom, CETIN win fibre deployment deals worth BGN 433 million in Bulgaria](https://www.telecompaper.com/news/a1-vivacom-cetin-win-fibre-deployment-deals-worth-bgn-433-million-in-bulgaria--1539741) — Telecompaper, 2025-06
+- [Bulgaria Mobile Network Experience Report, January 2026](https://insights.opensignal.com/reports/2026/01/bulgaria/mobile-network-experience) — Opensignal, 2026-01
+- [Neven Dilkov: Bulgarian regulator must restore the telecom market balance](https://neterra.net/news/neven-dilkov-bulgarian-regulator-must-restore-the-telecom-market-balance) — Neterra, 2026
+- [BABTO supports legal changes in favour of establishing MVNOs](https://neterra.net/news/babto-supports-legal-changes-in-favor-of-establishing-mvnos) — Neterra, 2026
+- [PRIMARY] [CRC Bulgaria — Communications Regulation Commission](https://crc.bg/en) — CRC official
+
+---
+
 ## 2026-06 — June (baseline refresh)
 
 ### Pricing & retail competition
@@ -42,3 +63,11 @@
 - [Bulgaria EC Recovery and Resilience Facility broadband](https://commission.europa.eu/business-economy-euro/economic-recovery/recovery-and-resilience-facility/recovery-and-resilience-plan-bulgaria/bulgarias-recovery-and-resilience-supported-projects-nation-wide-investment-scheme_en) — European Commission
 - [Neterra taps Infinera for EUR 12M network upgrade](https://developingtelecoms.com/telecom-technology/wireless-networks/19735-neterra-taps-infinera-for-eur12m-network-upgrade-in-bulgaria.html) — Developing Telecoms
 - [PRIMARY] [CRC Bulgaria — Communications Regulation Commission](https://crc.bg/en) — CRC official
+
+## 2026-06 — June (pulse update, M&A/earnings search)
+
+### M&A, earnings & executive commentary
+- [PRIMARY] [A1 Telekom Austria Group Q1 2026 Results](https://www.finanzwire.com/article/telekom-austria-ag-etr-a1-telekom-austria-group-reports-q1-2026-results-1LqYr1flBfn) — Finanzwire / A1 Group, 2026-04-21
+- [PRIMARY] [A1 Telekom Austria Group Q1 2026 Results (EQS)](https://www.eqs-news.com/news/corporate/a1-telekom-austria-group-q1-2026-results/e25ad4bb-c22f-4a24-9dc1-df1d3a972747_en) — EQS News, 2026-04-21
+- [Bulgaria court confirms United Group's Bulsatcom infrastructure deal not subject to merger notification](https://www.broadbandtvnews.com/2026/02/20/bulgaria-court-confirms-united-groups-bulsatcom-infrastructure-deal-not-subject-to-merger-notification/) — Broadband TV News, 2026-02-20
+- [Bulgaria court confirms United Group's Bulsatcom deal (mirror)](https://tvtechnews.uk/2026/02/23/bulgaria-court-confirms-united-groups-bulsatcom-infrastructure-deal-not-subject-to-merger-notification/) — TV Tech News, 2026-02-23
