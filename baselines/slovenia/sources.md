@@ -45,3 +45,26 @@
 - [EU 5G Observatory Report 2025](https://digital-strategy.ec.europa.eu/en/policies/5g-observatory-2025) — European Commission
 - [Opensignal Mobile Network Experience Report Slovenia, September 2025](https://www.opensignal.com/reports/2025/09/slovenia/mobile-network-experience) — Opensignal
 - [CMS Expert Guide on 5G Regulation and Law in Slovenia](https://cms.law/en/int/expert-guides/cms-expert-guide-to-5g-regulation-and-law/slovenia) — CMS Law
+
+## 2026-06 — June (monthly pulse)
+
+### Pricing & retail competition
+- [Telekom Slovenije lowers prices of Naj mobile plans](https://alertify.eu/telekom-slovenije-lowers-the-prices-of-the-most-popular-mobile-plans-in-the-biggest-5g-network-in-slovenia/) — alertify.eu, 2026
+- [A1 MIO Plans](https://www.a1.si/eng/mio-plans) — A1 Slovenia, 2026
+- [A1 Vajb Plan](https://www.a1.si/eng/a1-vajb-plan) — A1 Slovenia, 2026
+- [Best Mobile Operators in Slovenia 2026](https://esimslovenia.net/operators/) — esimslovenia.net, 2026
+- [Slovenia Telecom MNO Market Report](https://www.mordorintelligence.com/industry-reports/slovenia-telecom-market) — Mordor Intelligence, 2026
+
+### M&A, earnings & executive commentary
+- [PRIMARY] [Telekom Slovenije Q1 net profit grows 12% to EUR 16 million](https://www.telecompaper.com/news/telekom-slovenije-q1-net-profit-grows-12-to-eur-16-million--1571984) — Telecompaper, 2026-05
+- [Telemach Slovenia set to redefine the telecom sector with T-2 acquisition](https://connectingregion.com/slovenia/telemach-slovenia-set-to-redefine-the-telecom-sector-with-t-2-acquisition/) — ConnectingRegion, 2026
+- [Telemach Slovenija signs deal to acquire rival T-2](https://sloveniatimes.com/40750/telemach-slovenija-signs-deal-to-acquire-rival-t-2) — Slovenia Times, 2026
+- [Slovenian Competition Authority opens Phase II investigation into Telemach/T-2](https://www.concurrences.com/en/bulletin/news-issues/preview/the-slovenian-competition-authority-opens-an-in-depth-phase-ii-investigation) — Concurrences, 2026-03-16
+
+### Regulatory & infrastructure
+- [PRIMARY] [Telekom Slovenije launches 5G Standalone network](https://www.ericsson.com/en/press-releases/3/2026/telekom-slovenije-launches-5g-standalone-network) — Ericsson, 2026-05
+- [PRIMARY] [Commission requests Slovenian regulator review wholesale broadband proposal](https://digital-strategy.ec.europa.eu/en/news/commission-requests-slovenian-regulator-review-its-proposal-wholesale-high-quality-broadband-access) — European Commission, 2026
+- [Slovenia's AKOS to lead AI regulation](https://www.telecompaper.com/news/slovenias-akos-to-lead-ai-regulation--1571525) — Telecompaper, 2026-05
+- [Slovenia regional 5G spectrum licenses](https://www.spectrum-tracker.com/news/26) — Spectrum Tracker, 2026
+- [A1 Slovenia 3G switch-off](https://www.samenacouncil.org/samena_daily_news?news=95115) — SAMENA Daily, 2026
+- [Slovenia's High-Speed Makeover — fiber coverage 78.5%](https://ts2.tech/en/slovenias-high-speed-makeover-from-fiber-frenzy-to-starlink-skies/) — ts2.tech, 2026
