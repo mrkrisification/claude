@@ -116,10 +116,104 @@ The `--refresh-baseline` flag triggers a deeper run: 5 search angles, lookback 1
 
 ---
 
+## PDF export
+
+After writing all files, generate a PDF brief and send it to the user.
+
+1. Write a self-contained HTML file to `baselines/<country>/<country>-<YYYY-MM>.html` using the template below.
+2. Convert to PDF using WeasyPrint: `python3 -m weasyprint <html_path> <pdf_path>` where the PDF path is `baselines/<country>/<country>-<YYYY-MM>.pdf`.
+3. Send the PDF to the user with `SendUserFile`.
+4. Delete the intermediate HTML file after successful conversion.
+
+### HTML template
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10.5pt; line-height: 1.6; color: #1a1a2e; margin: 0; padding: 0; }
+  .cover { page-break-after: always; padding: 60px 64px; background: linear-gradient(160deg, #0f3460 0%, #1a1a2e 100%); color: white; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+  .cover-label { font-size: 8pt; letter-spacing: 0.2em; text-transform: uppercase; color: #a0c4ff; margin-bottom: 24px; }
+  .cover-title { font-size: 26pt; font-weight: 700; line-height: 1.2; margin-bottom: 16px; }
+  .cover-subtitle { font-size: 12pt; font-weight: 300; color: #a0c4ff; border-left: 3px solid #4cc9f0; padding-left: 14px; margin-bottom: 48px; }
+  .cover-meta { font-size: 8.5pt; color: #7a8ba8; margin-top: auto; padding-top: 32px; border-top: 1px solid #2a3f6f; }
+  .cover-meta span { display: block; margin-bottom: 3px; }
+  .content { padding: 48px 64px; }
+  h1 { font-size: 15pt; font-weight: 700; color: #0f3460; border-bottom: 2px solid #0f3460; padding-bottom: 6px; margin: 32px 0 12px; }
+  h1.first { margin-top: 0; }
+  h2 { font-size: 11pt; font-weight: 600; color: #0f3460; margin: 24px 0 8px; }
+  p { margin-bottom: 10px; }
+  ul { margin: 8px 0 14px 0; padding-left: 20px; }
+  li { margin-bottom: 6px; }
+  .verdict { border-left: 5px solid #e63946; background: #fff0f0; padding: 14px 18px; border-radius: 4px; margin: 16px 0; }
+  .verdict.stable { border-color: #2dc653; background: #f0fff4; }
+  .verdict.easing { border-color: #4cc9f0; background: #f0faff; }
+  .verdict-label { font-size: 7.5pt; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #666; margin-bottom: 4px; }
+  .verdict-text { font-size: 12pt; font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 9pt; }
+  thead tr { background: #0f3460; color: white; }
+  th { padding: 8px 11px; text-align: left; font-size: 8.5pt; }
+  tbody tr:nth-child(even) { background: #f4f7fb; }
+  td { padding: 7px 11px; border-bottom: 1px solid #e0e7ef; vertical-align: top; }
+  .sources { font-size: 8pt; color: #666; margin-top: 32px; padding-top: 14px; border-top: 1px solid #ddd; }
+  .sources a { color: #0f3460; text-decoration: none; }
+  .sources p { margin-bottom: 3px; }
+  a { color: #0f3460; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-label">Telecom Market Intelligence — Monthly Pulse</div>
+  <div class="cover-title">[COUNTRY] Telecommunications Market</div>
+  <div class="cover-subtitle">[MONTH YEAR] — Competitive Intensity Brief</div>
+  <div class="cover-meta">
+    <span><strong>Run date:</strong> [DATE]</span>
+    <span><strong>Operators covered:</strong> [OPERATORS]</span>
+    <span><strong>Research window:</strong> Last 90 days</span>
+  </div>
+</div>
+
+<div class="content">
+
+<h1 class="first">Year So Far</h1>
+<p>[YEAR SO FAR TEXT]</p>
+
+<h1>Last 90 Days</h1>
+
+<div class="verdict [VERDICT_CLASS]">
+  <div class="verdict-label">Directional Verdict</div>
+  <div class="verdict-text">[VERDICT] — [VERDICT EXPLANATION]</div>
+</div>
+
+<ul>
+[BULLET POINTS AS <li> ITEMS — each bullet becomes one <li>, stripping markdown bold markers and converting source links to HTML <a> tags]
+</ul>
+
+<h1>Outlook to Year-End</h1>
+<ul>
+[OUTLOOK BULLETS AS <li> ITEMS]
+</ul>
+
+<div class="sources">
+<strong>Sources</strong><br>
+[ALL URLS FROM THIS RUN AS <p><a href="URL">TITLE</a> — Publication, Date</p> LINES]
+</div>
+
+</div>
+</body>
+</html>
+```
+
+For `[VERDICT_CLASS]`: use `intensifying` when verdict is Intensifying, `stable` when Stable, `easing` when Easing.
+
+---
+
 ## Tone and constraints
 
 - Be directional. The purpose is an opinion on competitive intensity, not a neutral summary.
 - Cite every factual claim with a source and date. If something cannot be sourced, do not include it.
-- Keep the total output under 600 words. Brevity is a feature.
+- Keep the pulse text output under 600 words. Brevity is a feature.
 - If the baseline file is missing, note it prominently and still produce the pulse from search alone.
-- Do not produce a PDF unless the user explicitly asks.
