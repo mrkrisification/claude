@@ -19,3 +19,8 @@
 - [A1 vs Magenta vs Drei: Austrian Mobile Networks Compared](https://www.how-to-austria.com/facts/a1-vs-magenta-vs-drei) — How to Austria, 2026
 - [Hutchison Drei Austria Taunts Rivals With 'Real 5G'](https://www.sdxcentral.com/news/hutchison-drei-austria-taunts-rivals-with-real-5g/) — SDxCentral, 2025/2026
 - [Austria 26 GHz mmWave FR2 frequency spectrum auction results](https://www.spectrum-tracker.com/news/28) — Spectrum Tracker, 2024
+- [PRIMARY] [Austria raises EUR 39 mln in auction of 2.3, 2.6 GHz bands](https://www.telecompaper.com/news/austria-raises-eur-39-mln-in-auction-of-23-26-ghz-bands--1567961) — Telecompaper, 2026-04
+- [Austria auctioning off 2300 and 2600 MHz — these are the winners](https://www.teltarif.de/en/frequenzvergabe-2300mhz-2600mhz-rtr-magenta-drei-a1-hutchison-tmobile/news/102956.html) — teltarif.de, 2026-04
+- [Digital connectivity in Austria](https://digital-strategy.ec.europa.eu/en/policies/digital-connectivity-austria) — European Commission, 2025-09
+- [Austria Telecom MNO Market Size & Growth Trends, 2026–2031](https://www.mordorintelligence.com/industry-reports/austria-telecom-market) — Mordor Intelligence, 2026
+- [Magenta Telekom, Hutchison Drei get regulator approval for network cooperation](https://www.telecompaper.com/news/magenta-telekom-hutchison-drei-get-regulator-approval-for-network-cooperation--1487826) — Telecompaper, 2025/2026
