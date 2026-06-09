@@ -1,15 +1,32 @@
-## 2026-06 — June
+# Austria — Source Log
+
+---
+
+## 2026-06 — June (baseline refresh + pulse)
 
 ### Pricing & retail competition
-- [Internet in Austria 2026: Expat Guide to Providers](https://www.checkeverything.at/en/blog/internet-plans-austria-2026) — CheckEverything, April 2026
+- [Internet in Austria 2026: Expat Guide to Providers](https://www.checkeverything.at/en/blog/internet-plans-austria-2026) — CheckEverything, 2026-04
 - [Mobile Phone Plans Austria 2026: Expat & Resident Guide](https://www.checkeverything.at/en/blog/mobile-phone-plans-austria-2026) — CheckEverything, 2026
 - [Cheapest Mobile Plan Austria 2026: Best Budget Tariffs from €5.90](https://www.checkeverything.at/en/blog/cheapest-mobile-plan-austria-2026) — CheckEverything, 2026
+- [Wertsicherung 2026: Tarife steigen 3.5–6.5%](https://www.lteforum.at/mobilfunktarife/wertsicherung-2026) — LTE-Forum Österreich, 2026
+- [Inflationsanpassung: Magenta, A1 und Drei erhöhen im April die Preise](https://www.noen.at/niederoesterreich/wirtschaft/inflationsanpassung-handytarife-magenta-a1-und-drei-erhoehen-im-april-die-preise-514978642) — NÖN.at, 2026-04
+- [Bis zu 6,5 Prozent: Mobilfunker schnalzen Preise in die Höhe](https://www.heute.at/s/mit-1-april-mobilfunker-schnalzen-preise-in-die-hoehe-120168500) — Heute.at, 2026-04
+- [Wertanpassung Handytarife & Internettarife](https://durchblicker.at/b/wertanpassung-handytarife-internettarife) — durchblicker.at, 2026
+- [Preiserhöhungen ab April 2026](https://www.finanz.at/news/mobilfunk-preiserhoehungen-april-2026-11401/) — finanz.at, 2026
 
 ### M&A, earnings & executive commentary
-- [PRIMARY] [A1 Telekom Austria Group Q1 2026 results](https://www.eqs-news.com/news/corporate-news/a1-telekom-austria-group-q1-2026-results/e25ad4bb-c22f-4a24-9dc1-df1d3a972747) — EQS News / A1 Group IR, 2026
-- [A1 Telekom Austria Group Reports Q1 2026 Results](https://www.finanzwire.com/article/telekom-austria-ag-etr-a1-telekom-austria-group-reports-q1-2026-results-1LqYr1flBfn) — Finanzwire, 2026
-- [Telekom Austria AG Q1 2026 results](https://www.ad-hoc-news.de/boerse/news/corporate-news/telekom-austria-ag-at0000720008/69230513) — Ad-hoc News, 2026
-- [Investor Relations - A1 Group](https://a1.group/investor-relations/) — A1 Group, ongoing
+- [PRIMARY] [A1 Telekom Austria Group Q1 2026 results](https://www.eqs-news.com/news/corporate-news/a1-telekom-austria-group-q1-2026-results/e25ad4bb-c22f-4a24-9dc1-df1d3a972747) — EQS News / A1 Group IR, 2026-04-21
+- [A1 Telekom Austria Group Reports Q1 2026 Results](https://www.finanzwire.com/article/telekom-austria-ag-etr-a1-telekom-austria-group-reports-q1-2026-results-1LqYr1flBfn) — Finanzwire, 2026-04-21
+- [Magenta Telekom records revenue, earnings decline in Q1](https://www.telecompaper.com/news/magenta-telekom-records-revenue-earnings-decline-in-q1--1571277) — Telecompaper, 2026
+- [Drei Austria lifts revenues, EBITDA in H1](https://www.telecompaper.com/news/drei-austria-lifts-revenues-ebitda-in-h1--1509489) — Telecompaper, 2025-08
+- [Drei Austria records lower revenues, flat EBITDA in 2025](https://www.telecompaper.com/news/drei-austria-records-lowers-revenues-flat-ebitda-in-2025--1565809) — Telecompaper, 2026
+- [A1 Group Q3 2025 Results](https://newsroom.a1.group/news-third-quarter-2025-for-a1-revenue-and-ebitda-growth-despite-very-challenging-conditions-in-austria?id=224477&menueid=14594&l=english) — A1 Group Newsroom, 2025-11
+- [A1 Group FY2025 Results](https://www.marketscreener.com/news/telekom-austria-very-solid-financial-year-2025-for-a1-group-with-revenue-and-ebitda-growth-ce7e5adcdd81f62c) — MarketScreener, 2026-02
+- [Austria's FTTH Fight Club: Magenta EUR 1bn JV, Drei Taps A1's Network](https://www.telecomtv.com/content/access-evolution/austria-s-ftth-fight-club-as-magenta-strikes-1bn-jv-drei-taps-a1-s-network-45245/) — TelecomTV
+- [Austria Telecom Operators Country Intelligence Report 2025](https://www.globenewswire.com/news-release/2025/10/21/3170460/28124/en/Austria-Telecom-Operators-Country-Intelligence-Report-2025-Featuring-A1-Telekom-Austria-Magenta-Telekom-Drei-Austria-Hofer-and-Spusu.html) — GlobeNewswire, 2025-10-21
+- [Austria's MVNO market share climbs to 18.3%](https://www.mobileeurope.co.uk/austrias-mvno-market-share-climbs-to-18-3/) — Mobile Europe, 2025
+- [MVNO Market Share Grows in Austria](https://www.yozzo.com/mvno-news/mvno-market-share-grows-in-austria/) — Yozzo, 2025
+- [Investor Relations — A1 Group](https://a1.group/investor-relations/) — A1 Group, ongoing
 
 ### Regulatory & infrastructure
 - [PRIMARY] [2022–2026 Spectrum Release Plan](https://www.rtr.at/TKP/was_wir_tun/telekommunikation/spectrum/framework/Spectrum_Release_Plan_2022-2026.en.pdf) — RTR, 2022
