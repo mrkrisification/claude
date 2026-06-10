@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slovenian Telecommunications Market: Competitive Dynamics Analysis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.65;
+    color: #1a1a2e;
+    background: #fff;
+  }
+
+  /* Cover page */
+  .cover {
+    page-break-after: always;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 70px;
+    background: linear-gradient(160deg, #0f3460 0%, #16213e 60%, #1a1a2e 100%);
+    color: white;
+  }
+  .cover-label {
+    font-size: 8pt;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #a0c4ff;
+    margin-bottom: 32px;
+  }
+  .cover-title {
+    font-size: 28pt;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  .cover-subtitle {
+    font-size: 14pt;
+    font-weight: 300;
+    color: #a0c4ff;
+    margin-bottom: 48px;
+    border-left: 3px solid #4cc9f0;
+    padding-left: 16px;
+  }
+  .cover-meta {
+    font-size: 9pt;
+    color: #7a8ba8;
+    margin-top: auto;
+    padding-top: 48px;
+    border-top: 1px solid #2a3f6f;
+  }
+  .cover-meta span { display: block; margin-bottom: 4px; }
+
+  /* Verdict badge */
+  .verdict-box {
+    background: #fff3cd;
+    border-left: 5px solid #e6a817;
+    border-radius: 4px;
+    padding: 18px 22px;
+    margin: 24px 0;
+  }
+  .verdict-box.intensifying { border-color: #e63946; background: #fff0f0; }
+  .verdict-box.easing { border-color: #2dc653; background: #f0fff4; }
+  .verdict-label {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 6px;
+  }
+  .verdict-text {
+    font-size: 13pt;
+    font-weight: 600;
+    color: #1a1a2e;
+  }
+
+  /* Page layout */
+  .page-content {
+    padding: 48px 64px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  /* Section headers */
+  h1 {
+    font-size: 18pt;
+    font-weight: 700;
+    color: #0f3460;
+    margin: 36px 0 8px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #0f3460;
+  }
+  h1.first { margin-top: 0; }
+  h2 {
+    font-size: 12pt;
+    font-weight: 600;
+    color: #0f3460;
+    margin: 28px 0 8px;
+  }
+  h3 {
+    font-size: 10.5pt;
+    font-weight: 600;
+    color: #333;
+    margin: 20px 0 6px;
+  }
+
+  p { margin-bottom: 12px; }
+
+  /* Section divider label */
+  .section-label {
+    display: inline-block;
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #4cc9f0;
+    margin-bottom: 6px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 9.5pt;
+  }
+  thead tr {
+    background: #0f3460;
+    color: white;
+  }
+  thead th {
+    padding: 9px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 8.5pt;
+    letter-spacing: 0.05em;
+  }
+  tbody tr:nth-child(even) { background: #f4f7fb; }
+  tbody tr:hover { background: #e8f0fb; }
+  tbody td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e0e7ef;
+    vertical-align: top;
+  }
+  .tag-intensifying { color: #c0392b; font-weight: 600; }
+  .tag-easing { color: #27ae60; font-weight: 600; }
+  .tag-neutral { color: #7f8c8d; font-weight: 600; }
+  .tag-risk { color: #e67e22; font-weight: 600; }
+
+  /* Signal cards */
+  .signal-card {
+    border: 1px solid #e0e7ef;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 12px 0;
+    page-break-inside: avoid;
+  }
+  .signal-card.red { border-left: 4px solid #e63946; }
+  .signal-card.green { border-left: 4px solid #2dc653; }
+  .signal-card.amber { border-left: 4px solid #e6a817; }
+  .signal-title {
+    font-weight: 600;
+    font-size: 10.5pt;
+    margin-bottom: 4px;
+  }
+
+  /* Callout */
+  .callout {
+    background: #eef5ff;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 9.5pt;
+    color: #2c3e7a;
+  }
+
+  /* Quote */
+  blockquote {
+    border-left: 3px solid #4cc9f0;
+    padding: 8px 16px;
+    color: #444;
+    font-style: italic;
+    margin: 14px 0;
+    background: #f8fbff;
+    border-radius: 0 4px 4px 0;
+  }
+
+  /* Source footnotes */
+  .sources {
+    font-size: 8pt;
+    color: #666;
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid #ddd;
+  }
+  .sources a { color: #0f3460; text-decoration: none; }
+  .sources p { margin-bottom: 4px; }
+
+  /* Page break utilities */
+  .page-break { page-break-before: always; }
+  .no-break { page-break-inside: avoid; }
+
+  /* Operator share table highlight */
+  .leader { font-weight: 600; }
+  .declining { color: #c0392b; }
+  .gaining { color: #27ae60; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-label">Market Intelligence Report</div>
+  <div class="cover-title">Slovenian Telecommunications Market:<br>Competitive Dynamics Analysis</div>
+  <div class="cover-subtitle">Filtering signals on whether competition is intensifying or easing — 2024 through June 2026</div>
+  <div class="cover-meta">
+    <span><strong>Report date:</strong> June 9, 2026</span>
+    <span><strong>Research scope:</strong> Telekom Slovenije · A1 Slovenia · Telemach · T-2</span>
+    <span><strong>Methodology:</strong> Multi-source web research, financial filings, regulatory notices, trade press</span>
+  </div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="page-content">
+
+<div class="section-label">Executive Summary</div>
+<h1 class="first">Key Findings at a Glance</h1>
+
+<div class="verdict-box intensifying">
+  <div class="verdict-label">Current verdict (March–June 2026)</div>
+  <div class="verdict-text">Competition is intensifying — structural consolidation stalled by regulatory block</div>
+</div>
+
+<p>The Slovenian telecom market entered 2024 in a state of acute competitive intensity — price wars, unlimited data bundling, three-way FTTH overbuild, and one operator (T-2) collapsing under the pressure. The expected consolidation that would have eased these dynamics (Telemach's acquisition of T-2, announced August 2024) has been blocked in a Phase II regulatory investigation since March 2026. Competition is therefore more intense than the structural trajectory suggested it would be.</p>
+
+<p>The market leader, Telekom Slovenije, is actively applying pressure through aggressive convergent bundling and a 5G Standalone launch. A1 Slovenia — the clearest loser — has escalated to legal warfare. Telemach is holding position while awaiting regulatory clearance. The AVK's decision on the Telemach/T-2 merger is the single most important variable for the next 6–12 months.</p>
+
+<table>
+  <thead>
+    <tr><th>Dimension</th><th>Direction</th><th>Key signal</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Retail pricing</td><td class="tag-intensifying">Intensifying</td><td>Telekom aggressive bundle launch (May 2026); unlimited data baseline</td></tr>
+    <tr><td>Market structure</td><td class="tag-intensifying">Intensifying</td><td>Merger blocked — 4 operators remain; T-2 still competing</td></tr>
+    <tr><td>Infrastructure</td><td class="tag-intensifying">Intensifying</td><td>Telekom 5G SA launch; FTTH overbuild unresolved</td></tr>
+    <tr><td>Legal/regulatory</td><td class="tag-intensifying">Intensifying</td><td>A1 new €30.4M suit vs Telekom (May 2026); €428M total claims</td></tr>
+    <tr><td>Financial pressure</td><td class="tag-intensifying">Intensifying</td><td>A1 Slovenia absent from A1 Group growth contributors Q1 2026</td></tr>
+    <tr><td>Pricing trajectory (2026 plan)</td><td class="tag-easing">Easing signal</td><td>A1 + Telemach coordinated price increases announced for 2026</td></tr>
+    <tr><td>Medium-term structure</td><td class="tag-risk">Uncertain</td><td>AVK verdict on Telemach/T-2; PPF interest in Telemach itself</td></tr>
+  </tbody>
+</table>
+
+<!-- PART 1: FULL YEAR ANALYSIS -->
+<div class="page-break"></div>
+<div class="section-label">Part 1 — Full Cycle Analysis</div>
+<h1>2024–2025: The Arc from Price War to Stalled Rationalization</h1>
+
+<h2>Phase 1 (2023–mid-2024): Maximum Competitive Intensity</h2>
+
+<p>The market entered 2024 in a state of acute price warfare. The trigger was unlimited data bundling — A1's "MIO" plans and Telemach's "VEČ" bundles popularized uncapped data with premium speed tiers, forcing all operators to match or lose subscribers. The result was textbook margin compression.</p>
+
+<div class="signal-card red no-break">
+  <div class="signal-title">A1 Slovenia: Only declining A1 Group market globally in FY2024</div>
+  <p>A1 Slovenia EBITDA fell <strong>7.3% year-on-year in FY2024</strong> — the only market across A1 Group's nine-country footprint to post a decline. Service revenues fell while subscriber volumes held, a sign that competition was structural, not cyclical. Slovenia contributed just 4% of group revenues and 3% of group EBITDA — the weakest margin contribution of any segment.</p>
+  <p><em>Source: A1 Group FY2024 Annual Report; heise online</em></p>
+</div>
+
+<p>Three-way FTTH overbuild amplified the pressure: Telekom SiOL (460,000+ fiber homes passed), Telemach's hybrid DOCSIS/XGS-PON cable network (~350,000 homes), and T-2's symmetric gigabit FTTH were all competing simultaneously in the same urban and suburban areas. This is a textbook unsustainable configuration.</p>
+
+<p>When Telekom Slovenije raised prices (effective November 2024), Telemach, A1, and T-2 publicly declined to follow — the behavior of operators under subscriber acquisition pressure, holding price to absorb churn from the incumbent.</p>
+
+<h2>Phase 2 (late 2024): Consolidation Move — Telemach Acquires T-2</h2>
+
+<p>The key event was the <strong>Telemach–T-2 acquisition</strong> (binding agreement August 2024). This would have eliminated one of the four competing mobile networks, removed the third FTTH builder, and given Telemach a dominant ~55% combined fixed broadband share.</p>
+
+<blockquote>"Consolidation of the telecommunications sector is essential to remain competitive on the Slovenian market and to promote digitisation and connectivity." — Tomislav Čizmić, CEO Telemach Slovenia, August 2024</blockquote>
+
+<table>
+  <thead>
+    <tr><th>Deal parameter</th><th>Detail</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Announced</td><td>June 2024 (initial); August 2024 (binding SPA signed)</td></tr>
+    <tr><td>Stake acquired</td><td>≥98.06% of T-2</td></tr>
+    <tr><td>Deal structure</td><td>€90M debt assumption; €37M to SSH upfront, remainder by mid-2027</td></tr>
+    <tr><td>Combined mobile share (pro-forma)</td><td>~33% (Telemach 26% + T-2 7%)</td></tr>
+    <tr><td>Combined fixed broadband share</td><td>~55% — primary regulatory concern</td></tr>
+    <tr><td>Regulatory status (March 2026)</td><td>AVK Phase II in-depth investigation opened; no final decision</td></tr>
+  </tbody>
+</table>
+
+<h2>Behavioral Shift: Coordinated Repricing for 2026</h2>
+
+<p>In anticipation of consolidation, both A1 and Telemach announced coordinated price increases effective January 2026 — the opposite of the "rivals hold while Telekom raises" dynamic from 2024. Telemach's EON fixed packages increased by €2/month (2024), then a further €3/month announced for 2026. A1 made parallel adjustments.</p>
+
+<p>This is early evidence of a market moving from a four-player price war toward oligopolistic repricing — a pattern that is interrupted, but not cancelled, by the regulatory block.</p>
+
+<!-- MARKET SHARE -->
+<div class="page-break"></div>
+<div class="section-label">Part 2 — Market Structure</div>
+<h1>Operator Positions and Share Shifts</h1>
+
+<h2>Mobile Market Share Trajectory</h2>
+
+<table>
+  <thead>
+    <tr><th>Operator</th><th>~2021–22</th><th>Q1 2024</th><th>End-2025 (est.)</th><th>Trend</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="leader">Telekom Slovenije</td><td>~43.7%</td><td>~37%</td><td>~35.8–36.9%</td><td class="gaining">Stable leader; growing revenue/profit</td></tr>
+    <tr><td>A1 Slovenia</td><td>~28.8%</td><td>~30.5%</td><td>~25.5%</td><td class="declining">Losing ground; revenue declining</td></tr>
+    <tr><td>Telemach</td><td>~19.2%</td><td>~25.9%</td><td>~24.7% (brand only)</td><td class="gaining">Gaining; combined with T-2 = ~33%</td></tr>
+    <tr><td>T-2</td><td>~7–8%</td><td>~7%</td><td>Absorbed (pending)</td><td class="declining">Eliminated as standalone</td></tr>
+  </tbody>
+</table>
+
+<h2>Fixed Broadband</h2>
+<p>Telemach overtook Telekom Slovenije as the #1 fixed broadband provider in 2025, driven by T-2 integration. Telekom held ~34% with 213,000+ retail connections; T-2's ~21.9% share added to Telemach's ~33% creates a dominant combined position of ~55% — the central concern in the AVK probe.</p>
+
+<h2>MVNO Landscape</h2>
+<p>No significant new MVNO entrants were identified for 2024–2025. Existing MVNOs (HoT Mobil on A1, HIP Mobil and Spar Mobile on Telekom) remain niche. Telekom discontinued its "Izi" sub-brand effective August 2025. The high market concentration and ongoing consolidation deter new challenger entry.</p>
+
+<!-- INFRASTRUCTURE -->
+<div class="page-break"></div>
+<div class="section-label">Part 3 — Infrastructure</div>
+<h1>5G and Fiber: Competitive Buildout Signals</h1>
+
+<h2>5G: A Genuine Three-Way Race</h2>
+
+<table>
+  <thead>
+    <tr><th>Operator</th><th>Coverage</th><th>Speed (Opensignal 2025)</th><th>Key milestone</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Telekom Slovenije</td><td>99% population (end-2025 target met)</td><td>109 Mbps avg 5G download</td><td>5G Standalone launch, early 2026 (first in Slovenia)</td></tr>
+    <tr><td>A1 Slovenia</td><td>~85% population</td><td>204 Mbps (fastest award, Opensignal)</td><td>Fixed Wireless Access rural deployment</td></tr>
+    <tr><td>Telemach</td><td>Lower coverage, higher peak</td><td>302.5 Mbps peak</td><td>€51.6M spectrum spend; €100M investment committed; 5G-Adria traffic project (Feb 2024)</td></tr>
+  </tbody>
+</table>
+
+<p>Telekom leads on coverage breadth; A1 on quality (Opensignal award); Telemach on peak throughput. The 5G SA launch by Telekom is a meaningful differentiation move — it enables network slicing, sub-1ms latency, and enterprise services that competitors cannot yet match.</p>
+
+<h2>FTTH: Unsustainable Overbuild Resolving Slowly</h2>
+
+<div class="signal-card amber no-break">
+  <div class="signal-title">Three-way FTTH overbuild was unsustainable — resolution is incomplete</div>
+  <p>Parallel fiber/cable networks (Telekom SiOL + Telemach + T-2) in the same urban areas intensified discounting and slowed investment payback. T-2's financial collapse was the first casualty. The Telemach acquisition would absorb T-2's fiber footprint, but the Phase II block means the overbuild situation is not yet resolved. Slovenia's FTTP household coverage at 76% is well above the EU average of 56%, underscoring the depth of infrastructure competition.</p>
+</div>
+
+<!-- REGULATORY -->
+<div class="page-break"></div>
+<div class="section-label">Part 4 — Regulatory Environment</div>
+<h1>Regulatory Signals and Legal Warfare</h1>
+
+<h2>AKOS: Wholesale Access Deregulation and A1's Response</h2>
+
+<p>In 2023, AKOS reduced certain wholesale access obligations for Telekom Slovenije in the central and local access markets, citing reduced market power concerns. A1 responded by filing a lawsuit in the Ljubljana District Court claiming approximately <strong>€33.7 million in damages</strong> for abuse of dominance.</p>
+
+<p>On <strong>May 11, 2026</strong>, A1 filed a further suit for <strong>€30.4 million</strong>, covering the period November 2024 to March 2026. Total competitor claims against Telekom now exceed €190 million; Telekom reports 43 pending legal claims totalling approximately €428 million. This legal escalation is itself a competitive intensity signal — operators that resort to litigation are ones that feel commercially outgunned.</p>
+
+<h2>AVK Phase II Investigation: The Market's Biggest Wildcard</h2>
+
+<div class="signal-card red no-break">
+  <div class="signal-title">Phase II investigation opened March 16, 2026 — no final decision as of June 2026</div>
+  <p>The AVK found the Telemach/T-2 merger "raises serious doubts as to its compatibility with Slovenian competition rules" across all segments: mobile, fixed telephony, fixed broadband, and linear TV. T-2 is explicitly characterized as <em>"an important driver of competition"</em>.</p>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Outcome scenario</th><th>Probability (qualitative)</th><th>Competition impact</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Approved with remedies (wholesale access, asset divestitures)</td><td>Most likely</td><td class="tag-easing">Easing — structural rationalization with guardrails</td></tr>
+    <tr><td>Unconditional approval</td><td>Less likely</td><td class="tag-easing">Strongest easing — fastest path to rationalization</td></tr>
+    <tr><td>Blocked — T-2 enters bankruptcy restructuring</td><td>Less likely</td><td class="tag-intensifying">Short-term intensification; same long-term outcome via messy route</td></tr>
+  </tbody>
+</table>
+
+<p>An additional complication: Czech media group <strong>PPF</strong> (owner of Pop TV/CME) has reportedly shown interest in acquiring Telemach itself, which could either derail the T-2 deal or introduce a new ownership dynamic entirely.</p>
+
+<h2>EU Digital Networks Act</h2>
+<p>The EU Council approved political guidance in December 2024; the Commission is expected to propose the full DNA by end-2025. The Act may ease wholesale access obligations that currently constrain investment differentiation. This is a long-term easing signal for all operators — but implementation timelines mean it will not affect competitive dynamics before 2027 at the earliest.</p>
+
+<h2>AKOS: AI Regulation Mandate (2026)</h2>
+<p>AKOS was designated as Slovenia's national lead authority for EU AI Act enforcement in 2026, including establishing a regulatory sandbox by August 2, 2026. This is an expansion of mandate unrelated to telecom market competition, but signals the regulator's bandwidth is being consumed by new obligations.</p>
+
+<!-- LAST 3 MONTHS -->
+<div class="page-break"></div>
+<div class="section-label">Part 5 — Near-Term Intelligence</div>
+<h1>Last 3 Months: March–June 2026</h1>
+
+<div class="verdict-box intensifying">
+  <div class="verdict-label">Near-term verdict</div>
+  <div class="verdict-text">Competition is intensifying — consolidation thesis stalled, Telekom applying pressure, A1 in legal warfare</div>
+</div>
+
+<h2>Signal 1 — Merger Blocked (Most Important)</h2>
+<div class="signal-card red">
+  <div class="signal-title">AVK Phase II opened March 16, 2026 — T-2 remains a live competitor</div>
+  <p>As long as the Phase II investigation runs, T-2 continues operating as a separate (if weakened) competitive force. The market remains at 4 operators. The structural rationalization expected to ease pricing pressure is on hold, and its outcome is genuinely uncertain.</p>
+</div>
+
+<h2>Signal 2 — Telekom's Aggressive Bundle Launch (May 2026)</h2>
+<div class="signal-card red">
+  <div class="signal-title">Telekom launches convergent package marketing €2,000+ family savings</div>
+  <p>Telekom Slovenije introduced a new mobile-fixed "Naj+Neo" convergent package in May 2026. Mobile plans from €10.99/month; fixed from €32.99/month. This is a direct attack on Telemach's bundle dominance and is the behavior of a profitable market leader choosing to compete aggressively.</p>
+  <p>Telekom Q1 2026: revenue +4%, net profit +12%, EBITDA +7%. An operator applying pressure from strength.</p>
+  <p><em>Source: Telecompaper, May 2026</em></p>
+</div>
+
+<h2>Signal 3 — Telekom 5G Standalone (Early 2026)</h2>
+<div class="signal-card red">
+  <div class="signal-title">First 5G SA in Slovenia — differentiation arms race escalating</div>
+  <p>Telekom launched Slovenia's first 5G Standalone network with Ericsson, enabling network slicing, VoNR, and enterprise services. Neither A1 nor Telemach can match this capability yet. This raises the infrastructure stakes and shifts competition from coverage quantity to service quality.</p>
+  <p><em>Source: Ericsson press release; Telecompaper</em></p>
+</div>
+
+<h2>Signal 4 — A1 Escalates to Legal Warfare (May 11, 2026)</h2>
+<div class="signal-card red">
+  <div class="signal-title">A1 files new €30.4M suit vs. Telekom — total claims now €190M+</div>
+  <p>A1 Slovenia filed a follow-on damages suit against Telekom for alleged wholesale access abuse (November 2024–March 2026). This is the clearest distress signal: operators that file damages suits are ones that cannot win commercially. A1 was not mentioned among A1 Group's growth contributors in either FY2025 or Q1 2026 commentary.</p>
+  <p><em>Source: SeeNews, May 2026</em></p>
+</div>
+
+<h2>Operator Posture Summary (June 2026)</h2>
+
+<table>
+  <thead>
+    <tr><th>Operator</th><th>Current posture</th><th>Pressure direction</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Telekom Slovenije</strong></td><td>Aggressive bundling, 5G SA launch, profitable growth</td><td class="tag-intensifying">Applying pressure</td></tr>
+    <tr><td><strong>A1 Slovenia</strong></td><td>Litigation, defensive, no growth signal visible</td><td class="tag-intensifying">Under pressure — reactive</td></tr>
+    <tr><td><strong>Telemach</strong></td><td>Merger blocked, maintaining unlimited pricing, strong group results</td><td class="tag-neutral">Holding; watching AVK</td></tr>
+    <tr><td><strong>T-2</strong></td><td>Operating independently; financially fragile</td><td class="tag-risk">Wildcard — sustaining price competition</td></tr>
+  </tbody>
+</table>
+
+<!-- OUTLOOK -->
+<div class="page-break"></div>
+<div class="section-label">Part 6 — Forward Indicators</div>
+<h1>What to Watch: Leading Indicators</h1>
+
+<h2>The Fork in the Road</h2>
+<p>The next 6–12 months hinge entirely on the AVK's decision on the Telemach/T-2 merger:</p>
+
+<div class="signal-card green no-break">
+  <div class="signal-title">Scenario A — Merger approved (with or without remedies)</div>
+  <p>Market rationalizes quickly. 4→3 players. Overbuild reduces. T-2's infrastructure absorbed. Coordinated pricing resumes. <strong>Competition eases materially.</strong> Telemach becomes dominant in fixed; Telekom retains mobile leadership; A1 may seek consolidation or be acquired.</p>
+</div>
+
+<div class="signal-card red no-break">
+  <div class="signal-title">Scenario B — Merger blocked; T-2 enters bankruptcy restructuring</div>
+  <p>Short-term chaos as T-2 assets are repriced or liquidated. A1 remains under pressure with no structural relief. Telekom continues to strengthen. Same long-term consolidation outcome via a messier route. <strong>Competition remains intense through 2027.</strong></p>
+</div>
+
+<div class="signal-card amber no-break">
+  <div class="signal-title">Scenario C — PPF acquires Telemach</div>
+  <p>Introduces a new well-capitalized media/telecom owner. Could revitalize competitive aggression or lead to re-evaluation of the T-2 deal. <strong>Outcome uncertain</strong> — depends on PPF's strategic intent vs. United Group's infrastructure-first approach.</p>
+</div>
+
+<h2>Leading Indicators Scorecard</h2>
+
+<table>
+  <thead>
+    <tr><th>Indicator</th><th>Direction</th><th>Implication</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>4→3 MNO consolidation</td><td class="tag-easing">Potential easing</td><td>Less price competition in mobile — if approved</td></tr>
+    <tr><td>AVK Phase II investigation</td><td class="tag-risk">Uncertain</td><td>Most important single variable</td></tr>
+    <tr><td>A1 revenue under sustained pressure</td><td class="tag-intensifying">Risk of aggression</td><td>A1 may launch promotional counter-offensive to stop share erosion</td></tr>
+    <tr><td>Coordinated 2026 price increases (A1+Telemach)</td><td class="tag-easing">Easing signal</td><td>Oligopolistic repricing underway — fragile but present</td></tr>
+    <tr><td>Telekom 5G SA — capability differentiation</td><td class="tag-easing">Easing on price</td><td>Competition shifting to quality axis; less pure price warfare</td></tr>
+    <tr><td>No new MVNO entrants</td><td class="tag-easing">Easing</td><td>Low structural threat from challengers</td></tr>
+    <tr><td>EU Digital Networks Act (2025–2027)</td><td class="tag-easing">Long-term easing</td><td>May ease wholesale obligations; reduces infrastructure sharing mandates</td></tr>
+    <tr><td>PPF interest in Telemach</td><td class="tag-risk">Wildcard</td><td>Could revitalize or complicate competitive dynamics</td></tr>
+    <tr><td>5G SA enabling enterprise/B2B</td><td class="tag-intensifying">New front opening</td><td>Competition intensifying in B2B segment specifically</td></tr>
+  </tbody>
+</table>
+
+<h2>The Operator to Watch: A1 Slovenia</h2>
+<p>A1 is the market's leading indicator for competitive intensity. As the operator losing ground in all segments, it is under parent-company pressure to restore margins — yet it was the only declining market in a nine-country group. If A1 launches a promotional counter-offensive to stop share erosion, that is the signal for another aggressive phase. If it continues to absorb losses quietly through litigation, the market is moving toward a Telekom/Telemach duopoly with A1 as a distant third. <strong>Watch A1 Slovenia's H1 2026 results (expected August 2026) as the next key datapoint.</strong></p>
+
+<!-- SOURCES -->
+<div class="page-break"></div>
+<div class="section-label">References</div>
+<h1>Sources</h1>
+
+<div class="sources">
+  <h3>Financial Filings &amp; Earnings</h3>
+  <p>A1 Group FY2024 Annual Report — <a href="https://a1.group/wp-content/uploads/sites/6/2025/03/A1-Group_results-report-2024.pdf">a1.group</a></p>
+  <p>A1 Group Q1 2026 Results — <a href="https://www.eqs-news.com/news/corporate/a1-telekom-austria-group-q1-2026-results/e25ad4bb-c22f-4a24-9dc1-df1d3a972747_en">EQS News, April 22, 2026</a></p>
+  <p>Telekom Slovenije FY2024 Investor Release — <a href="https://www.telekom.si/en/about-us/investor-relations/public-releases/the-business-results-of-telekom-slovenije-group-and-telekom-slovenije-dd-for-the-year-2024-the-proposal-for-using-distributable-profit-and-the-publication-of-corporate-governance-statement/">telekom.si</a></p>
+  <p>Telekom Slovenije Q1 2026 Results — <a href="https://www.telecompaper.com/news/telekom-slovenije-q1-net-profit-grows-12-to-eur-16-million--1571984">Telecompaper, May 8, 2026</a></p>
+  <p>United Group Q1 2026 Press Release — <a href="https://united.group/united-group-b-v-delivers-double-digit-revenue-and-earnings-growth-in-q1-2026/">united.group, May 2026</a></p>
+
+  <h3 style="margin-top:12px">M&amp;A / Consolidation</h3>
+  <p>Telemach Slovenia signs agreement to acquire T-2 — <a href="https://united.group/telemach-slovenia-signs-agreement-to-acquire-t-2/">United Group, August 2024</a></p>
+  <p>Telemach Slovenia signs deal to acquire rival T-2 — <a href="https://sloveniatimes.com/40750/telemach-slovenija-signs-deal-to-acquire-rival-t-2">Slovenia Times, August 2024</a></p>
+  <p>Main Developments in Competition Law and Policy 2024 — Slovenia — <a href="https://competitionlawblog.kluwercompetitionlaw.com/2025/02/17/main-developments-in-competition-law-and-policy-2024-slovenia/">Kluwer Competition Law Blog, February 2025</a></p>
+
+  <h3 style="margin-top:12px">Regulatory</h3>
+  <p>AVK Phase II investigation notice — <a href="https://www.varstvo-konkurence.si/informacije/novica/agencija-zacela-podrobnejso-presojo-koncentracije-podjetij-telemach-slovenija-doo-in-t-2-doo-ter-poziva-k-posredovanju-podatkov-pomembnih-za-odlocitev/">varstvo-konkurence.si, March 16, 2026</a></p>
+  <p>Slovenia antitrust sees competition risks from Telemach/T-2 merger — <a href="https://www.telecompaper.com/news/slovenia-antitrust-sees-competition-risks-from-telemach-t-2-merger--1566683">Telecompaper</a></p>
+  <p>A1 sues Telekom Slovenije over alleged abuse of dominance — <a href="https://seenews.com/news/a1-sues-telekom-slovenije-over-alleged-abuse-of-dominance-in-wholesale-1294554">SeeNews, May 2026</a></p>
+  <p>Slovenia raises €164.2M in 5G frequencies tender — <a href="https://seenews.com/news/slovenia-raises-164-2-mln-euro-in-5g-frequencies-tender-1188538">SeeNews</a></p>
+  <p>EU 5G Observatory Report 2025 — <a href="https://digital-strategy.ec.europa.eu/en/policies/5g-observatory-2025">European Commission</a></p>
+
+  <h3 style="margin-top:12px">Pricing &amp; Market</h3>
+  <p>Telekom Slovenije launches new mobile-fixed offer — <a href="https://www.telecompaper.com/news/telekom-slovenije-launches-new-mobile-fixed-offer--1571522">Telecompaper, May 2026</a></p>
+  <p>Telekom will increase the price of services, Telemach, A1 and T-2 are not thinking about it — <a href="https://slovenia.postsen.com/local/93706/Telekom-will-increase-the-price-of-services-Telemach-A1-and-T-2-are-not-thinking-about-it.html">Postsen</a></p>
+  <p>Telecommunications market in Slovenia: Are users really getting the best deals? — <a href="https://www.racunalniske-novice.com/en/telecommunications-market-in-slovenia-do-users-really-get-the-best-deals/">Računalniške novice</a></p>
+  <p>Slovenia Telecoms, Mobile and Broadband Industry Report 2024 — <a href="https://www.globenewswire.com/news-release/2024/07/02/2907198/28124/en/Slovenia-Telecoms-Mobile-and-Broadband-Industry-Report-2024-with-Telekom-Slovenije-A1-Slovenia-T-2-Mobitel-Telemach-Debitel-and-Amis-Telekom.html">GlobeNewswire, July 2, 2024</a></p>
+  <p>Telekom Slovenije extends lead in mobile, Telemach tops broadband in 2025 — <a href="https://www.telecompaper.com/news/telekom-slovenije-extends-lead-in-mobile-telemach-tops-broadband-market-in-2025--1572136">Telecompaper</a></p>
+
+  <h3 style="margin-top:12px">Infrastructure</h3>
+  <p>Telekom Slovenije launches 5G Standalone network — <a href="https://www.ericsson.com/en/press-releases/3/2026/telekom-slovenije-launches-5g-standalone-network">Ericsson, 2026</a></p>
+  <p>Telekom Slovenije accelerates 5G expansion, targets 99% coverage by 2025 — <a href="https://telecomtalk.info/telekom-slovenije-accelerates-5g-expansion-targets-coverage/980455/">TelecomTalk</a></p>
+  <p>Digital Connectivity in Slovenia — <a href="https://digital-strategy.ec.europa.eu/en/policies/broadband-slovenia">European Commission</a></p>
+  <p>Slovenia 2025 Digital Decade Country Report — <a href="https://digital-strategy.ec.europa.eu/en/factpages/slovenia-2025-digital-decade-country-report">European Commission</a></p>
+  <p>Opensignal Mobile Network Experience Report, September 2025 — <a href="https://www.opensignal.com/reports/2025/09/slovenia/mobile-network-experience">opensignal.com</a></p>
+</div>
+
+</div><!-- end page-content -->
+</body>
+</html>
