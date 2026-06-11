@@ -1,0 +1,16 @@
+{
+  "market_data": {
+    "market_cap_m": null,
+    "share_price": null,
+    "pe_ratio": null,
+    "ev_ebitda": null,
+    "as_of_date": null
+  },
+  "market_position": {
+    "subscribers_m": 2.0,
+    "market_share_pct": null,
+    "key_competitors": ["Hrvatski Telekom (HT)", "Telemach Croatia", "Tele2 Croatia"],
+    "notes": "A1 Croatia (~2m total customers across mobile, fixed and TV) is generally regarded as the #2 operator behind market leader Hrvatski Telekom (Deutsche Telekom subsidiary). Mobile subscriber share estimates conflict between sources: ~33.8% (Q1 2025, ranking A1 #2) vs. a broader 2025 estimate of HT ~46% / Telemach ~35% / A1 ~20%. Recommend verifying against HAKOM's official quarterly market-share reports. Convergence (mobile + cable/fixed broadband bundling) is A1's key differentiator; FTTH passed ~409k households (2024), >672k premises on gigabit broadband, 5G covers 98% of Croatia, 5G Standalone live in Zagreb, Split, Rijeka and key tourist routes. EBITDA margin reported at ~37% for FY2024 group-wide segment. Croatian telecom market revenue ~$1.91bn (2025), projected ~$2.18bn by 2030."
+  },
+  "last_updated": "2026-06-11"
+}

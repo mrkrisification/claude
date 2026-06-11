@@ -1,0 +1,18 @@
+{
+  "currency": "EUR",
+  "fiscal_year_end": "12-31",
+  "periods": [
+    {
+      "period": "H1 2025",
+      "revenue_m": 220.8,
+      "ebitda_m": 78.4,
+      "ebitda_margin_pct": 35.5,
+      "net_income_m": null,
+      "capex_m": null,
+      "as_of_date": "2025-08-01",
+      "source": "SEEbiz.eu, A1 Hrvatska H1 2025 results report",
+      "estimated": false
+    }
+  ],
+  "last_updated": "2026-06-11"
+}
