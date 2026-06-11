@@ -3,6 +3,39 @@
   "fiscal_year_end": "12-31",
   "periods": [
     {
+      "period": "FY2022",
+      "revenue_m": 470.2,
+      "ebitda_m": 160.8,
+      "ebitda_margin_pct": 34.2,
+      "net_income_m": null,
+      "capex_m": null,
+      "as_of_date": "2024-01-01",
+      "source": "Dnevnik.hr/ZIMO, cited as prior-year comparison in FY2023 reporting",
+      "estimated": true
+    },
+    {
+      "period": "FY2023",
+      "revenue_m": 523.2,
+      "ebitda_m": 188,
+      "ebitda_margin_pct": 35.9,
+      "net_income_m": null,
+      "capex_m": 203.9,
+      "as_of_date": "2024-01-01",
+      "source": "Financije.hr, A1 Hrvatska FY2023 results (A1 Group FY2024 report cites EBITDA as EUR 189m)",
+      "estimated": false
+    },
+    {
+      "period": "FY2024",
+      "revenue_m": null,
+      "ebitda_m": 224,
+      "ebitda_margin_pct": null,
+      "net_income_m": null,
+      "capex_m": null,
+      "as_of_date": "2025-02-13",
+      "source": "SeeNews, 'A1 Croatia 2024 EBITDA climbs 18.7%' (citing A1 Telekom Austria Group FY2024 segment results)",
+      "estimated": true
+    },
+    {
       "period": "H1 2025",
       "revenue_m": 220.8,
       "ebitda_m": 78.4,
