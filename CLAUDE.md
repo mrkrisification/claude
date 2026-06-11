@@ -39,6 +39,7 @@ Key behaviors:
 - **Incremental refresh** is the default: load existing `data/*.json`, verify/update rather than rebuild from scratch, append/update `periods` (never drop history), append (never overwrite) `sources.md`.
 - **History backfill**: if `financials.json` has fewer than 3 annual (`FY*`) periods (including a brand-new company), the run targets 2-3 fiscal years of history, prioritizing the parent company's annual reports/investor presentations for multi-year segment breakdowns, and archives those primary documents to `raw/`.
 - 3 parallel research agents per run: Financials & filings, Market position & competition, Corporate structure/ownership & recent news.
+- **`raw/` archiving is best-effort**: PDF downloads of primary reports (e.g. `a1.group`, `hakom.hr`, `eqs-news.com`) frequently return HTTP 403 to both `curl` and `WebFetch` in this environment (anti-bot protection, sometimes a broader sandbox network restriction affecting `WebFetch` entirely). When a fetch fails, note it in `sources.md`/`profile.md` Data notes rather than silently leaving `raw/` empty — don't treat repeated 403s as a bug to keep retrying within a single run.
 
 ### `karpathy-llm-wiki` (`.claude/commands/karpathy-llm-wiki.md`)
 Personal LLM-powered knowledge base. Not yet populated with content in this repo (no `raw/`/`wiki/` directories exist yet) — see the skill file for the intended `raw/<topic>/` (immutable sources) + `wiki/<topic>/` (compiled articles) + `index.md`/`log.md` structure before creating new ones.
