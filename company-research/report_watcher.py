@@ -127,14 +127,24 @@ def _firecrawl(path: str, payload: dict, key: str, timeout: int = 120) -> dict:
         body = e.read().decode(errors="replace")[:300]
         if e.code in (401, 403) and "allowlist" in body.lower():
             sys.exit(f"[2] Firecrawl unreachable: {body}\n→ allowlist api.firecrawl.dev (README step 2).")
+        if e.code == 402:
+            sys.exit("[2] Firecrawl out of credits (HTTP 402). Top up at firecrawl.dev/pricing, "
+                     "then re-run — the ledger resumes where it stopped.")
         raise SystemExit(f"[2] Firecrawl HTTP {e.code}: {body}")
     except urllib.error.URLError as e:
         raise SystemExit(f"[2] Firecrawl network error: {e.reason}")
 
 
-def discover_links(urls: list[str], key: str) -> list[str]:
-    """Enumerate candidate links from each reports page via map + scrape."""
+def discover_links(urls: list[str], key: str) -> tuple[list[str], set[str]]:
+    """Enumerate candidate links from each reports page via map + scrape.
+
+    Returns (links, doc_hosts). `doc_hosts` are the registrable domains that the
+    official IR pages link *document files* to (e.g. q4cdn.com) — these are IR
+    hosting CDNs and are trusted as official, since the official page references
+    them directly.
+    """
     found: set[str] = set()
+    doc_hosts: set[str] = set()
     for url in urls:
         # map: enumerate the URL graph, biased toward report-y paths
         m = _firecrawl("map", {"url": url, "search": "report results quarterly annual", "limit": 300}, key)
@@ -148,10 +158,13 @@ def discover_links(urls: list[str], key: str) -> list[str]:
         for href in data.get("links", []) or []:
             if href:
                 found.add(href)
+                # a document file linked from the official page → trust its host
+                if href.split("#", 1)[0].split("?", 1)[0].lower().endswith(FILE_EXTS):
+                    doc_hosts.add(registrable_domain(href))
     # drop in-page fragments and the reports pages themselves
     bases = {u.rstrip("/") for u in urls}
     cleaned = {h.split("#", 1)[0].rstrip("/") for h in found if h}
-    return sorted(h for h in cleaned if h and h not in bases)
+    return sorted(h for h in cleaned if h and h not in bases), doc_hosts
 
 
 # ---------------------------------------------------------------------------
@@ -277,8 +290,9 @@ def cmd_check(args) -> int:
     ledger = load_ledger(args.slug)
     seen = set(ledger.get("downloaded", {}))
 
-    links = discover_links(c["urls"], key)
-    candidates = select_candidates(links, patterns, allowed_domains(c))
+    links, doc_hosts = discover_links(c["urls"], key)
+    domains = allowed_domains(c) | doc_hosts
+    candidates = select_candidates(links, patterns, domains)
     new = [u for u in candidates if u not in seen]
 
     if args.json:
@@ -307,7 +321,8 @@ def fetch_new(slug: str, c: dict, key: str, extra_urls: list[str] | None = None,
     urls = list(extra_urls or [])
     if discover:
         patterns = DEFAULT_PATTERNS + c.get("patterns", [])
-        links = discover_links(c["urls"], key)
+        links, doc_hosts = discover_links(c["urls"], key)
+        domains = domains | doc_hosts        # trust IR-CDN hosts the official page links docs to
         urls += select_candidates(links, patterns, domains)
 
     urls = [u for u in dict.fromkeys(urls) if u not in seen]  # dedupe, skip already-have
@@ -320,15 +335,17 @@ def fetch_new(slug: str, c: dict, key: str, extra_urls: list[str] | None = None,
         print(f"[{slug}] nothing new.")
         return 0
 
+    done = 0
     for url in urls:
         print(f"[{slug}] ↓ {url}")
         rec = download_one(url, slug, key)
         rec["downloaded_at"] = _dt.datetime.now().isoformat()
         ledger.setdefault("downloaded", {})[url] = rec
+        save_ledger(slug, ledger)          # persist after each — resumable on failure
+        done += 1
         print(f"          saved {rec['file']}  ({rec['method']})")
-    save_ledger(slug, ledger)
-    print(f"[{slug}] ledger updated ({len(urls)} new) -> {ledger_path(slug).relative_to(ROOT)}")
-    return len(urls)
+    print(f"[{slug}] ledger updated ({done} new) -> {ledger_path(slug).relative_to(ROOT)}")
+    return done
 
 
 def cmd_download(args) -> int:
