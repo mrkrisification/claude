@@ -1,0 +1,47 @@
+{
+  "downloaded": {
+    "https://www.ift.org.mx/sites/default/files/cindicadores2024.pdf": {
+      "downloaded_at": "2026-06-12T12:39:25.125801",
+      "file": "_regulators/ift/raw/2026-06-12-cindicadores2024.pdf",
+      "method": "direct",
+      "sha256_16": "ba57faea0da7bd3e",
+      "url": "https://www.ift.org.mx/sites/default/files/cindicadores2024.pdf"
+    },
+    "https://www.ift.org.mx/sites/default/files/cindicadores2025.pdf": {
+      "downloaded_at": "2026-06-12T12:39:28.839222",
+      "file": "_regulators/ift/raw/2026-06-12-cindicadores2025.pdf",
+      "method": "direct",
+      "sha256_16": "7de0068321a5e426",
+      "url": "https://www.ift.org.mx/sites/default/files/cindicadores2025.pdf"
+    },
+    "https://www.ift.org.mx/sites/default/files/comunicacion-y-medios/informes/ite1t2022acc.pdf": {
+      "downloaded_at": "2026-06-12T12:39:34.472758",
+      "file": "_regulators/ift/raw/2026-06-12-ite1t2022acc.pdf",
+      "method": "direct",
+      "sha256_16": "fde46a5affca2593",
+      "url": "https://www.ift.org.mx/sites/default/files/comunicacion-y-medios/informes/ite1t2022acc.pdf"
+    },
+    "https://www.ift.org.mx/sites/default/files/comunicacion-y-medios/informes/ite2t2022acc.pdf": {
+      "downloaded_at": "2026-06-12T12:39:38.481468",
+      "file": "_regulators/ift/raw/2026-06-12-ite2t2022acc.pdf",
+      "method": "direct",
+      "sha256_16": "f5770780f5f3f1c5",
+      "url": "https://www.ift.org.mx/sites/default/files/comunicacion-y-medios/informes/ite2t2022acc.pdf"
+    },
+    "https://www.ift.org.mx/sites/default/files/comunicacion-y-medios/informes/ite3t2022acc.pdf": {
+      "downloaded_at": "2026-06-12T12:39:42.548956",
+      "file": "_regulators/ift/raw/2026-06-12-ite3t2022acc.pdf",
+      "method": "direct",
+      "sha256_16": "47ea8c6a41d805d3",
+      "url": "https://www.ift.org.mx/sites/default/files/comunicacion-y-medios/informes/ite3t2022acc.pdf"
+    },
+    "https://www.ift.org.mx/sites/default/files/contenidogeneral/transparencia/cindicadores2023pdf.pdf": {
+      "downloaded_at": "2026-06-12T12:40:19.196259",
+      "file": "_regulators/ift/raw/2026-06-12-cindicadores2023pdf.pdf",
+      "method": "direct",
+      "sha256_16": "fb93bbfd92dc2f09",
+      "url": "https://www.ift.org.mx/sites/default/files/contenidogeneral/transparencia/cindicadores2023pdf.pdf"
+    }
+  },
+  "id": "regulator:ift"
+}

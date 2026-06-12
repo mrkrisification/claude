@@ -1,32 +1,54 @@
 {
-  "company": "america-movil",
   "downloaded": {
+    "https://s22.q4cdn.com/604986553/files/doc_financials/2022/ar/20F-2022-FINAL.pdf": {
+      "downloaded_at": "2026-06-12T12:38:55.352416",
+      "file": "america-movil/raw/2026-06-12-20F-2022-FINAL.pdf",
+      "method": "direct",
+      "sha256_16": "5f2fb156fef618ee",
+      "url": "https://s22.q4cdn.com/604986553/files/doc_financials/2022/ar/20F-2022-FINAL.pdf"
+    },
+    "https://s22.q4cdn.com/604986553/files/doc_financials/2023/ar/as_filed.pdf": {
+      "downloaded_at": "2026-06-12T12:38:51.487891",
+      "file": "america-movil/raw/2026-06-12-as_filed.pdf",
+      "method": "direct",
+      "sha256_16": "8c5b01de4351a089",
+      "url": "https://s22.q4cdn.com/604986553/files/doc_financials/2023/ar/as_filed.pdf"
+    },
+    "https://s22.q4cdn.com/604986553/files/doc_financials/2024/ar/As-Filed-AMERICA-MOVIL-SAB-DE-CV-20F-2024.pdf": {
+      "downloaded_at": "2026-06-12T12:38:48.078664",
+      "file": "america-movil/raw/2026-06-12-As-Filed-AMERICA-MOVIL-SAB-DE-CV-20F-2024.pdf",
+      "method": "direct",
+      "sha256_16": "dc6851bf5098f84e",
+      "url": "https://s22.q4cdn.com/604986553/files/doc_financials/2024/ar/As-Filed-AMERICA-MOVIL-SAB-DE-CV-20F-2024.pdf"
+    },
     "https://s22.q4cdn.com/604986553/files/doc_financials/2025/ar/AS-FILED-AMERICA-MOVIL-SAB-DE-CV-20F-2025.pdf": {
-      "downloaded_at": "2026-06-12T09:49:33",
-      "file": "america-movil/raw/2026-06-12-AS-FILED-AMERICA-MOVIL-SAB-DE-CV-20F-2025.md",
-      "method": "firecrawl-parsed",
+      "downloaded_at": "2026-06-12T12:38:20.093708",
+      "file": "america-movil/raw/2026-06-12-AS-FILED-AMERICA-MOVIL-SAB-DE-CV-20F-2025.pdf",
+      "method": "direct",
+      "sha256_16": "d340b7db3eeada61",
       "url": "https://s22.q4cdn.com/604986553/files/doc_financials/2025/ar/AS-FILED-AMERICA-MOVIL-SAB-DE-CV-20F-2025.pdf"
     },
     "https://s22.q4cdn.com/604986553/files/doc_financials/2026/q1/1Q26.pdf": {
-      "downloaded_at": "2026-06-12T11:46:53.535966",
+      "downloaded_at": "2026-06-12T12:38:20.599915",
       "file": "america-movil/raw/2026-06-12-1Q26.pdf",
       "method": "direct",
       "sha256_16": "a1e2c9620edb8835",
       "url": "https://s22.q4cdn.com/604986553/files/doc_financials/2026/q1/1Q26.pdf"
     },
     "https://s22.q4cdn.com/604986553/files/doc_financials/2026/q1/AMX-1Q26.pdf": {
-      "downloaded_at": "2026-06-12T11:46:54.324277",
+      "downloaded_at": "2026-06-12T12:38:21.371606",
       "file": "america-movil/raw/2026-06-12-AMX-1Q26.pdf",
       "method": "direct",
       "sha256_16": "84f018274a95db81",
       "url": "https://s22.q4cdn.com/604986553/files/doc_financials/2026/q1/AMX-1Q26.pdf"
     },
     "https://s22.q4cdn.com/604986553/files/doc_financials/2026/q1/America-Movil-SAB-de-CV-Earnings-Call-Transcript1Q26.pdf": {
-      "downloaded_at": "2026-06-12T11:46:54.466399",
+      "downloaded_at": "2026-06-12T12:38:21.548631",
       "file": "america-movil/raw/2026-06-12-America-Movil-SAB-de-CV-Earnings-Call-Transcript1Q26.pdf",
       "method": "direct",
       "sha256_16": "75a0c0eee75c29d9",
       "url": "https://s22.q4cdn.com/604986553/files/doc_financials/2026/q1/America-Movil-SAB-de-CV-Earnings-Call-Transcript1Q26.pdf"
     }
-  }
+  },
+  "id": "america-movil"
 }
