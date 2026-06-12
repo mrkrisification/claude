@@ -155,16 +155,21 @@ class _AnchorParser(HTMLParser):
                     self.hrefs.append(v)
 
 
-def direct_discover(urls: list[str]) -> tuple[set[str], set[str], set[str]]:
+def direct_discover(urls: list[str]) -> tuple[set[str], set[str], set[str], set[str]]:
     """Free discovery: fetch each IR page directly and parse its anchors locally.
 
     Works only when the page's host is reachable (egress-allowlisted and not
-    bot-blocked). Returns (links, doc_hosts, blocked_hosts) — blocked_hosts are the
-    IR-page hosts we could not fetch (candidates for the allowlist).
+    bot-blocked) *and* serves the document links in static HTML. Returns
+    (links, doc_hosts, blocked_hosts, productive_urls):
+      - blocked_hosts are the IR-page hosts we could not fetch (allowlist candidates).
+      - productive_urls are the IR pages that yielded at least one document-file
+        link directly; pages absent from this set (unreachable, or JS-rendered
+        single-page apps that inject links client-side) need the Firecrawl fallback.
     """
     links: set[str] = set()
     doc_hosts: set[str] = set()
     blocked: set[str] = set()
+    productive: set[str] = set()
     for url in urls:
         try:
             req = urllib.request.Request(url, headers=BROWSER_HEADERS)
@@ -186,7 +191,8 @@ def direct_discover(urls: list[str]) -> tuple[set[str], set[str], set[str]]:
             links.add(absu)
             if absu.split("#", 1)[0].split("?", 1)[0].lower().endswith(FILE_EXTS):
                 doc_hosts.add(registrable_domain(absu))
-    return links, doc_hosts, blocked
+                productive.add(url)
+    return links, doc_hosts, blocked, productive
 
 
 def discover_links(urls: list[str], key: str,
@@ -198,9 +204,11 @@ def discover_links(urls: list[str], key: str,
     domains the IR pages link document files to (e.g. q4cdn.com) — trusted as official.
     `blocked_hosts` are hosts that could not be fetched directly (allowlist candidates).
     """
-    found, doc_hosts, blocked_hosts = direct_discover(urls)
-    # only the IR pages whose host was blocked need the Firecrawl fallback
-    fc_urls = [u for u in urls if registrable_domain(u) in blocked_hosts]
+    found, doc_hosts, blocked_hosts, productive = direct_discover(urls)
+    # Fall back to Firecrawl for any IR page that direct discovery couldn't mine:
+    # hosts we couldn't fetch at all, *and* pages we fetched but that yielded no
+    # document links (Q4-style single-page apps inject the PDFs via JavaScript).
+    fc_urls = [u for u in urls if u not in productive]
     if fc_urls and firecrawl_ok:
         for url in fc_urls:
             try:
@@ -209,7 +217,9 @@ def discover_links(urls: list[str], key: str,
                     href = link.get("url") if isinstance(link, dict) else link
                     if href:
                         found.add(href)
-                s = _firecrawl("scrape", {"url": url, "formats": ["links"]}, key)
+                # waitFor lets client-rendered SPAs inject their document links
+                # before we read them (the static DOM has none).
+                s = _firecrawl("scrape", {"url": url, "formats": ["links"], "waitFor": 8000}, key)
                 data = s.get("data", s)
                 for href in data.get("links", []) or []:
                     if href:

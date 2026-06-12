@@ -2,10 +2,31 @@
   "company": "america-movil",
   "downloaded": {
     "https://s22.q4cdn.com/604986553/files/doc_financials/2025/ar/AS-FILED-AMERICA-MOVIL-SAB-DE-CV-20F-2025.pdf": {
-      "url": "https://s22.q4cdn.com/604986553/files/doc_financials/2025/ar/AS-FILED-AMERICA-MOVIL-SAB-DE-CV-20F-2025.pdf",
+      "downloaded_at": "2026-06-12T09:49:33",
       "file": "america-movil/raw/2026-06-12-AS-FILED-AMERICA-MOVIL-SAB-DE-CV-20F-2025.md",
       "method": "firecrawl-parsed",
-      "downloaded_at": "2026-06-12T09:49:33"
+      "url": "https://s22.q4cdn.com/604986553/files/doc_financials/2025/ar/AS-FILED-AMERICA-MOVIL-SAB-DE-CV-20F-2025.pdf"
+    },
+    "https://s22.q4cdn.com/604986553/files/doc_financials/2026/q1/1Q26.pdf": {
+      "downloaded_at": "2026-06-12T11:46:53.535966",
+      "file": "america-movil/raw/2026-06-12-1Q26.pdf",
+      "method": "direct",
+      "sha256_16": "a1e2c9620edb8835",
+      "url": "https://s22.q4cdn.com/604986553/files/doc_financials/2026/q1/1Q26.pdf"
+    },
+    "https://s22.q4cdn.com/604986553/files/doc_financials/2026/q1/AMX-1Q26.pdf": {
+      "downloaded_at": "2026-06-12T11:46:54.324277",
+      "file": "america-movil/raw/2026-06-12-AMX-1Q26.pdf",
+      "method": "direct",
+      "sha256_16": "84f018274a95db81",
+      "url": "https://s22.q4cdn.com/604986553/files/doc_financials/2026/q1/AMX-1Q26.pdf"
+    },
+    "https://s22.q4cdn.com/604986553/files/doc_financials/2026/q1/America-Movil-SAB-de-CV-Earnings-Call-Transcript1Q26.pdf": {
+      "downloaded_at": "2026-06-12T11:46:54.466399",
+      "file": "america-movil/raw/2026-06-12-America-Movil-SAB-de-CV-Earnings-Call-Transcript1Q26.pdf",
+      "method": "direct",
+      "sha256_16": "75a0c0eee75c29d9",
+      "url": "https://s22.q4cdn.com/604986553/files/doc_financials/2026/q1/America-Movil-SAB-de-CV-Earnings-Call-Transcript1Q26.pdf"
     }
   }
 }
