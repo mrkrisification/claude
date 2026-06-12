@@ -89,27 +89,34 @@ ingests them directly — the `Read` tool parses PDFs natively.
 (quarterly results, full-year results, annual reports, presentations …), works out which are **new**
 since the last run, and downloads them into the company's `raw/` folder — on demand, at runtime.
 
-Discovery uses Firecrawl (IR sites block direct fetches). Downloads try a **direct fetch first
-(free)**; a per-company `reports/ledger.json` records what was fetched so nothing is re-downloaded.
+**Layered, free-first collection.** Discovery and downloads both try a **direct fetch first (free)**
+and only fall back to Firecrawl when that's blocked. A per-company `reports/ledger.json` records what
+was fetched so nothing is re-downloaded.
+
+1. **Find** the IR page — the skill/agent uses `WebSearch` (free) to locate it, passing it via `--page`.
+2. **Discover** report links — the watcher fetches the IR page directly and parses its anchors
+   locally; only if that host is blocked does it fall back to Firecrawl `map`+`scrape`.
+3. **Download** — direct download (free); blocked files are handled per the credit policy below.
+4. **Self-diagnose** — every blocked host is written to a paste-ready `allowlist.txt` and printed as
+   "allowlist to go Firecrawl-free next run".
 
 ### Credit cost & the free path ⚠️
 
-Firecrawl bills **1 credit per PDF page**, so parsing a single few-hundred-page annual report / 20-F
-can cost 200–300 credits — that is what exhausts the free tier (1,000 credits/month), not discovery
-(`map` + a links scrape ≈ 2–4 credits per IR page). To keep runs free:
+Firecrawl bills **1 credit per PDF page**, so parsing one few-hundred-page annual report / 20-F can
+cost 200–300 credits — that is what exhausts the free tier (1,000/month), not discovery. Policy:
 
-- **Default = free.** The watcher only does direct download by default. When a file is reachable, the
-  bytes are saved and the `Read` tool parses the PDF locally — **Firecrawl never touches the
-  document, so zero per-page credits.**
-- **Blocked downloads are deferred, not parsed.** If direct download is blocked, the watcher reports
-  the file as *deferred* and names the host to allowlist — it does **not** silently spend credits.
-- **The free fix for this environment:** direct download is blocked here only because the egress
-  allowlist permits just `api.firecrawl.dev`. Add the IR/CDN hosts to the environment's network
-  egress allowlist and direct download (hence the whole collection) becomes free. Hosts seen so far:
-  `americamovil.com`, `q4cdn.com`, `telekom.com`, `a1.group`.
-- **`--firecrawl-fallback`** is the **PAID** escape hatch: it parses blocked PDFs via Firecrawl
-  (~1 credit/page), printing the estimated cost. Use it only for a specific document on a site that
-  blocks direct download even when allowlisted (e.g. Cloudflare). Avoid it on full annual reports.
+- **Default = free-first.** Direct download always runs first; reachable files are parsed locally by
+  the `Read` tool (**zero** Firecrawl credits). When direct is blocked, the default auto-parses only
+  *small* docs via Firecrawl and **defers large reports/20-Fs** (never silently spends hundreds).
+- **Modes:** `--no-firecrawl` = guaranteed zero credits (defer everything blocked); `--firecrawl-all`
+  = allow Firecrawl even on large reports (PAID); `--max-credits N` = per-run soft cap.
+- **The real free fix — allowlist the hosts.** Direct fetch is blocked here only because the egress
+  allowlist permits just `api.firecrawl.dev`. The watcher can't change that (it's a web-UI security
+  boundary) but it **curates the list for you**: every blocked host lands in `company-research/
+  allowlist.txt`, one domain per line. Two options in the environment's **Network access** settings:
+    - **Custom** → paste `allowlist.txt` into *Allowed domains* (e.g. `q4cdn.com` covers many issuers); or
+    - **Full** → any domain, zero ongoing maintenance.
+  Once a host is reachable, the whole pipeline for it is free.
 - Firecrawl's `maxAge` cache does **not** reduce credits, so caching is not a workaround.
 
 ```bash
@@ -134,11 +141,11 @@ python3 report_watcher.py list <slug>             # what's already on record
 
 - **Supervised** — `check` *proposes* new documents and the agent/human decides before `download`
   fetches them. Use when you want a judgement gate.
-- **Unattended (collect-broadly)** — `watch` discovers and downloads everything new in one shot,
-  ideal for a scheduled `/loop`. Safe because of the **domain guard**: the watcher only ever
-  downloads from the official IR domain(s) (config `domains`, else derived from `urls`) — links to
-  third-party newswires/social/CDNs the IR page references are skipped, and even an explicit
-  `--url` off an official domain is refused.
+- **Unattended (collect-broadly)** — `watch` discovers and downloads everything new in one shot.
+  Safe because of the **domain guard**: it downloads only from the official IR domain(s) (config
+  `domains`, else derived from `urls`) **plus the CDN hosts the official page itself links report
+  files to** (e.g. `q4cdn.com`). Other third-party links (newswires/social) and any explicit `--url`
+  off those domains are refused.
 
 Tune precision per company with the optional `patterns` list; obvious non-documents (financial
 calendars, event listings) are excluded automatically.

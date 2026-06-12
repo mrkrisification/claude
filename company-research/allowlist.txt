@@ -1,0 +1,4 @@
+# Paste these into the environment's Network access → Custom → Allowed domains.
+# Maintained by report_watcher.py; updated 2026-06-12.
+americamovil.com
+q4cdn.com

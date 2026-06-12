@@ -153,25 +153,26 @@ Run the phases in order. **Do not start Phase 2 until Phase 1 collection is repo
 
 ### Phase 1 — COLLECT into `raw/` (do NOT compose datasets yet)
 
-0. **Auto-collect official reports first (report watcher).** Identify the operator's — and its
-   parent's — official IR **results/reports page** (Phase 0.4; confirm with one `WebSearch` /
-   Firecrawl search if unknown). Then run the watcher to pull every new official report into `raw/`:
+0. **Auto-collect official reports first (report watcher).** Use **`WebSearch` (free)** to find the
+   operator's — and its parent's — official IR **results/reports page** (Phase 0.4). Then run the
+   watcher to pull every new official report into `raw/`:
    ```bash
    python3 company-research/report_watcher.py watch <company-slug> \
      --page "<operator-ir-results-url>" [--page "<parent-ir-results-url>"]
    ```
-   It is domain-guarded (official IR only) and idempotent (skips anything in `reports/ledger.json`),
-   so it is safe to run on every invocation. For each file it writes to `raw/`, add a `manifest.md`
-   row with a fresh `source_id` (`fetch_method: firecrawl` if parsed via Firecrawl, else
-   `local-file` once you `Read` a directly-downloaded PDF). If no IR reports page is reachable
+   It is domain-guarded (official IR + the CDN hosts the page links files to) and idempotent (skips
+   anything in `reports/ledger.json`), so it is safe to run on every invocation. For each file it
+   writes to `raw/`, add a `manifest.md` row with a fresh `source_id` (`fetch_method: local-file`
+   once you `Read` a directly-downloaded PDF, else `firecrawl`). If no IR reports page is reachable
    (e.g. an unlisted subsidiary with no standalone IR site), skip this and rely on the steps below.
 
-   **Credits:** the watcher's default is **free** — direct download + the `Read` tool parsing the PDF
-   locally. Firecrawl bills ~1 credit per PDF page, so do **not** add `--firecrawl-fallback` by
-   default; reach for it only to capture a *specific* needed document on a site that blocks direct
-   download, and avoid Firecrawl-parsing full annual reports / 20-Fs when a short quarterly release
-   carries the figures you need. If the watcher reports files as *deferred (direct blocked)*, note
-   the gap in the collection report and continue — do not silently burn credits to force them.
+   **Credits (free-first):** the default already prefers free direct download + local `Read` parsing,
+   auto-uses Firecrawl only for *small* blocked docs, and **defers large reports/20-Fs**. Do not
+   reach for `--firecrawl-all` (PAID, ~1 credit/PDF page) unless a *specific* large document is truly
+   needed and a shorter quarterly release won't do. When the watcher prints an **"allowlist to go
+   Firecrawl-free"** line (and updates `company-research/allowlist.txt`), surface that to the user in
+   the collection report — adding those hosts to the environment's Network access (Custom, or Full)
+   makes future runs free. Treat *deferred* files as a stated gap; don't burn credits to force them.
 1. **Discover** exact document URLs with `WebSearch`. Force depth with targeted queries, not one
    shallow pass — e.g. `"<parent> segment results <subsidiary> EBITDA FY<year>"`,
    `"<parent> data book <year> filetype:pdf"`, `"<regulator> <country> mobile market report <year>"`,

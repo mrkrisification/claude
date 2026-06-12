@@ -43,8 +43,9 @@ import re
 import sys
 import urllib.error
 import urllib.request
+from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 
 ROOT = Path(__file__).resolve().parent
 FIRECRAWL_BASE = "https://api.firecrawl.dev/v2"
@@ -135,36 +136,93 @@ def _firecrawl(path: str, payload: dict, key: str, timeout: int = 120) -> dict:
         raise SystemExit(f"[2] Firecrawl network error: {e.reason}")
 
 
-def discover_links(urls: list[str], key: str) -> tuple[list[str], set[str]]:
-    """Enumerate candidate links from each reports page via map + scrape.
+BROWSER_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/pdf,*/*",
+}
 
-    Returns (links, doc_hosts). `doc_hosts` are the registrable domains that the
-    official IR pages link *document files* to (e.g. q4cdn.com) — these are IR
-    hosting CDNs and are trusted as official, since the official page references
-    them directly.
+
+class _AnchorParser(HTMLParser):
+    """Collect every <a href> on a page."""
+    def __init__(self):
+        super().__init__()
+        self.hrefs: list[str] = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "a":
+            for k, v in attrs:
+                if k == "href" and v:
+                    self.hrefs.append(v)
+
+
+def direct_discover(urls: list[str]) -> tuple[set[str], set[str], set[str]]:
+    """Free discovery: fetch each IR page directly and parse its anchors locally.
+
+    Works only when the page's host is reachable (egress-allowlisted and not
+    bot-blocked). Returns (links, doc_hosts, blocked_hosts) — blocked_hosts are the
+    IR-page hosts we could not fetch (candidates for the allowlist).
     """
-    found: set[str] = set()
+    links: set[str] = set()
     doc_hosts: set[str] = set()
+    blocked: set[str] = set()
     for url in urls:
-        # map: enumerate the URL graph, biased toward report-y paths
-        m = _firecrawl("map", {"url": url, "search": "report results quarterly annual", "limit": 300}, key)
-        for link in m.get("links", []):
-            href = link.get("url") if isinstance(link, dict) else link
-            if href:
-                found.add(href)
-        # scrape: pull anchor links off the page itself (catches direct PDF hrefs)
-        s = _firecrawl("scrape", {"url": url, "formats": ["links"]}, key)
-        data = s.get("data", s)
-        for href in data.get("links", []) or []:
-            if href:
-                found.add(href)
-                # a document file linked from the official page → trust its host
-                if href.split("#", 1)[0].split("?", 1)[0].lower().endswith(FILE_EXTS):
-                    doc_hosts.add(registrable_domain(href))
+        try:
+            req = urllib.request.Request(url, headers=BROWSER_HEADERS)
+            with urllib.request.urlopen(req, timeout=60) as r:
+                ctype = r.headers.get("Content-Type", "")
+                if "html" not in ctype.lower():
+                    blocked.add(registrable_domain(url))   # not parseable HTML
+                    continue
+                html = r.read().decode("utf-8", errors="replace")
+        except Exception:
+            blocked.add(registrable_domain(url))
+            continue
+        p = _AnchorParser()
+        p.feed(html)
+        for href in p.hrefs:
+            absu = urljoin(url, href)
+            if not absu.lower().startswith("http"):
+                continue
+            links.add(absu)
+            if absu.split("#", 1)[0].split("?", 1)[0].lower().endswith(FILE_EXTS):
+                doc_hosts.add(registrable_domain(absu))
+    return links, doc_hosts, blocked
+
+
+def discover_links(urls: list[str], key: str,
+                   firecrawl_ok: bool = True) -> tuple[list[str], set[str], set[str]]:
+    """Enumerate candidate links from each reports page.
+
+    Tries free direct-HTML discovery first; only pages whose host is blocked fall
+    back to Firecrawl `map`+`scrape` (when firecrawl_ok). `doc_hosts` are registrable
+    domains the IR pages link document files to (e.g. q4cdn.com) — trusted as official.
+    `blocked_hosts` are hosts that could not be fetched directly (allowlist candidates).
+    """
+    found, doc_hosts, blocked_hosts = direct_discover(urls)
+    # only the IR pages whose host was blocked need the Firecrawl fallback
+    fc_urls = [u for u in urls if registrable_domain(u) in blocked_hosts]
+    if fc_urls and firecrawl_ok:
+        for url in fc_urls:
+            try:
+                m = _firecrawl("map", {"url": url, "search": "report results quarterly annual", "limit": 300}, key)
+                for link in m.get("links", []):
+                    href = link.get("url") if isinstance(link, dict) else link
+                    if href:
+                        found.add(href)
+                s = _firecrawl("scrape", {"url": url, "formats": ["links"]}, key)
+                data = s.get("data", s)
+                for href in data.get("links", []) or []:
+                    if href:
+                        found.add(href)
+                        if href.split("#", 1)[0].split("?", 1)[0].lower().endswith(FILE_EXTS):
+                            doc_hosts.add(registrable_domain(href))
+                blocked_hosts.discard(registrable_domain(url))   # Firecrawl rescued it
+            except SystemExit as e:
+                print(f"  (Firecrawl discovery unavailable for {url}: {e})")
     # drop in-page fragments and the reports pages themselves
     bases = {u.rstrip("/") for u in urls}
     cleaned = {h.split("#", 1)[0].rstrip("/") for h in found if h}
-    return sorted(h for h in cleaned if h and h not in bases), doc_hosts
+    return sorted(h for h in cleaned if h and h not in bases), doc_hosts, blocked_hosts
 
 
 # ---------------------------------------------------------------------------
@@ -211,6 +269,29 @@ def select_candidates(links: list[str], patterns: list[str], domains: set[str]) 
     return [u for u in links if is_report(u, patterns) and registrable_domain(u) in domains]
 
 
+ALLOWLIST_FILE = ROOT / "allowlist.txt"
+
+
+def record_allowlist(hosts: set[str]) -> list[str]:
+    """Merge blocked hosts into a paste-ready allowlist file (one domain/line, the exact
+    format the web UI's Custom 'Allowed domains' field expects). Returns newly-added hosts.
+    The agent can't apply the allowlist (it's a web-UI security boundary) — this just keeps
+    the list curated so the user pastes it in one go."""
+    if not hosts:
+        return []
+    existing: set[str] = set()
+    if ALLOWLIST_FILE.is_file():
+        existing = {ln.strip() for ln in ALLOWLIST_FILE.read_text().splitlines()
+                    if ln.strip() and not ln.startswith("#")}
+    new = sorted(h for h in hosts if h and h not in existing)
+    if new:
+        header = (f"# Paste these into the environment's Network access → Custom → Allowed domains.\n"
+                  f"# Maintained by report_watcher.py; updated {_dt.date.today().isoformat()}.\n")
+        lines = sorted(existing | set(new))
+        ALLOWLIST_FILE.write_text(header + "\n".join(lines) + "\n")
+    return new
+
+
 def ledger_path(slug: str) -> Path:
     return ROOT / slug / "reports" / "ledger.json"
 
@@ -239,12 +320,17 @@ def safe_name(url: str) -> str:
     return f"{_dt.date.today().isoformat()}-{base}"
 
 
+def is_large_report(url: str) -> bool:
+    """Heuristic: URL looks like a big multi-hundred-page document (annual report / 20-F /
+    integrated report / data book) — too expensive to auto-parse via Firecrawl."""
+    u = url.lower()
+    return bool(re.search(r"annual[-_]?report|20[-_]?f|integrated[-_]?report|"
+                          r"universal[-_]?registration|/ar/|data[-_]?book", u))
+
+
 def direct_download(url: str, dest: Path) -> bool:
     """Try a plain fetch with browsery headers. Returns True if a real doc landed."""
-    req = urllib.request.Request(url, headers={
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36",
-        "Accept": "application/pdf,*/*",
-    })
+    req = urllib.request.Request(url, headers=BROWSER_HEADERS)
     try:
         with urllib.request.urlopen(req, timeout=120) as r:
             ctype = r.headers.get("Content-Type", "")
@@ -275,20 +361,24 @@ def firecrawl_capture(url: str, dest: Path, key: str) -> tuple[Path, int]:
     return md_dest, int(est_pages)
 
 
-def download_one(url: str, slug: str, key: str, firecrawl_fallback: bool = False) -> dict:
-    """Fetch one report. Direct download (free) is always tried first. If it fails,
-    Firecrawl PDF-parsing (PAID, ~1 credit/page) runs ONLY when firecrawl_fallback is
-    on; otherwise the URL is returned as 'deferred' and nothing is spent."""
+def download_one(url: str, slug: str, key: str, firecrawl_ok: bool) -> dict:
+    """Fetch one report. Direct download (free) is always tried first. Firecrawl
+    PDF-parsing (PAID, ~1 credit/page) runs only when firecrawl_ok; otherwise the URL
+    is deferred and nothing is spent. A Firecrawl 402 degrades to deferred, not a crash."""
     dest_dir = ROOT / slug / "raw"
     dest_dir.mkdir(parents=True, exist_ok=True)
     dest = dest_dir / safe_name(url)
+    host = registrable_domain(url)
     if direct_download(url, dest):
         digest = hashlib.sha256(dest.read_bytes()).hexdigest()[:16]
         return {"url": url, "file": str(dest.relative_to(ROOT)), "method": "direct", "sha256_16": digest}
-    if not firecrawl_fallback:
-        return {"url": url, "status": "deferred", "method": "direct-blocked",
-                "host": registrable_domain(url)}
-    saved, est_pages = firecrawl_capture(url, dest, key)
+    if not firecrawl_ok:
+        return {"url": url, "status": "deferred", "method": "direct-blocked", "host": host}
+    try:
+        saved, est_pages = firecrawl_capture(url, dest, key)
+    except SystemExit as e:                 # e.g. 402 out of credits
+        return {"url": url, "status": "deferred", "method": "firecrawl-unavailable",
+                "host": host, "reason": str(e)}
     return {"url": url, "file": str(saved.relative_to(ROOT)), "method": "firecrawl-parsed",
             "est_credits": est_pages}
 
@@ -304,13 +394,14 @@ def cmd_check(args) -> int:
     ledger = load_ledger(args.slug)
     seen = set(ledger.get("downloaded", {}))
 
-    links, doc_hosts = discover_links(c["urls"], key)
+    links, doc_hosts, blocked = discover_links(c["urls"], key, firecrawl_ok=not args.no_firecrawl)
     domains = allowed_domains(c) | doc_hosts
     candidates = select_candidates(links, patterns, domains)
     new = [u for u in candidates if u not in seen]
 
     if args.json:
-        print(json.dumps({"company": args.slug, "new": new, "all_candidates": candidates}, indent=2))
+        print(json.dumps({"company": args.slug, "new": new, "all_candidates": candidates,
+                          "blocked_hosts": sorted(blocked)}, indent=2))
     else:
         print(f"# {args.slug}: {len(new)} new of {len(candidates)} report candidate(s)\n")
         for u in new:
@@ -322,61 +413,95 @@ def cmd_check(args) -> int:
             print("  (no report-like links found — check the URL / add 'patterns' in config)")
         if new:
             print(f"\nDownload: python3 report_watcher.py download {args.slug} --all")
+    if blocked:
+        record_allowlist(blocked)
+        print(f"\nAllowlist to go Firecrawl-free: {', '.join(sorted(blocked))}  (also in {ALLOWLIST_FILE.relative_to(ROOT)})")
     return 0
 
 
 def fetch_new(slug: str, c: dict, key: str, extra_urls: list[str] | None = None,
-              discover: bool = True, firecrawl_fallback: bool = False) -> int:
+              discover: bool = True, mode: str = "default", max_credits: int = 0) -> int:
     """Download new reports for one company (domain-guarded). Returns count fetched.
 
-    Default is free: direct download only. When direct download is blocked, the URL is
-    reported as 'deferred' and skipped — Firecrawl PDF-parsing (PAID, ~1 credit/page)
-    only runs with firecrawl_fallback=True."""
+    Free-first: direct download is always tried first. When it's blocked, Firecrawl
+    PDF-parsing (PAID, ~1 credit/page) runs per `mode`:
+      'no-firecrawl'  — never; defer everything blocked (guaranteed zero credits)
+      'default'       — auto-Firecrawl small blocked docs; defer large reports
+      'firecrawl-all' — Firecrawl any blocked doc, including large reports
+    `max_credits` (>0) stops further Firecrawl use once estimated spend exceeds it."""
     ledger = load_ledger(slug)
     seen = set(ledger.get("downloaded", {}))
     domains = allowed_domains(c)
+    blocked_hosts: set[str] = set()
 
     urls = list(extra_urls or [])
     if discover:
         patterns = DEFAULT_PATTERNS + c.get("patterns", [])
-        links, doc_hosts = discover_links(c["urls"], key)
+        links, doc_hosts, disc_blocked = discover_links(
+            c["urls"], key, firecrawl_ok=(mode != "no-firecrawl"))
         domains = domains | doc_hosts        # trust IR-CDN hosts the official page links docs to
+        blocked_hosts |= disc_blocked
         urls += select_candidates(links, patterns, domains)
 
     urls = [u for u in dict.fromkeys(urls) if u not in seen]  # dedupe, skip already-have
-    blocked = [u for u in urls if registrable_domain(u) not in domains]
-    for u in blocked:
+    offdomain = [u for u in urls if registrable_domain(u) not in domains]
+    for u in offdomain:
         print(f"⚠ skipped (not an official IR domain {sorted(domains)}): {u}")
-    urls = [u for u in urls if u not in blocked]
+    urls = [u for u in urls if u not in offdomain]
 
-    if not urls:
+    if not urls and not blocked_hosts:
         print(f"[{slug}] nothing new.")
         return 0
 
     done = 0
+    spent = 0
     deferred: list[dict] = []
     for url in urls:
         print(f"[{slug}] ↓ {url}")
-        rec = download_one(url, slug, key, firecrawl_fallback)
+        # decide whether Firecrawl may be used for THIS doc
+        fc_ok = mode != "no-firecrawl"
+        if mode == "default" and is_large_report(url):
+            fc_ok = False                    # never auto-parse a few-hundred-page report
+        if max_credits and spent >= max_credits:
+            fc_ok = False                    # per-run credit cap reached
+
+        rec = download_one(url, slug, key, firecrawl_ok=fc_ok)
         if rec.get("status") == "deferred":
             deferred.append(rec)             # not downloaded, not ledgered → retried next run
-            print(f"          deferred (direct download blocked: {rec['host']})")
+            blocked_hosts.add(rec["host"])
+            why = "large report — allowlist for free download" if is_large_report(url) and mode == "default" \
+                  else rec.get("reason", "direct download blocked")
+            print(f"          deferred ({rec['host']}: {why})")
             continue
         rec["downloaded_at"] = _dt.datetime.now().isoformat()
         ledger.setdefault("downloaded", {})[url] = rec
         save_ledger(slug, ledger)            # persist after each — resumable on failure
         done += 1
+        spent += int(rec.get("est_credits") or 0)
         extra = f"  ≈{rec['est_credits']} credits" if rec.get("est_credits") else ""
         print(f"          saved {rec['file']}  ({rec['method']}){extra}")
 
     if done:
-        print(f"[{slug}] ledger updated ({done} new) -> {ledger_path(slug).relative_to(ROOT)}")
+        tot = f"  (~{spent} Firecrawl credits)" if spent else "  (free — no Firecrawl)"
+        print(f"[{slug}] ledger updated ({done} new){tot} -> {ledger_path(slug).relative_to(ROOT)}")
     if deferred:
-        hosts = sorted({r["host"] for r in deferred})
         print(f"[{slug}] {len(deferred)} report(s) NOT collected — direct download blocked.")
-        print(f"          Free fix: add to the environment egress allowlist: {', '.join(hosts)}")
-        print(f"          Or re-run with --firecrawl-fallback (PAID: Firecrawl ~1 credit/PDF page).")
+    if blocked_hosts:
+        added = record_allowlist(blocked_hosts)
+        print(f"[{slug}] Allowlist to go Firecrawl-free next run: {', '.join(sorted(blocked_hosts))}")
+        print(f"          → paste-ready list in {ALLOWLIST_FILE.relative_to(ROOT)}"
+              + (f" ({len(added)} new)" if added else ""))
+        if mode == "default":
+            print(f"          Or re-run with --firecrawl-all (PAID) to parse large reports via Firecrawl.")
     return done
+
+
+def _mode(args) -> str:
+    if getattr(args, "no_firecrawl", False):
+        return "no-firecrawl"
+    if getattr(args, "firecrawl_all", False):
+        return "firecrawl-all"
+    return "default"
 
 
 def cmd_download(args) -> int:
@@ -386,7 +511,7 @@ def cmd_download(args) -> int:
     if not args.url and not args.all:
         sys.exit("download needs --url <URL> (repeatable) or --all")
     fetch_new(args.slug, c, key, extra_urls=args.url, discover=bool(args.all),
-              firecrawl_fallback=args.firecrawl_fallback)
+              mode=_mode(args), max_credits=args.max_credits)
     return 0
 
 
@@ -404,7 +529,7 @@ def cmd_watch(args) -> int:
         c = company_cfg(cfg, slug, args.page)
         try:
             total += fetch_new(slug, c, key, discover=True,
-                               firecrawl_fallback=args.firecrawl_fallback)
+                               mode=_mode(args), max_credits=args.max_credits)
         except SystemExit as e:           # one bad site shouldn't abort the whole sweep
             print(f"[{slug}] error: {e}")
     print(f"\nWatch complete: {total} new report(s) across {len(slugs)} company(ies).")
@@ -425,11 +550,21 @@ def main() -> int:
     sub = p.add_subparsers(dest="cmd", required=True)
 
     page_help = "ad-hoc IR reports page URL (repeatable) — no config entry needed; download domain is derived from it"
-    fb_help = "PAID escape hatch: parse blocked PDFs via Firecrawl (~1 credit/page). Default off — direct download (free) only; blocked docs are deferred."
+
+    def add_fc_flags(sp):
+        g = sp.add_mutually_exclusive_group()
+        g.add_argument("--no-firecrawl", action="store_true",
+                       help="fully free: direct download only, defer everything blocked (0 credits)")
+        g.add_argument("--firecrawl-all", action="store_true",
+                       help="PAID: allow Firecrawl even for large reports/20-Fs (~1 credit/PDF page)")
+        sp.add_argument("--max-credits", type=int, default=0,
+                        help="per-run soft cap: stop using Firecrawl past this estimated spend")
 
     pc = sub.add_parser("check", help="discover new report candidates (read-only)")
     pc.add_argument("slug")
     pc.add_argument("--page", action="append", help=page_help)
+    pc.add_argument("--no-firecrawl", action="store_true",
+                    help="discovery via direct fetch only (no Firecrawl map/scrape)")
     pc.add_argument("--json", action="store_true")
     pc.set_defaults(func=cmd_check)
 
@@ -438,13 +573,13 @@ def main() -> int:
     pd.add_argument("--page", action="append", help=page_help)
     pd.add_argument("--url", action="append", help="specific report URL (repeatable)")
     pd.add_argument("--all", action="store_true", help="download every new candidate")
-    pd.add_argument("--firecrawl-fallback", action="store_true", help=fb_help)
+    add_fc_flags(pd)
     pd.set_defaults(func=cmd_download)
 
     pw = sub.add_parser("watch", help="one-shot: discover + download everything new")
     pw.add_argument("slug", nargs="?", help="company slug; omit to sweep every company in config")
     pw.add_argument("--page", action="append", help=page_help)
-    pw.add_argument("--firecrawl-fallback", action="store_true", help=fb_help)
+    add_fc_flags(pw)
     pw.set_defaults(func=cmd_watch)
 
     pl = sub.add_parser("list", help="show the download ledger")
