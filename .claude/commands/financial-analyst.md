@@ -480,6 +480,27 @@ is exactly why per-company composition must use identical names and why regulato
 whole-market every run. (Country structure also feeds the existing `baselines/<country>/` and the
 `telecom-pulse` skill.)
 
+### Shared parent-group cache (design target — dedupe HQ reports across markets)
+
+A parent group's report covers **many markets at once**: one Deutsche Telekom annual report serves HT
+(Croatia), Magenta (Austria) and Makedonski Telekom; one A1 Group / Telekom Austria report serves A1
+Croatia, A1 Serbia, A1 Bulgaria …; one United Group report serves every Telemach/Vivacom. Collecting it
+afresh under each subsidiary (as the first Croatia run did, filing A1 *Group* reports under
+`a1-croatia/raw/`) duplicates large PDFs and work. Planned fix — a **shared group cache**, the exact
+analogue of `_regulators/<code>/`:
+
+```
+company-research/_groups/<group-slug>/      # e.g. deutsche-telekom, a1-group, united-group
+  raw/ + manifest.md + reports/ledger.json  # the group's filings, collected ONCE
+  data/segments.csv                          # per-subsidiary segment figures keyed by operator slug
+```
+
+Before collecting a parent report for a subsidiary, **check whether the group already has it** in
+`_groups/<group>/` (by URL in the ledger) and reuse it; a subsidiary's `financials.csv` then pulls its
+rows from `_groups/<group>/data/segments.csv` (segment-derived → `estimated=true`). This keeps one
+authoritative copy of each HQ filing and makes a subsidiary profile a thin layer over shared group +
+shared regulator data. (Not built yet — design only.)
+
 ---
 
 ## Tone and constraints

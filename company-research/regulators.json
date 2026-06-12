@@ -14,9 +14,10 @@
     "hakom": {
       "name": "Hrvatska regulatorna agencija za mrežne djelatnosti (HAKOM)",
       "country": "Croatia",
-      "urls": ["https://www.hakom.hr/en/measurements-and-analyses/market-analyses/22"],
+      "urls": ["https://www.hakom.hr/en/electronic-communications-market/10691"],
       "domains": ["hakom.hr"],
-      "patterns": ["market", "trzist", "kvartal", "quarter", "godisnj", "annual"]
+      "search": "Croatian quarterly annual electronic communications market data report",
+      "patterns": ["elektronicke_komunikacije", "electronic.{0,3}communications"]
     },
     "hanfa": {
       "name": "Hrvatska agencija za nadzor financijskih usluga (HANFA)",

@@ -1,5 +1,5 @@
 {
-  "_comment": "Map each company slug to its investor-relations / reports page(s). Copy this file to report_watcher.config.json and edit. List BOTH the quarterly-results and annual-reports pages to capture full-year history; pair with `watch --max-years 5`. 'patterns' (optional) are extra regexes (matched case-insensitively against the URL) on top of the built-in report patterns. 'domains' (optional) restricts downloads to these registrable domains — the watcher only ever fetches from official IR domains (plus the CDN hosts the page links files to); if omitted, the domains are derived from the 'urls' above. National regulators live separately in regulators.json (see README).",
+  "_comment": "Map each company slug to its investor-relations / reports page(s). Copy this file to report_watcher.config.json and edit. List BOTH the quarterly-results and annual-reports pages to capture full-year history; pair with `watch --max-years 5`. Optional keys: 'patterns' = extra URL regexes (case-insensitive); 'search' = a Firecrawl map hint for deep IR sites where the report PDFs sit levels below the landing page; 'strict' = true makes a candidate PDF match one of 'patterns' (use for group IR sites that dump governance/remuneration/compliance PDFs alongside results); 'domains' restricts downloads to these registrable domains (plus CDN hosts the page links files to), else derived from 'urls'. National regulators live separately in regulators.json (see README).",
   "companies": {
     "america-movil": {
       "urls": [
@@ -10,11 +10,17 @@
       "domains": ["americamovil.com", "q4cdn.com"]
     },
     "a1-croatia": {
-      "urls": [
-        "https://www.a1.group/en/investor-relations/financial-results"
-      ],
-      "patterns": [],
-      "domains": ["a1.group"]
+      "_note": "Subsidiary: figures come from A1 Group / Telekom Austria segment reporting. a1.group's IR site dumps many non-financial PDFs, so 'strict' + financial 'patterns' keep only results.",
+      "urls": ["https://www.a1.group/en/investor-relations/financial-results"],
+      "search": "A1 Group financial results report annual quarter",
+      "strict": true,
+      "patterns": ["combined.?report", "financial.?report", "results.?report", "earnings.?update", "half.?year", "at.?a.?glance"],
+      "domains": ["a1.group", "a1.com"]
+    },
+    "hrvatski-telekom": {
+      "urls": ["https://www.t.ht.hr/en/investor-relations"],
+      "search": "Hrvatski Telekom quarterly annual financial report results",
+      "domains": ["ht.hr"]
     },
     "deutsche-telekom": {
       "urls": [

@@ -215,40 +215,57 @@ def direct_discover(urls: list[str]) -> tuple[set[str], set[str], set[str], set[
     return links, doc_hosts, blocked, productive
 
 
-def discover_links(urls: list[str], key: str,
-                   firecrawl_ok: bool = True) -> tuple[list[str], set[str], set[str]]:
+DEFAULT_MAP_SEARCH = "report results quarterly annual"
+
+
+def discover_links(urls: list[str], key: str, firecrawl_ok: bool = True,
+                   search: str = DEFAULT_MAP_SEARCH) -> tuple[list[str], set[str], set[str]]:
     """Enumerate candidate links from each reports page.
 
-    Tries free direct-HTML discovery first; only pages whose host is blocked fall
-    back to Firecrawl `map`+`scrape` (when firecrawl_ok). `doc_hosts` are registrable
-    domains the IR pages link document files to (e.g. q4cdn.com) — trusted as official.
-    `blocked_hosts` are hosts that could not be fetched directly (allowlist candidates).
+    Free direct-HTML discovery first, then Firecrawl:
+      - whole-site `map` (with the `search` hint) surfaces documents buried levels below a
+        landing page — run for any page that yielded no doc directly, and ALWAYS when an
+        explicit (non-default) `search` hint is set, since regulator landing pages often
+        link a few incidental PDFs (glossaries) yet bury the real reports a level down;
+      - per-page `scrape` (waitFor) catches client-rendered SPAs that inject links via JS.
+    `doc_hosts` are registrable domains documents live on (e.g. q4cdn.com) — trusted as
+    official. `blocked_hosts` are hosts that could not be fetched directly (allowlist hints).
     """
     found, doc_hosts, blocked_hosts, productive = direct_discover(urls)
-    # Fall back to Firecrawl for any IR page that direct discovery couldn't mine:
-    # hosts we couldn't fetch at all, *and* pages we fetched but that yielded no
-    # document links (Q4-style single-page apps inject the PDFs via JavaScript).
-    fc_urls = [u for u in urls if u not in productive]
-    if fc_urls and firecrawl_ok:
-        for url in fc_urls:
+    nonproductive = [u for u in urls if u not in productive]
+    explicit_search = search != DEFAULT_MAP_SEARCH
+    if firecrawl_ok and (nonproductive or explicit_search):
+        # origins to map: all pages when an explicit hint is set, else just the empty ones
+        map_targets = urls if explicit_search else nonproductive
+        origins: list[str] = []
+        for u in map_targets:
+            sp = urlsplit(u)
+            o = f"{sp.scheme}://{sp.netloc}"
+            if o not in origins:
+                origins.append(o)
+        for origin in origins:
             try:
-                m = _firecrawl("map", {"url": url, "search": "report results quarterly annual", "limit": 300}, key)
+                m = _firecrawl("map", {"url": origin, "search": search, "limit": 300}, key)
                 for link in m.get("links", []):
                     href = link.get("url") if isinstance(link, dict) else link
                     if href:
                         found.add(href)
-                # waitFor lets client-rendered SPAs inject their document links
-                # before we read them (the static DOM has none).
+                        if _is_doc(href):
+                            doc_hosts.add(registrable_domain(href))
+            except SystemExit as e:
+                print(f"  (Firecrawl map unavailable for {origin}: {e})")
+        for url in nonproductive:                # SPA link injection on the actual page
+            try:
                 s = _firecrawl("scrape", {"url": url, "formats": ["links"], "waitFor": 8000}, key)
                 data = s.get("data", s)
                 for href in data.get("links", []) or []:
                     if href:
                         found.add(href)
-                        if href.split("#", 1)[0].split("?", 1)[0].lower().endswith(FILE_EXTS):
+                        if _is_doc(href):
                             doc_hosts.add(registrable_domain(href))
                 blocked_hosts.discard(registrable_domain(url))   # Firecrawl rescued it
             except SystemExit as e:
-                print(f"  (Firecrawl discovery unavailable for {url}: {e})")
+                print(f"  (Firecrawl scrape unavailable for {url}: {e})")
     # drop in-page fragments and the reports pages themselves
     bases = {u.rstrip("/") for u in urls}
     cleaned = {h.split("#", 1)[0].rstrip("/") for h in found if h}
@@ -292,10 +309,12 @@ def expand_detail_pages(links: list[str], key: str, patterns: list[str], domains
 
 def discover_all(urls: list[str], key: str, patterns: list[str], domains: set[str],
                  firecrawl_ok: bool = True, two_hop: bool = False,
-                 max_years: int = 0) -> tuple[list[str], set[str], set[str]]:
+                 max_years: int = 0, search: str | None = None) -> tuple[list[str], set[str], set[str]]:
     """discover_links, optionally plus a second hop through report detail pages
-    (`two_hop`, used for regulator targets). Returns (links, doc_hosts, blocked_hosts)."""
-    links, doc_hosts, blocked = discover_links(urls, key, firecrawl_ok=firecrawl_ok)
+    (`two_hop`, used for regulator targets). `search` is an optional Firecrawl map hint
+    (per-regulator, for deep sites). Returns (links, doc_hosts, blocked_hosts)."""
+    kw = {"search": search} if search else {}
+    links, doc_hosts, blocked = discover_links(urls, key, firecrawl_ok=firecrawl_ok, **kw)
     if two_hop:
         follow_domains = {registrable_domain(d) for d in domains} | doc_hosts
         docs, dh2 = expand_detail_pages(links, key, patterns, follow_domains,
@@ -350,9 +369,15 @@ def _matches_pattern(url: str, patterns: list[str]) -> bool:
 
 
 def _url_year(url: str) -> int | None:
-    """Latest 4-digit 20xx year mentioned in the URL, or None if it carries no full year."""
-    years = [int(y) for y in re.findall(r"20\d{2}", url)]
-    return max(years) if years else None
+    """Best guess of the document's year. Prefer the filename (basename) — the report period
+    lives there — over the full URL, whose directory path often carries an unrelated CDN
+    upload year (e.g. /wp-content/uploads/2023/08/Annual_Report_2012.pdf → 2012, not 2023)."""
+    base = urlsplit(url).path.rsplit("/", 1)[-1]
+    for scope in (base, url):
+        years = [int(y) for y in re.findall(r"20\d{2}", scope)]
+        if years:
+            return max(years)
+    return None
 
 
 def within_year_window(url: str, max_years: int) -> bool:
@@ -526,7 +551,9 @@ def download_one(url: str, t: Target, key: str, firecrawl_ok: bool) -> dict:
 def _check(t: Target, c: dict, args, require_pattern: bool = False, two_hop: bool = False) -> int:
     """Read-only discovery: print new vs seen candidates for one target."""
     key = load_api_key()
-    patterns = DEFAULT_PATTERNS + c.get("patterns", [])
+    # Regulator targets (require_pattern) match ONLY the registry's specific patterns — not the
+    # generic period defaults — so HTML detail pages / off-sector docs are excluded.
+    patterns = c.get("patterns", []) if require_pattern else DEFAULT_PATTERNS + c.get("patterns", [])
     ledger = load_ledger(t)
     seen = set(ledger.get("downloaded", {}))
     max_years = getattr(args, "max_years", 0)
@@ -534,7 +561,8 @@ def _check(t: Target, c: dict, args, require_pattern: bool = False, two_hop: boo
     base_domains = allowed_domains(c)
     links, doc_hosts, blocked = discover_all(c["urls"], key, patterns, base_domains,
                                              firecrawl_ok=not args.no_firecrawl,
-                                             two_hop=two_hop, max_years=max_years)
+                                             two_hop=two_hop, max_years=max_years,
+                                             search=c.get("search"))
     domains = base_domains | doc_hosts
     candidates = select_candidates(links, patterns, domains,
                                    require_pattern=require_pattern, max_years=max_years)
@@ -561,7 +589,7 @@ def _check(t: Target, c: dict, args, require_pattern: bool = False, two_hop: boo
 def cmd_check(args) -> int:
     cfg = load_config(required=not args.page)
     c = company_cfg(cfg, args.slug, args.page)
-    return _check(company_target(args.slug), c, args)
+    return _check(company_target(args.slug), c, args, require_pattern=bool(c.get("strict")))
 
 
 def fetch_new(t: Target, c: dict, key: str, extra_urls: list[str] | None = None,
@@ -583,10 +611,11 @@ def fetch_new(t: Target, c: dict, key: str, extra_urls: list[str] | None = None,
 
     urls = list(extra_urls or [])
     if discover:
-        patterns = DEFAULT_PATTERNS + c.get("patterns", [])
+        # regulators: match only the registry's specific patterns (see _check)
+        patterns = c.get("patterns", []) if require_pattern else DEFAULT_PATTERNS + c.get("patterns", [])
         links, doc_hosts, disc_blocked = discover_all(
             c["urls"], key, patterns, domains, firecrawl_ok=(mode != "no-firecrawl"),
-            two_hop=two_hop, max_years=max_years)
+            two_hop=two_hop, max_years=max_years, search=c.get("search"))
         domains = domains | doc_hosts        # trust IR-CDN hosts the official page links docs to
         blocked_hosts |= disc_blocked
         urls += select_candidates(links, patterns, domains,
@@ -660,7 +689,8 @@ def cmd_download(args) -> int:
     if not args.url and not args.all:
         sys.exit("download needs --url <URL> (repeatable) or --all")
     fetch_new(company_target(args.slug), c, key, extra_urls=args.url, discover=bool(args.all),
-              mode=_mode(args), max_credits=args.max_credits, max_years=args.max_years)
+              mode=_mode(args), max_credits=args.max_credits, max_years=args.max_years,
+              require_pattern=bool(c.get("strict")))
     return 0
 
 
@@ -678,7 +708,8 @@ def cmd_watch(args) -> int:
         c = company_cfg(cfg, slug, args.page)
         try:
             total += fetch_new(company_target(slug), c, key, discover=True,
-                               mode=_mode(args), max_credits=args.max_credits, max_years=args.max_years)
+                               mode=_mode(args), max_credits=args.max_credits, max_years=args.max_years,
+                               require_pattern=bool(c.get("strict")))
         except SystemExit as e:           # one bad site shouldn't abort the whole sweep
             print(f"[{slug}] error: {e}")
     print(f"\nWatch complete: {total} new report(s) across {len(slugs)} company(ies).")
