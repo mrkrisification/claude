@@ -1,0 +1,68 @@
+{
+  "downloaded": {
+    "https://www.hakom.hr/UserDocsImages/2022/e_trziste/Croatian%20Quarterly%20electronic%20communications%20data,Q32022.eng.pdf": {
+      "downloaded_at": "2026-06-12T13:57:38.200777",
+      "file": "_regulators/hakom/raw/2026-06-12-Croatian_20Quarterly_20electronic_20communications_20data_Q32022.eng.pdf",
+      "method": "direct",
+      "sha256_16": "f1284ef59a58a47a",
+      "url": "https://www.hakom.hr/UserDocsImages/2022/e_trziste/Croatian%20Quarterly%20electronic%20communications%20data,Q32022.eng.pdf"
+    },
+    "https://www.hakom.hr/UserDocsImages/2023/e_trziste/Croatian%20Quarterly%20electronic%20communications%20data%2CQ3_2023.eng.pdf": {
+      "downloaded_at": "2026-06-12T13:57:39.829004",
+      "file": "_regulators/hakom/raw/2026-06-12-Croatian_20Quarterly_20electronic_20communications_20data_2CQ3_2023.eng.pdf",
+      "method": "direct",
+      "sha256_16": "e6795d7e4ed4f3ca",
+      "url": "https://www.hakom.hr/UserDocsImages/2023/e_trziste/Croatian%20Quarterly%20electronic%20communications%20data%2CQ3_2023.eng.pdf"
+    },
+    "https://www.hakom.hr/UserDocsImages/2023/e_trziste/Croatian%20Quarterly%20electronic%20communications%20data,Q12023.eng.pdf": {
+      "downloaded_at": "2026-06-12T13:57:41.371102",
+      "file": "_regulators/hakom/raw/2026-06-12-Croatian_20Quarterly_20electronic_20communications_20data_Q12023.eng.pdf",
+      "method": "direct",
+      "sha256_16": "469bad406bb13a5b",
+      "url": "https://www.hakom.hr/UserDocsImages/2023/e_trziste/Croatian%20Quarterly%20electronic%20communications%20data,Q12023.eng.pdf"
+    },
+    "https://www.hakom.hr/UserDocsImages/2023/e_trziste/Croatian%20Quarterly%20electronic%20communications%20data,Q22023.eng.pdf": {
+      "downloaded_at": "2026-06-12T13:57:42.961949",
+      "file": "_regulators/hakom/raw/2026-06-12-Croatian_20Quarterly_20electronic_20communications_20data_Q22023.eng.pdf",
+      "method": "direct",
+      "sha256_16": "79e55e21272c8298",
+      "url": "https://www.hakom.hr/UserDocsImages/2023/e_trziste/Croatian%20Quarterly%20electronic%20communications%20data,Q22023.eng.pdf"
+    },
+    "https://www.hakom.hr/UserDocsImages/2023/e_trziste/Croatian_Quarterly%20electronic%20communications%20data_Q42022.eng.pdf": {
+      "downloaded_at": "2026-06-12T13:57:44.354594",
+      "file": "_regulators/hakom/raw/2026-06-12-Croatian_Quarterly_20electronic_20communications_20data_Q42022.eng.pdf",
+      "method": "direct",
+      "sha256_16": "a332130af64157db",
+      "url": "https://www.hakom.hr/UserDocsImages/2023/e_trziste/Croatian_Quarterly%20electronic%20communications%20data_Q42022.eng.pdf"
+    },
+    "https://www.hakom.hr/UserDocsImages/2024/e_trziste/Croatian%20Quarterly%20electronic%20communications%20data,Q4_2023.eng.pdf": {
+      "downloaded_at": "2026-06-12T13:57:45.726366",
+      "file": "_regulators/hakom/raw/2026-06-12-Croatian_20Quarterly_20electronic_20communications_20data_Q4_2023.eng.pdf",
+      "method": "direct",
+      "sha256_16": "dac334581ea85612",
+      "url": "https://www.hakom.hr/UserDocsImages/2024/e_trziste/Croatian%20Quarterly%20electronic%20communications%20data,Q4_2023.eng.pdf"
+    },
+    "https://www.hakom.hr/UserDocsImages/2024/e_trziste/Croatian%20quarterly%20electronic%20communications%20market%20data%20for%202.quarter%202024.-ENG.pdf": {
+      "downloaded_at": "2026-06-12T13:57:47.381311",
+      "file": "_regulators/hakom/raw/2026-06-12-Croatian_20quarterly_20electronic_20communications_20market_20data_20for_202.quarter_202024.-ENG.pdf",
+      "method": "direct",
+      "sha256_16": "12a39bddd187551f",
+      "url": "https://www.hakom.hr/UserDocsImages/2024/e_trziste/Croatian%20quarterly%20electronic%20communications%20market%20data%20for%202.quarter%202024.-ENG.pdf"
+    },
+    "https://www.hakom.hr/UserDocsImages/2025/e_trziste/elektronicke_komunikacije/Tromjese%C4%8Dni%20usporedni%20Q4_2024%20-%20eng_correction.pdf": {
+      "downloaded_at": "2026-06-12T13:57:48.904023",
+      "file": "_regulators/hakom/raw/2026-06-12-Tromjese_C4_8Dni_20usporedni_20Q4_2024_20-_20eng_correction.pdf",
+      "method": "direct",
+      "sha256_16": "5471bb9e6c657787",
+      "url": "https://www.hakom.hr/UserDocsImages/2025/e_trziste/elektronicke_komunikacije/Tromjese%C4%8Dni%20usporedni%20Q4_2024%20-%20eng_correction.pdf"
+    },
+    "https://www.hakom.hr/UserDocsImages/2026/e_trziste/elektronicke_komunikacije/Tromjese%C4%8Dni%20uporedni%20podaci%20-%20Q4_2025%20-%20eng.pdf": {
+      "downloaded_at": "2026-06-12T13:57:51.275900",
+      "file": "_regulators/hakom/raw/2026-06-12-Tromjese_C4_8Dni_20uporedni_20podaci_20-_20Q4_2025_20-_20eng.pdf",
+      "method": "direct",
+      "sha256_16": "36940dc51e12423e",
+      "url": "https://www.hakom.hr/UserDocsImages/2026/e_trziste/elektronicke_komunikacije/Tromjese%C4%8Dni%20uporedni%20podaci%20-%20Q4_2025%20-%20eng.pdf"
+    }
+  },
+  "id": "regulator:hakom"
+}

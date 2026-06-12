@@ -1,0 +1,124 @@
+{
+  "downloaded": {
+    "https://a1.com/investor-relations/results-center/annual-financial-reports": {
+      "downloaded_at": "2026-06-12T14:04:03.536235",
+      "est_credits": 4,
+      "file": "a1-croatia/raw/2026-06-12-annual-financial-reports.md",
+      "method": "firecrawl-parsed",
+      "url": "https://a1.com/investor-relations/results-center/annual-financial-reports"
+    },
+    "https://a1.com/investor-relations/results-center/quarterly-results-2023": {
+      "downloaded_at": "2026-06-12T14:04:07.857091",
+      "est_credits": 3,
+      "file": "a1-croatia/raw/2026-06-12-quarterly-results-2023.md",
+      "method": "firecrawl-parsed",
+      "url": "https://a1.com/investor-relations/results-center/quarterly-results-2023"
+    },
+    "https://a1.com/investor-relations/results-center/quarterly-results-2024": {
+      "downloaded_at": "2026-06-12T14:04:20.046265",
+      "est_credits": 3,
+      "file": "a1-croatia/raw/2026-06-12-quarterly-results-2024.md",
+      "method": "firecrawl-parsed",
+      "url": "https://a1.com/investor-relations/results-center/quarterly-results-2024"
+    },
+    "https://a1.com/investor-relations/results-center/quarterly-results-2025": {
+      "downloaded_at": "2026-06-12T14:04:24.149110",
+      "est_credits": 3,
+      "file": "a1-croatia/raw/2026-06-12-quarterly-results-2025.md",
+      "method": "firecrawl-parsed",
+      "url": "https://a1.com/investor-relations/results-center/quarterly-results-2025"
+    },
+    "https://a1.com/wp-content/uploads/sites/6/2023/07/A1_Combined_Report_2022_EN.pdf": {
+      "downloaded_at": "2026-06-12T14:04:25.599947",
+      "file": "a1-croatia/raw/2026-06-12-A1_Combined_Report_2022_EN.pdf",
+      "method": "direct",
+      "sha256_16": "abbd20efaeb39c91",
+      "url": "https://a1.com/wp-content/uploads/sites/6/2023/07/A1_Combined_Report_2022_EN.pdf"
+    },
+    "https://a1.com/wp-content/uploads/sites/6/2023/08/A1_Non-financial_Report_2022_EN.pdf": {
+      "downloaded_at": "2026-06-12T14:04:26.910821",
+      "file": "a1-croatia/raw/2026-06-12-A1_Non-financial_Report_2022_EN.pdf",
+      "method": "direct",
+      "sha256_16": "0c57949fe1dd57f3",
+      "url": "https://a1.com/wp-content/uploads/sites/6/2023/08/A1_Non-financial_Report_2022_EN.pdf"
+    },
+    "https://a1.com/wp-content/uploads/sites/6/2023/08/gm2023_Financial_Report_2022.pdf": {
+      "downloaded_at": "2026-06-12T14:04:27.487220",
+      "file": "a1-croatia/raw/2026-06-12-gm2023_Financial_Report_2022.pdf",
+      "method": "direct",
+      "sha256_16": "4e645f7cdd932b16",
+      "url": "https://a1.com/wp-content/uploads/sites/6/2023/08/gm2023_Financial_Report_2022.pdf"
+    },
+    "https://a1.com/wp-content/uploads/sites/6/2023/09/A1_Combined_Report_2022_EN.pdf": {
+      "downloaded_at": "2026-06-12T14:04:28.196038",
+      "file": "a1-croatia/raw/2026-06-12-A1_Combined_Report_2022_EN.pdf",
+      "method": "direct",
+      "sha256_16": "c3e478a13561afe8",
+      "url": "https://a1.com/wp-content/uploads/sites/6/2023/09/A1_Combined_Report_2022_EN.pdf"
+    },
+    "https://a1.com/wp-content/uploads/sites/6/2024/03/A1-Group-Financial-Report-2023.pdf": {
+      "downloaded_at": "2026-06-12T14:04:28.492001",
+      "file": "a1-croatia/raw/2026-06-12-A1-Group-Financial-Report-2023.pdf",
+      "method": "direct",
+      "sha256_16": "a493491040745e57",
+      "url": "https://a1.com/wp-content/uploads/sites/6/2024/03/A1-Group-Financial-Report-2023.pdf"
+    },
+    "https://a1.com/wp-content/uploads/sites/6/2024/03/Telekom-Austria-AG-Financial-Report-2023.pdf": {
+      "downloaded_at": "2026-06-12T14:04:28.938817",
+      "file": "a1-croatia/raw/2026-06-12-Telekom-Austria-AG-Financial-Report-2023.pdf",
+      "method": "direct",
+      "sha256_16": "a3de39ef18ee6728",
+      "url": "https://a1.com/wp-content/uploads/sites/6/2024/03/Telekom-Austria-AG-Financial-Report-2023.pdf"
+    },
+    "https://a1.com/wp-content/uploads/sites/6/2024/07/Half-Year_Financial_Report-2024.pdf": {
+      "downloaded_at": "2026-06-12T14:04:29.614944",
+      "file": "a1-croatia/raw/2026-06-12-Half-Year_Financial_Report-2024.pdf",
+      "method": "direct",
+      "sha256_16": "66f512ab5efe09f0",
+      "url": "https://a1.com/wp-content/uploads/sites/6/2024/07/Half-Year_Financial_Report-2024.pdf"
+    },
+    "https://a1.com/wp-content/uploads/sites/6/2025/02/A1-%E2%80%93-Earnings-Update-Q4-2024-1.pdf": {
+      "downloaded_at": "2026-06-12T14:04:29.795257",
+      "file": "a1-croatia/raw/2026-06-12-A1-_E2_80_93-Earnings-Update-Q4-2024-1.pdf",
+      "method": "direct",
+      "sha256_16": "e2a7094aa65aed96",
+      "url": "https://a1.com/wp-content/uploads/sites/6/2025/02/A1-%E2%80%93-Earnings-Update-Q4-2024-1.pdf"
+    },
+    "https://a1.com/wp-content/uploads/sites/6/2025/03/A1-Group_results-report-2024.pdf": {
+      "downloaded_at": "2026-06-12T14:04:30.239528",
+      "file": "a1-croatia/raw/2026-06-12-A1-Group_results-report-2024.pdf",
+      "method": "direct",
+      "sha256_16": "52aee180e8b82347",
+      "url": "https://a1.com/wp-content/uploads/sites/6/2025/03/A1-Group_results-report-2024.pdf"
+    },
+    "https://a1.com/wp-content/uploads/sites/6/2025/03/Telekom-Austria-AG_results-report-2024-2.pdf": {
+      "downloaded_at": "2026-06-12T14:04:30.788309",
+      "file": "a1-croatia/raw/2026-06-12-Telekom-Austria-AG_results-report-2024-2.pdf",
+      "method": "direct",
+      "sha256_16": "aaa375de00b6e4dc",
+      "url": "https://a1.com/wp-content/uploads/sites/6/2025/03/Telekom-Austria-AG_results-report-2024-2.pdf"
+    },
+    "https://a1.com/wp-content/uploads/sites/6/2025/05/A1_At_a_Glance_2024_EN.pdf": {
+      "downloaded_at": "2026-06-12T14:04:31.738903",
+      "file": "a1-croatia/raw/2026-06-12-A1_At_a_Glance_2024_EN.pdf",
+      "method": "direct",
+      "sha256_16": "b9f5b00110639543",
+      "url": "https://a1.com/wp-content/uploads/sites/6/2025/05/A1_At_a_Glance_2024_EN.pdf"
+    },
+    "https://a1.com/wp-content/uploads/sites/6/2025/06/A1_At_a_glance_2024_EN.pdf": {
+      "downloaded_at": "2026-06-12T14:04:32.805990",
+      "file": "a1-croatia/raw/2026-06-12-A1_At_a_glance_2024_EN.pdf",
+      "method": "direct",
+      "sha256_16": "48ceffad021d092f",
+      "url": "https://a1.com/wp-content/uploads/sites/6/2025/06/A1_At_a_glance_2024_EN.pdf"
+    },
+    "https://a1.com/wp-content/uploads/sites/6/2026/02/A1-Group-%E2%80%93-Earnings-Update-Q4-2025.pdf": {
+      "downloaded_at": "2026-06-12T14:04:32.976695",
+      "file": "a1-croatia/raw/2026-06-12-A1-Group-_E2_80_93-Earnings-Update-Q4-2025.pdf",
+      "method": "direct",
+      "sha256_16": "97eb8ab60b701f43",
+      "url": "https://a1.com/wp-content/uploads/sites/6/2026/02/A1-Group-%E2%80%93-Earnings-Update-Q4-2025.pdf"
+    }
+  },
+  "id": "a1-croatia"
+}
