@@ -1,6 +1,14 @@
 {
-  "_comment": "Map each company slug to its investor-relations / reports page(s). Copy this file to report_watcher.config.json and edit. 'patterns' (optional) are extra regexes (matched case-insensitively against the URL) on top of the built-in report patterns. 'domains' (optional) restricts downloads to these registrable domains — the watcher only ever fetches from official IR domains; if omitted, the domains are derived from the 'urls' above.",
+  "_comment": "Map each company slug to its investor-relations / reports page(s). Copy this file to report_watcher.config.json and edit. List BOTH the quarterly-results and annual-reports pages to capture full-year history; pair with `watch --max-years 5`. 'patterns' (optional) are extra regexes (matched case-insensitively against the URL) on top of the built-in report patterns. 'domains' (optional) restricts downloads to these registrable domains — the watcher only ever fetches from official IR domains (plus the CDN hosts the page links files to); if omitted, the domains are derived from the 'urls' above. National regulators live separately in regulators.json (see README).",
   "companies": {
+    "america-movil": {
+      "urls": [
+        "https://www.americamovil.com/English/investors/reports-and-filings/quarterly-results/default.aspx",
+        "https://www.americamovil.com/English/investors/reports-and-filings/annual-reports/default.aspx"
+      ],
+      "patterns": ["20-?f", "annual"],
+      "domains": ["americamovil.com", "q4cdn.com"]
+    },
     "a1-croatia": {
       "urls": [
         "https://www.a1.group/en/investor-relations/financial-results"

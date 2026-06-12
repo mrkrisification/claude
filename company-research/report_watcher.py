@@ -111,6 +111,26 @@ def company_cfg(cfg: dict, slug: str, pages: list[str] | None = None) -> dict:
     return c
 
 
+def load_regulators() -> dict:
+    """Registry of national regulators (publications page(s), official domain(s), match
+    patterns). Committed reference data — unlike the per-company runtime config."""
+    reg = ROOT / "regulators.json"
+    if not reg.is_file():
+        return {"regulators": {}}
+    return json.loads(reg.read_text())
+
+
+def regulator_cfg(regs: dict, code: str) -> dict:
+    """Resolve one regulator into the same {urls, patterns, domains} shape company_cfg yields."""
+    r = dict(regs[code])
+    r["urls"] = r.get("urls") or ([r["url"]] if r.get("url") else [])
+    if not r["urls"]:
+        sys.exit(f"Regulator '{code}' has no 'url'/'urls' in regulators.json.")
+    if not r.get("domains"):
+        r["domains"] = [registrable_domain(u) for u in r["urls"]]
+    return r
+
+
 # ---------------------------------------------------------------------------
 # Firecrawl
 # ---------------------------------------------------------------------------
@@ -235,6 +255,56 @@ def discover_links(urls: list[str], key: str,
     return sorted(h for h in cleaned if h and h not in bases), doc_hosts, blocked_hosts
 
 
+def _is_doc(url: str) -> bool:
+    return url.split("#", 1)[0].split("?", 1)[0].lower().endswith(FILE_EXTS)
+
+
+def expand_detail_pages(links: list[str], key: str, patterns: list[str], domains: set[str],
+                        firecrawl_ok: bool = True, max_years: int = 0,
+                        max_pages: int = 40) -> tuple[set[str], set[str]]:
+    """Second hop for regulator-style sites that list report *detail* pages, not the PDF
+    itself. Follow on-domain, pattern-matching detail links (bounded by `max_years` and
+    `max_pages`) and harvest the document files they link. Returns (doc_urls, doc_hosts).
+
+    Direct fetch first (free); Firecrawl scrape per page only if the host is blocked.
+    """
+    detail = [u for u in dict.fromkeys(links)
+              if registrable_domain(u) in domains and not _is_doc(u)
+              and _matches_pattern(u, patterns) and within_year_window(u, max_years)]
+    detail = detail[:max_pages]
+    docs: set[str] = set()
+    doc_hosts: set[str] = set()
+    for du in detail:
+        sub, _dh, _blocked, _prod = direct_discover([du])
+        if not any(_is_doc(h) for h in sub) and firecrawl_ok:
+            try:                                  # static DOM had no doc link — render it
+                s = _firecrawl("scrape", {"url": du, "formats": ["links"], "waitFor": 6000}, key)
+                data = s.get("data", s)
+                sub |= {h for h in (data.get("links", []) or []) if h}
+            except SystemExit:
+                pass
+        for h in sub:
+            if _is_doc(h) and registrable_domain(h) in domains:
+                docs.add(h.split("#", 1)[0])
+                doc_hosts.add(registrable_domain(h))
+    return docs, doc_hosts
+
+
+def discover_all(urls: list[str], key: str, patterns: list[str], domains: set[str],
+                 firecrawl_ok: bool = True, two_hop: bool = False,
+                 max_years: int = 0) -> tuple[list[str], set[str], set[str]]:
+    """discover_links, optionally plus a second hop through report detail pages
+    (`two_hop`, used for regulator targets). Returns (links, doc_hosts, blocked_hosts)."""
+    links, doc_hosts, blocked = discover_links(urls, key, firecrawl_ok=firecrawl_ok)
+    if two_hop:
+        follow_domains = {registrable_domain(d) for d in domains} | doc_hosts
+        docs, dh2 = expand_detail_pages(links, key, patterns, follow_domains,
+                                        firecrawl_ok=firecrawl_ok, max_years=max_years)
+        links = sorted(set(links) | docs)
+        doc_hosts |= dh2
+    return links, doc_hosts, blocked
+
+
 # ---------------------------------------------------------------------------
 # matching & ledger
 # ---------------------------------------------------------------------------
@@ -274,9 +344,48 @@ def allowed_domains(cfg_company: dict) -> set[str]:
     return {registrable_domain(u) for u in cfg_company["urls"]}
 
 
-def select_candidates(links: list[str], patterns: list[str], domains: set[str]) -> list[str]:
-    """Report-like links that live on an official IR domain."""
-    return [u for u in links if is_report(u, patterns) and registrable_domain(u) in domains]
+def _matches_pattern(url: str, patterns: list[str]) -> bool:
+    u = url.split("#", 1)[0].lower()
+    return any(re.search(p, u) for p in patterns)
+
+
+def _url_year(url: str) -> int | None:
+    """Latest 4-digit 20xx year mentioned in the URL, or None if it carries no full year."""
+    years = [int(y) for y in re.findall(r"20\d{2}", url)]
+    return max(years) if years else None
+
+
+def within_year_window(url: str, max_years: int) -> bool:
+    """True if the URL is recent enough. URLs with no detectable 20xx year (e.g. `1Q26`)
+    always pass, so quarter-coded current releases are never dropped by the history bound."""
+    if not max_years:
+        return True
+    y = _url_year(url)
+    if y is None:
+        return True
+    return y >= _dt.date.today().year - max_years + 1
+
+
+def select_candidates(links: list[str], patterns: list[str], domains: set[str],
+                      require_pattern: bool = False, max_years: int = 0) -> list[str]:
+    """Report-like links on an official domain.
+
+    `require_pattern` (used for noisy regulator sites): a bare document file must *also* match
+    one of `patterns` — without it, `is_report` accepts any `.pdf`, which on a regulator page
+    pulls user manuals and unrelated PDFs into the cache. `max_years` bounds history (see
+    `within_year_window`)."""
+    out = []
+    for u in links:
+        if registrable_domain(u) not in domains:
+            continue
+        if not is_report(u, patterns):
+            continue
+        if require_pattern and not _matches_pattern(u, patterns):
+            continue
+        if not within_year_window(u, max_years):
+            continue
+        out.append(u)
+    return out
 
 
 ALLOWLIST_FILE = ROOT / "allowlist.txt"
@@ -302,21 +411,39 @@ def record_allowlist(hosts: set[str]) -> list[str]:
     return new
 
 
-def ledger_path(slug: str) -> Path:
-    return ROOT / slug / "reports" / "ledger.json"
+# A collection target: a base directory under ROOT with its own raw/ archive and ledger.
+# Companies live at ROOT/<slug>/; regulators share one cache at ROOT/_regulators/<code>/.
+class Target:
+    def __init__(self, base: Path, label: str):
+        self.base = base          # e.g. ROOT/"america-movil" or ROOT/"_regulators"/"ift"
+        self.label = label        # human label for log lines / ledger id
+
+    @property
+    def raw(self) -> Path:
+        return self.base / "raw"
+
+    @property
+    def ledger_file(self) -> Path:
+        return self.base / "reports" / "ledger.json"
 
 
-def load_ledger(slug: str) -> dict:
-    p = ledger_path(slug)
-    if p.is_file():
-        return json.loads(p.read_text())
-    return {"company": slug, "downloaded": {}}
+def company_target(slug: str) -> Target:
+    return Target(ROOT / slug, slug)
 
 
-def save_ledger(slug: str, ledger: dict) -> None:
-    p = ledger_path(slug)
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n")
+def regulator_target(code: str) -> Target:
+    return Target(ROOT / "_regulators" / code, f"regulator:{code}")
+
+
+def load_ledger(t: Target) -> dict:
+    if t.ledger_file.is_file():
+        return json.loads(t.ledger_file.read_text())
+    return {"id": t.label, "downloaded": {}}
+
+
+def save_ledger(t: Target, ledger: dict) -> None:
+    t.ledger_file.parent.mkdir(parents=True, exist_ok=True)
+    t.ledger_file.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n")
 
 
 # ---------------------------------------------------------------------------
@@ -371,11 +498,11 @@ def firecrawl_capture(url: str, dest: Path, key: str) -> tuple[Path, int]:
     return md_dest, int(est_pages)
 
 
-def download_one(url: str, slug: str, key: str, firecrawl_ok: bool) -> dict:
+def download_one(url: str, t: Target, key: str, firecrawl_ok: bool) -> dict:
     """Fetch one report. Direct download (free) is always tried first. Firecrawl
     PDF-parsing (PAID, ~1 credit/page) runs only when firecrawl_ok; otherwise the URL
     is deferred and nothing is spent. A Firecrawl 402 degrades to deferred, not a crash."""
-    dest_dir = ROOT / slug / "raw"
+    dest_dir = t.raw
     dest_dir.mkdir(parents=True, exist_ok=True)
     dest = dest_dir / safe_name(url)
     host = registrable_domain(url)
@@ -396,24 +523,28 @@ def download_one(url: str, slug: str, key: str, firecrawl_ok: bool) -> dict:
 # ---------------------------------------------------------------------------
 # commands
 # ---------------------------------------------------------------------------
-def cmd_check(args) -> int:
-    cfg = load_config(required=not args.page)
-    c = company_cfg(cfg, args.slug, args.page)
+def _check(t: Target, c: dict, args, require_pattern: bool = False, two_hop: bool = False) -> int:
+    """Read-only discovery: print new vs seen candidates for one target."""
     key = load_api_key()
     patterns = DEFAULT_PATTERNS + c.get("patterns", [])
-    ledger = load_ledger(args.slug)
+    ledger = load_ledger(t)
     seen = set(ledger.get("downloaded", {}))
+    max_years = getattr(args, "max_years", 0)
 
-    links, doc_hosts, blocked = discover_links(c["urls"], key, firecrawl_ok=not args.no_firecrawl)
-    domains = allowed_domains(c) | doc_hosts
-    candidates = select_candidates(links, patterns, domains)
+    base_domains = allowed_domains(c)
+    links, doc_hosts, blocked = discover_all(c["urls"], key, patterns, base_domains,
+                                             firecrawl_ok=not args.no_firecrawl,
+                                             two_hop=two_hop, max_years=max_years)
+    domains = base_domains | doc_hosts
+    candidates = select_candidates(links, patterns, domains,
+                                   require_pattern=require_pattern, max_years=max_years)
     new = [u for u in candidates if u not in seen]
 
-    if args.json:
-        print(json.dumps({"company": args.slug, "new": new, "all_candidates": candidates,
+    if getattr(args, "json", False):
+        print(json.dumps({"target": t.label, "new": new, "all_candidates": candidates,
                           "blocked_hosts": sorted(blocked)}, indent=2))
     else:
-        print(f"# {args.slug}: {len(new)} new of {len(candidates)} report candidate(s)\n")
+        print(f"# {t.label}: {len(new)} new of {len(candidates)} report candidate(s)\n")
         for u in new:
             print(f"  NEW   {u}")
         for u in candidates:
@@ -421,25 +552,31 @@ def cmd_check(args) -> int:
                 print(f"  seen  {u}")
         if not candidates:
             print("  (no report-like links found — check the URL / add 'patterns' in config)")
-        if new:
-            print(f"\nDownload: python3 report_watcher.py download {args.slug} --all")
     if blocked:
         record_allowlist(blocked)
         print(f"\nAllowlist to go Firecrawl-free: {', '.join(sorted(blocked))}  (also in {ALLOWLIST_FILE.relative_to(ROOT)})")
     return 0
 
 
-def fetch_new(slug: str, c: dict, key: str, extra_urls: list[str] | None = None,
-              discover: bool = True, mode: str = "default", max_credits: int = 0) -> int:
-    """Download new reports for one company (domain-guarded). Returns count fetched.
+def cmd_check(args) -> int:
+    cfg = load_config(required=not args.page)
+    c = company_cfg(cfg, args.slug, args.page)
+    return _check(company_target(args.slug), c, args)
+
+
+def fetch_new(t: Target, c: dict, key: str, extra_urls: list[str] | None = None,
+              discover: bool = True, mode: str = "default", max_credits: int = 0,
+              require_pattern: bool = False, max_years: int = 0, two_hop: bool = False) -> int:
+    """Download new reports for one target (domain-guarded). Returns count fetched.
 
     Free-first: direct download is always tried first. When it's blocked, Firecrawl
     PDF-parsing (PAID, ~1 credit/page) runs per `mode`:
       'no-firecrawl'  — never; defer everything blocked (guaranteed zero credits)
       'default'       — auto-Firecrawl small blocked docs; defer large reports
       'firecrawl-all' — Firecrawl any blocked doc, including large reports
-    `max_credits` (>0) stops further Firecrawl use once estimated spend exceeds it."""
-    ledger = load_ledger(slug)
+    `max_credits` (>0) stops further Firecrawl use once estimated spend exceeds it.
+    `require_pattern`/`max_years` are passed through to `select_candidates`."""
+    ledger = load_ledger(t)
     seen = set(ledger.get("downloaded", {}))
     domains = allowed_domains(c)
     blocked_hosts: set[str] = set()
@@ -447,27 +584,29 @@ def fetch_new(slug: str, c: dict, key: str, extra_urls: list[str] | None = None,
     urls = list(extra_urls or [])
     if discover:
         patterns = DEFAULT_PATTERNS + c.get("patterns", [])
-        links, doc_hosts, disc_blocked = discover_links(
-            c["urls"], key, firecrawl_ok=(mode != "no-firecrawl"))
+        links, doc_hosts, disc_blocked = discover_all(
+            c["urls"], key, patterns, domains, firecrawl_ok=(mode != "no-firecrawl"),
+            two_hop=two_hop, max_years=max_years)
         domains = domains | doc_hosts        # trust IR-CDN hosts the official page links docs to
         blocked_hosts |= disc_blocked
-        urls += select_candidates(links, patterns, domains)
+        urls += select_candidates(links, patterns, domains,
+                                  require_pattern=require_pattern, max_years=max_years)
 
     urls = [u for u in dict.fromkeys(urls) if u not in seen]  # dedupe, skip already-have
     offdomain = [u for u in urls if registrable_domain(u) not in domains]
     for u in offdomain:
-        print(f"⚠ skipped (not an official IR domain {sorted(domains)}): {u}")
+        print(f"⚠ skipped (not an official domain {sorted(domains)}): {u}")
     urls = [u for u in urls if u not in offdomain]
 
     if not urls and not blocked_hosts:
-        print(f"[{slug}] nothing new.")
+        print(f"[{t.label}] nothing new.")
         return 0
 
     done = 0
     spent = 0
     deferred: list[dict] = []
     for url in urls:
-        print(f"[{slug}] ↓ {url}")
+        print(f"[{t.label}] ↓ {url}")
         # decide whether Firecrawl may be used for THIS doc
         fc_ok = mode != "no-firecrawl"
         if mode == "default" and is_large_report(url):
@@ -475,7 +614,7 @@ def fetch_new(slug: str, c: dict, key: str, extra_urls: list[str] | None = None,
         if max_credits and spent >= max_credits:
             fc_ok = False                    # per-run credit cap reached
 
-        rec = download_one(url, slug, key, firecrawl_ok=fc_ok)
+        rec = download_one(url, t, key, firecrawl_ok=fc_ok)
         if rec.get("status") == "deferred":
             deferred.append(rec)             # not downloaded, not ledgered → retried next run
             blocked_hosts.add(rec["host"])
@@ -485,7 +624,7 @@ def fetch_new(slug: str, c: dict, key: str, extra_urls: list[str] | None = None,
             continue
         rec["downloaded_at"] = _dt.datetime.now().isoformat()
         ledger.setdefault("downloaded", {})[url] = rec
-        save_ledger(slug, ledger)            # persist after each — resumable on failure
+        save_ledger(t, ledger)               # persist after each — resumable on failure
         done += 1
         spent += int(rec.get("est_credits") or 0)
         extra = f"  ≈{rec['est_credits']} credits" if rec.get("est_credits") else ""
@@ -493,12 +632,12 @@ def fetch_new(slug: str, c: dict, key: str, extra_urls: list[str] | None = None,
 
     if done:
         tot = f"  (~{spent} Firecrawl credits)" if spent else "  (free — no Firecrawl)"
-        print(f"[{slug}] ledger updated ({done} new){tot} -> {ledger_path(slug).relative_to(ROOT)}")
+        print(f"[{t.label}] ledger updated ({done} new){tot} -> {t.ledger_file.relative_to(ROOT)}")
     if deferred:
-        print(f"[{slug}] {len(deferred)} report(s) NOT collected — direct download blocked.")
+        print(f"[{t.label}] {len(deferred)} report(s) NOT collected — direct download blocked.")
     if blocked_hosts:
         added = record_allowlist(blocked_hosts)
-        print(f"[{slug}] Allowlist to go Firecrawl-free next run: {', '.join(sorted(blocked_hosts))}")
+        print(f"[{t.label}] Allowlist to go Firecrawl-free next run: {', '.join(sorted(blocked_hosts))}")
         print(f"          → paste-ready list in {ALLOWLIST_FILE.relative_to(ROOT)}"
               + (f" ({len(added)} new)" if added else ""))
         if mode == "default":
@@ -520,8 +659,8 @@ def cmd_download(args) -> int:
     key = load_api_key()
     if not args.url and not args.all:
         sys.exit("download needs --url <URL> (repeatable) or --all")
-    fetch_new(args.slug, c, key, extra_urls=args.url, discover=bool(args.all),
-              mode=_mode(args), max_credits=args.max_credits)
+    fetch_new(company_target(args.slug), c, key, extra_urls=args.url, discover=bool(args.all),
+              mode=_mode(args), max_credits=args.max_credits, max_years=args.max_years)
     return 0
 
 
@@ -538,18 +677,47 @@ def cmd_watch(args) -> int:
     for slug in slugs:
         c = company_cfg(cfg, slug, args.page)
         try:
-            total += fetch_new(slug, c, key, discover=True,
-                               mode=_mode(args), max_credits=args.max_credits)
+            total += fetch_new(company_target(slug), c, key, discover=True,
+                               mode=_mode(args), max_credits=args.max_credits, max_years=args.max_years)
         except SystemExit as e:           # one bad site shouldn't abort the whole sweep
             print(f"[{slug}] error: {e}")
     print(f"\nWatch complete: {total} new report(s) across {len(slugs)} company(ies).")
     return 0
 
 
+def cmd_regulator(args) -> int:
+    """Collect national-regulator market/statistical reports into the shared
+    company-research/_regulators/<code>/ cache. Config comes from regulators.json."""
+    regs = load_regulators().get("regulators", {})
+    if not regs:
+        sys.exit(f"No regulators registry at {ROOT/'regulators.json'} — see README.")
+    if args.code and args.code not in regs:
+        sys.exit(f"Unknown regulator '{args.code}'. Known: {', '.join(sorted(regs))}")
+    codes = [args.code] if args.code else sorted(regs)
+    key = load_api_key()
+    total = 0
+    for code in codes:
+        c = regulator_cfg(regs, code)
+        t = regulator_target(code)
+        try:
+            if args.check:
+                _check(t, c, args, require_pattern=True, two_hop=True)
+            else:
+                total += fetch_new(t, c, key, discover=True, mode=_mode(args),
+                                   max_credits=args.max_credits, require_pattern=True,
+                                   max_years=args.max_years, two_hop=True)
+        except SystemExit as e:           # one bad regulator site shouldn't abort a sweep
+            print(f"[regulator:{code}] error: {e}")
+    if not args.check:
+        print(f"\nRegulator collection complete: {total} new report(s) across {len(codes)} regulator(s).")
+    return 0
+
+
 def cmd_list(args) -> int:
-    ledger = load_ledger(args.slug)
+    t = regulator_target(args.slug[len("reg:"):]) if args.slug.startswith("reg:") else company_target(args.slug)
+    ledger = load_ledger(t)
     dl = ledger.get("downloaded", {})
-    print(f"# {args.slug}: {len(dl)} report(s) on record")
+    print(f"# {t.label}: {len(dl)} report(s) on record")
     for url, rec in sorted(dl.items(), key=lambda kv: kv[1].get("downloaded_at", "")):
         print(f"  {rec.get('downloaded_at','?')[:10]}  {rec.get('file','?')}  <- {url}")
     return 0
@@ -570,11 +738,14 @@ def main() -> int:
         sp.add_argument("--max-credits", type=int, default=0,
                         help="per-run soft cap: stop using Firecrawl past this estimated spend")
 
+    years_help = "history bound: keep only reports from the last N fiscal years (0 = no bound)"
+
     pc = sub.add_parser("check", help="discover new report candidates (read-only)")
     pc.add_argument("slug")
     pc.add_argument("--page", action="append", help=page_help)
     pc.add_argument("--no-firecrawl", action="store_true",
                     help="discovery via direct fetch only (no Firecrawl map/scrape)")
+    pc.add_argument("--max-years", type=int, default=0, help=years_help)
     pc.add_argument("--json", action="store_true")
     pc.set_defaults(func=cmd_check)
 
@@ -583,16 +754,26 @@ def main() -> int:
     pd.add_argument("--page", action="append", help=page_help)
     pd.add_argument("--url", action="append", help="specific report URL (repeatable)")
     pd.add_argument("--all", action="store_true", help="download every new candidate")
+    pd.add_argument("--max-years", type=int, default=0, help=years_help)
     add_fc_flags(pd)
     pd.set_defaults(func=cmd_download)
 
     pw = sub.add_parser("watch", help="one-shot: discover + download everything new")
     pw.add_argument("slug", nargs="?", help="company slug; omit to sweep every company in config")
     pw.add_argument("--page", action="append", help=page_help)
+    pw.add_argument("--max-years", type=int, default=0, help=years_help)
     add_fc_flags(pw)
     pw.set_defaults(func=cmd_watch)
 
-    pl = sub.add_parser("list", help="show the download ledger")
+    pr = sub.add_parser("regulator", help="collect national-regulator reports into the shared _regulators/ cache")
+    pr.add_argument("code", nargs="?", help="regulator code from regulators.json; omit to sweep all")
+    pr.add_argument("--check", action="store_true", help="read-only: list candidates, download nothing")
+    pr.add_argument("--max-years", type=int, default=0, help=years_help)
+    pr.add_argument("--json", action="store_true")
+    add_fc_flags(pr)
+    pr.set_defaults(func=cmd_regulator)
+
+    pl = sub.add_parser("list", help="show the download ledger (prefix a regulator code with reg:)")
     pl.add_argument("slug")
     pl.set_defaults(func=cmd_list)
 

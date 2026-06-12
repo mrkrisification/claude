@@ -65,7 +65,10 @@ read that baseline first — it maps owner and regulator and saves a discovery p
 
 Regulators (market reports, KPIs, decisions): **RTR** (AT), **HAKOM** (HR), **RATEL** (RS),
 **AKOS** (SI), **AEK** (MK), **CRC** (BG), **MinCom/BeIGIE** (BY). Securities/market authorities:
-**HANFA** (HR). These are `[PRIMARY]` sources.
+**HANFA** (HR). These are `[PRIMARY]` sources. Each has a registry entry (publications page, official
+domain, match patterns) in `company-research/regulators.json` — collect them automatically with the
+watcher's `regulator <code>` command (see below); `<code>` is the lowercase key in that file
+(`rtr`, `hakom`, `ift`, …). Add a regulator there if the operator's country isn't covered yet.
 
 ### Collection engine — Firecrawl
 
@@ -124,9 +127,10 @@ reachable investor-relations reports page. It discovers report documents on an o
 later only picks up genuinely new filings. Drive it ad-hoc with `--page` (no config edit needed):
 
 ```bash
-# discover + download every NEW official report into company-research/<slug>/raw/
-python3 company-research/report_watcher.py watch <slug> \
-  --page "<operator-ir-results-url>" --page "<parent-ir-results-url>"
+# discover + download every NEW official report into company-research/<slug>/raw/,
+# bounded to the last 5 fiscal years of history
+python3 company-research/report_watcher.py watch <slug> --max-years 5 \
+  --page "<operator-ir-quarterly-results-url>" --page "<operator-ir-annual-reports-url>"
 ```
 
 Use `check` instead of `watch` first if you want to eyeball candidates before fetching. The watcher
@@ -134,6 +138,37 @@ only downloads from the IR page's own registrable domain (official sources), and
 across sessions. After it runs, treat each file it dropped in `raw/` as a `firecrawl` capture: read
 it, assign a `source_id`, and add a `manifest.md` row (Phase 1.2 / 1.5). For sites that block direct
 bytes the watcher saves the parsed report as `.md` — which is exactly what Phase 2 consumes.
+
+**Multi-year history.** Pass the **annual-reports / results archive** page too, and `--max-years 5`
+to bound the pull. Many IR landing pages expose only the *latest* annual report (e.g. only the newest
+20-F); deeper history then has to be found by search and handed to the watcher by URL — still
+ledgered, de-duplicated, and domain-guarded:
+
+```bash
+# find prior annual reports (per fiscal year), then download the exact PDFs
+python3 company-research/report_watcher.py download <slug> \
+  --url "<FY2024-annual-report-pdf>" --url "<FY2023-annual-report-pdf>"
+```
+
+`--max-years N` keeps only documents whose URL names a year within the last N (URLs with no 20xx year,
+e.g. `1Q26`, always pass, so current quarter releases are never dropped).
+
+**Regulators (the local market authority).** Run the watcher's `regulator` command to collect a
+national regulator's market/statistical reports into the **shared** cache
+`company-research/_regulators/<code>/raw/` (de-duplicated across every operator in that country, with
+its own ledger). The regulator's publications page(s), official domain, and report-matching patterns
+live in `company-research/regulators.json`; collection follows report **detail** pages one hop down to
+reach the actual PDFs:
+
+```bash
+python3 company-research/report_watcher.py regulator <code> --max-years 5   # e.g. ift, hakom, rtr…
+python3 company-research/report_watcher.py regulator <code> --check         # preview, download nothing
+```
+
+Read the relevant regulator report(s) from the shared cache, give them a `source_id`, add a
+`manifest.md` row, and cite them as `[PRIMARY]` in `sources.md` (note the file lives under
+`_regulators/<code>/`, not the company's own `raw/`). If a regulator is not yet in `regulators.json`,
+add it (publications page + registrable domain + a couple of URL patterns) and verify with `--check`.
 
 ---
 
@@ -145,8 +180,10 @@ Run the phases in order. **Do not start Phase 2 until Phase 1 collection is repo
 
 1. Derive `<company-slug>`. Create `company-research/<company-slug>/raw/` and `.../data/`.
 2. Classify `entity_type` (`listed` / `subsidiary` / `private`).
-3. Identify the ultimate parent and the relevant regulator(s). If the operator appears in
-   `baselines/`, read its baseline to pull owner + regulator directly.
+3. Identify the ultimate parent and the relevant regulator(s); resolve each regulator to its
+   `regulators.json` **code** (e.g. `ift`, `hakom`) — these go in `profile.json.regulators` and drive
+   the watcher's `regulator` command. If the operator appears in `baselines/`, read its baseline to
+   pull owner + regulator directly.
 4. List discovery targets in priority order: parent annual report & **segment reporting**, parent
    investor presentation / data book, bondholder reports (private groups), regulator market
    reports, securities-authority filings, then press.
@@ -154,17 +191,39 @@ Run the phases in order. **Do not start Phase 2 until Phase 1 collection is repo
 ### Phase 1 — COLLECT into `raw/` (do NOT compose datasets yet)
 
 0. **Auto-collect official reports first (report watcher).** Use **`WebSearch` (free)** to find the
-   operator's — and its parent's — official IR **results/reports page** (Phase 0.4). Then run the
-   watcher to pull every new official report into `raw/`:
+   operator's — and its parent's — official IR **quarterly results** *and* **annual-reports** pages
+   (Phase 0.4). Then run the watcher to pull every new official report into `raw/`, bounded to the
+   last 5 fiscal years:
    ```bash
-   python3 company-research/report_watcher.py watch <company-slug> \
-     --page "<operator-ir-results-url>" [--page "<parent-ir-results-url>"]
+   python3 company-research/report_watcher.py watch <company-slug> --max-years 5 \
+     --page "<operator-ir-quarterly-url>" --page "<operator-ir-annual-reports-url>" \
+     [--page "<parent-ir-results-url>"]
    ```
    It is domain-guarded (official IR + the CDN hosts the page links files to) and idempotent (skips
    anything in `reports/ledger.json`), so it is safe to run on every invocation. For each file it
    writes to `raw/`, add a `manifest.md` row with a fresh `source_id` (`fetch_method: local-file`
    once you `Read` a directly-downloaded PDF, else `firecrawl`). If no IR reports page is reachable
    (e.g. an unlisted subsidiary with no standalone IR site), skip this and rely on the steps below.
+
+   **History (last ~5 years).** If the annual-reports page lists only the newest report (common),
+   search per fiscal year for the prior annual reports (`"<operator> 20-F annual report <year>
+   filetype:pdf"`) and hand the exact PDFs to the watcher so they are downloaded, ledgered, and
+   de-duplicated like the rest:
+   ```bash
+   python3 company-research/report_watcher.py download <company-slug> \
+     --url "<prior-year-annual-report-pdf>" [--url "<...>"]
+   ```
+
+0b. **Collect the local regulator (market authority).** Resolve the regulator code(s) from Phase 0.3
+   and pull their market/statistical reports into the shared cache (`_regulators/<code>/raw/`):
+   ```bash
+   python3 company-research/report_watcher.py regulator <code> --max-years 5
+   ```
+   These are `[PRIMARY]` sources and are often the **only** standalone market data for an unlisted
+   subsidiary (subscribers, market share, ARPU). Read the relevant report(s) from the shared cache,
+   assign a `source_id`, add a `manifest.md` row, and cite them in `sources.md` noting the
+   `_regulators/<code>/` location. If the country's regulator isn't in `regulators.json` yet, add it
+   (publications page + domain + a couple of URL patterns) and confirm with `regulator <code> --check`.
 
    **Credits (free-first):** the default already prefers free direct download + local `Read` parsing,
    auto-uses Firecrawl only for *small* blocked docs, and **defers large reports/20-Fs**. Do not

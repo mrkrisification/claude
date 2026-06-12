@@ -135,7 +135,35 @@ python3 report_watcher.py watch <slug>            # one company
 python3 report_watcher.py watch                   # sweep every company in config
 
 python3 report_watcher.py list <slug>             # what's already on record
+python3 report_watcher.py list reg:<code>         # a regulator's ledger
 ```
+
+### History bound — `--max-years`
+
+`check`, `download`, `watch`, and `regulator` accept `--max-years N` to keep only documents whose URL
+names a year within the last N fiscal years. URLs with no four-digit `20xx` year (e.g. `1Q26`) always
+pass, so the current quarter's releases are never dropped. Many IR landing pages list only the newest
+annual report; for deeper history, search per year for the prior reports and pass the exact PDFs with
+`download <slug> --url …` (still ledgered, de-duplicated, and domain-guarded).
+
+### Regulators — shared market-authority cache
+
+National telecom regulators publish market/statistical reports (subscribers, share, ARPU, revenue) —
+often the only standalone data for an unlisted subsidiary. They live in a small registry,
+`regulators.json` (committed reference data), each entry giving the publications page(s), official
+registrable domain(s), and URL `patterns` a candidate must match:
+
+```bash
+python3 report_watcher.py regulator <code> --max-years 5   # e.g. ift, hakom, rtr, ratel …
+python3 report_watcher.py regulator <code> --check         # preview only
+python3 report_watcher.py regulator --all                  # sweep the whole registry
+```
+
+Reports land in the **shared** cache `company-research/_regulators/<code>/` (raw/ + its own ledger),
+so the same regulator report is fetched once and reused across every operator in that country.
+Because regulator sites usually list report **detail** pages rather than the PDF directly, the
+`regulator` command follows those detail links one hop down to reach the file (domain-guarded, bounded
+by `--max-years`), and the registry `patterns` keep manuals/unrelated PDFs out of the cache.
 
 **Two ways to run it:**
 

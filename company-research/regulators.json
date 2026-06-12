@@ -1,0 +1,71 @@
+{
+  "_comment": "Registry of national telecom regulators consumed by report_watcher.py's `regulator` subcommand. Each entry: publications/market-report page(s), official registrable domain(s) the downloader is restricted to, and `patterns` (regexes matched case-insensitively against the document URL) that a candidate PDF must also match (require_pattern) so noisy regulator sites don't pull manuals/unrelated files. Committed reference data — no secrets. IFT is verified against live data; the others are best-effort seeds — verify each with `python3 report_watcher.py regulator <code> --check` and refine the URL/patterns.",
+  "regulators": {
+    "ift": {
+      "name": "Instituto Federal de Telecomunicaciones",
+      "country": "Mexico",
+      "urls": [
+        "https://www.ift.org.mx/recursos-de-informacion/informes-estadisticos-trimestrales",
+        "https://www.ift.org.mx/estadisticas/analisis-especiales-estadisticos-0"
+      ],
+      "domains": ["ift.org.mx"],
+      "patterns": ["cindicadores", "informe.*estadistic", "\\bite\\d", "indicadores"]
+    },
+    "hakom": {
+      "name": "Hrvatska regulatorna agencija za mrežne djelatnosti (HAKOM)",
+      "country": "Croatia",
+      "urls": ["https://www.hakom.hr/en/measurements-and-analyses/market-analyses/22"],
+      "domains": ["hakom.hr"],
+      "patterns": ["market", "trzist", "kvartal", "quarter", "godisnj", "annual"]
+    },
+    "hanfa": {
+      "name": "Hrvatska agencija za nadzor financijskih usluga (HANFA)",
+      "country": "Croatia (securities/market authority)",
+      "urls": ["https://www.hanfa.hr/publikacije/"],
+      "domains": ["hanfa.hr"],
+      "patterns": ["izvjes", "report", "publik"]
+    },
+    "rtr": {
+      "name": "Rundfunk und Telekom Regulierungs-GmbH (RTR)",
+      "country": "Austria",
+      "urls": ["https://www.rtr.at/TKP/aktuelles/publikationen/publikationen/Publikationen.en.html"],
+      "domains": ["rtr.at"],
+      "patterns": ["kommunikationsbericht", "rtr-monitor", "market", "bericht", "report"]
+    },
+    "ratel": {
+      "name": "Regulatorna agencija za elektronske komunikacije i poštanske usluge (RATEL)",
+      "country": "Serbia",
+      "urls": ["https://www.ratel.rs/en/page/godisnji-izvestaji"],
+      "domains": ["ratel.rs"],
+      "patterns": ["izvestaj", "report", "market", "pregled"]
+    },
+    "akos": {
+      "name": "Agencija za komunikacijska omrežja in storitve (AKOS)",
+      "country": "Slovenia",
+      "urls": ["https://www.akos-rs.si/en/electronic-communications/data-and-analysis"],
+      "domains": ["akos-rs.si"],
+      "patterns": ["report", "porocilo", "market", "quarter", "annual", "letno"]
+    },
+    "aek": {
+      "name": "Agencija za elektronski komunikacii (AEK)",
+      "country": "North Macedonia",
+      "urls": ["https://aek.mk/en/category/publications/market-analysis/"],
+      "domains": ["aek.mk"],
+      "patterns": ["market", "izvestaj", "report", "kvartal", "quarter", "godishen", "annual"]
+    },
+    "crc": {
+      "name": "Komisia za regulirane na saobshteniyata (CRC)",
+      "country": "Bulgaria",
+      "urls": ["https://crc.bg/en/rubrics/85/annual-reports-and-analyses"],
+      "domains": ["crc.bg"],
+      "patterns": ["report", "analys", "market", "annual", "godishen"]
+    },
+    "mincom": {
+      "name": "Ministerstvo svyazi i informatizatsii / BeIGIE",
+      "country": "Belarus",
+      "urls": ["https://www.mpt.gov.by/en"],
+      "domains": ["mpt.gov.by"],
+      "patterns": ["report", "statistic", "market", "otchet"]
+    }
+  }
+}
