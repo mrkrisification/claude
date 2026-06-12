@@ -89,10 +89,28 @@ ingests them directly — the `Read` tool parses PDFs natively.
 (quarterly results, full-year results, annual reports, presentations …), works out which are **new**
 since the last run, and downloads them into the company's `raw/` folder — on demand, at runtime.
 
-Discovery uses Firecrawl (IR sites block direct fetches). Downloads try a direct fetch first, then
-fall back to Firecrawl, which parses protected PDFs to markdown (`*.md`) when raw bytes are blocked
-(e.g. `telekom.com` returns 403 to direct fetches). A per-company `reports/ledger.json` records what
-was fetched so nothing is re-downloaded.
+Discovery uses Firecrawl (IR sites block direct fetches). Downloads try a **direct fetch first
+(free)**; a per-company `reports/ledger.json` records what was fetched so nothing is re-downloaded.
+
+### Credit cost & the free path ⚠️
+
+Firecrawl bills **1 credit per PDF page**, so parsing a single few-hundred-page annual report / 20-F
+can cost 200–300 credits — that is what exhausts the free tier (1,000 credits/month), not discovery
+(`map` + a links scrape ≈ 2–4 credits per IR page). To keep runs free:
+
+- **Default = free.** The watcher only does direct download by default. When a file is reachable, the
+  bytes are saved and the `Read` tool parses the PDF locally — **Firecrawl never touches the
+  document, so zero per-page credits.**
+- **Blocked downloads are deferred, not parsed.** If direct download is blocked, the watcher reports
+  the file as *deferred* and names the host to allowlist — it does **not** silently spend credits.
+- **The free fix for this environment:** direct download is blocked here only because the egress
+  allowlist permits just `api.firecrawl.dev`. Add the IR/CDN hosts to the environment's network
+  egress allowlist and direct download (hence the whole collection) becomes free. Hosts seen so far:
+  `americamovil.com`, `q4cdn.com`, `telekom.com`, `a1.group`.
+- **`--firecrawl-fallback`** is the **PAID** escape hatch: it parses blocked PDFs via Firecrawl
+  (~1 credit/page), printing the estimated cost. Use it only for a specific document on a site that
+  blocks direct download even when allowlisted (e.g. Cloudflare). Avoid it on full annual reports.
+- Firecrawl's `maxAge` cache does **not** reduce credits, so caching is not a workaround.
 
 ```bash
 # one-time: declare the companies + their reports pages

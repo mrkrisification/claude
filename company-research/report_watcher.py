@@ -257,26 +257,40 @@ def direct_download(url: str, dest: Path) -> bool:
     return False
 
 
-def firecrawl_capture(url: str, dest: Path, key: str) -> Path:
-    """Fallback: have Firecrawl fetch+parse, save parsed markdown as a .md sidecar."""
+def firecrawl_capture(url: str, dest: Path, key: str) -> tuple[Path, int]:
+    """Fallback: have Firecrawl fetch+parse, save parsed markdown as a .md sidecar.
+
+    PAID: Firecrawl bills ~1 credit per PDF page. Returns (path, est_pages) so the
+    caller can surface the spend.
+    """
     s = _firecrawl("scrape", {"url": url, "formats": ["markdown"], "parsers": ["pdf"]}, key)
     data = s.get("data", s)
     md = data.get("markdown", "") or ""
+    meta = data.get("metadata", {}) or {}
+    # prefer reported page count; else a rough estimate (~3k chars/page)
+    est_pages = meta.get("numPages") or meta.get("pageCount") or max(1, round(len(md) / 3000))
     md_dest = dest.with_suffix(".md")
     header = f"<!-- source: {url}\n     captured: {_dt.datetime.now().isoformat()}\n     via: firecrawl (raw bytes unavailable) -->\n\n"
     md_dest.write_text(header + md)
-    return md_dest
+    return md_dest, int(est_pages)
 
 
-def download_one(url: str, slug: str, key: str) -> dict:
+def download_one(url: str, slug: str, key: str, firecrawl_fallback: bool = False) -> dict:
+    """Fetch one report. Direct download (free) is always tried first. If it fails,
+    Firecrawl PDF-parsing (PAID, ~1 credit/page) runs ONLY when firecrawl_fallback is
+    on; otherwise the URL is returned as 'deferred' and nothing is spent."""
     dest_dir = ROOT / slug / "raw"
     dest_dir.mkdir(parents=True, exist_ok=True)
     dest = dest_dir / safe_name(url)
     if direct_download(url, dest):
         digest = hashlib.sha256(dest.read_bytes()).hexdigest()[:16]
         return {"url": url, "file": str(dest.relative_to(ROOT)), "method": "direct", "sha256_16": digest}
-    saved = firecrawl_capture(url, dest, key)
-    return {"url": url, "file": str(saved.relative_to(ROOT)), "method": "firecrawl-parsed"}
+    if not firecrawl_fallback:
+        return {"url": url, "status": "deferred", "method": "direct-blocked",
+                "host": registrable_domain(url)}
+    saved, est_pages = firecrawl_capture(url, dest, key)
+    return {"url": url, "file": str(saved.relative_to(ROOT)), "method": "firecrawl-parsed",
+            "est_credits": est_pages}
 
 
 # ---------------------------------------------------------------------------
@@ -312,8 +326,12 @@ def cmd_check(args) -> int:
 
 
 def fetch_new(slug: str, c: dict, key: str, extra_urls: list[str] | None = None,
-              discover: bool = True) -> int:
-    """Download new reports for one company (domain-guarded). Returns count fetched."""
+              discover: bool = True, firecrawl_fallback: bool = False) -> int:
+    """Download new reports for one company (domain-guarded). Returns count fetched.
+
+    Default is free: direct download only. When direct download is blocked, the URL is
+    reported as 'deferred' and skipped — Firecrawl PDF-parsing (PAID, ~1 credit/page)
+    only runs with firecrawl_fallback=True."""
     ledger = load_ledger(slug)
     seen = set(ledger.get("downloaded", {}))
     domains = allowed_domains(c)
@@ -336,15 +354,28 @@ def fetch_new(slug: str, c: dict, key: str, extra_urls: list[str] | None = None,
         return 0
 
     done = 0
+    deferred: list[dict] = []
     for url in urls:
         print(f"[{slug}] ↓ {url}")
-        rec = download_one(url, slug, key)
+        rec = download_one(url, slug, key, firecrawl_fallback)
+        if rec.get("status") == "deferred":
+            deferred.append(rec)             # not downloaded, not ledgered → retried next run
+            print(f"          deferred (direct download blocked: {rec['host']})")
+            continue
         rec["downloaded_at"] = _dt.datetime.now().isoformat()
         ledger.setdefault("downloaded", {})[url] = rec
-        save_ledger(slug, ledger)          # persist after each — resumable on failure
+        save_ledger(slug, ledger)            # persist after each — resumable on failure
         done += 1
-        print(f"          saved {rec['file']}  ({rec['method']})")
-    print(f"[{slug}] ledger updated ({done} new) -> {ledger_path(slug).relative_to(ROOT)}")
+        extra = f"  ≈{rec['est_credits']} credits" if rec.get("est_credits") else ""
+        print(f"          saved {rec['file']}  ({rec['method']}){extra}")
+
+    if done:
+        print(f"[{slug}] ledger updated ({done} new) -> {ledger_path(slug).relative_to(ROOT)}")
+    if deferred:
+        hosts = sorted({r["host"] for r in deferred})
+        print(f"[{slug}] {len(deferred)} report(s) NOT collected — direct download blocked.")
+        print(f"          Free fix: add to the environment egress allowlist: {', '.join(hosts)}")
+        print(f"          Or re-run with --firecrawl-fallback (PAID: Firecrawl ~1 credit/PDF page).")
     return done
 
 
@@ -354,7 +385,8 @@ def cmd_download(args) -> int:
     key = load_api_key()
     if not args.url and not args.all:
         sys.exit("download needs --url <URL> (repeatable) or --all")
-    fetch_new(args.slug, c, key, extra_urls=args.url, discover=bool(args.all))
+    fetch_new(args.slug, c, key, extra_urls=args.url, discover=bool(args.all),
+              firecrawl_fallback=args.firecrawl_fallback)
     return 0
 
 
@@ -371,7 +403,8 @@ def cmd_watch(args) -> int:
     for slug in slugs:
         c = company_cfg(cfg, slug, args.page)
         try:
-            total += fetch_new(slug, c, key, discover=True)
+            total += fetch_new(slug, c, key, discover=True,
+                               firecrawl_fallback=args.firecrawl_fallback)
         except SystemExit as e:           # one bad site shouldn't abort the whole sweep
             print(f"[{slug}] error: {e}")
     print(f"\nWatch complete: {total} new report(s) across {len(slugs)} company(ies).")
@@ -392,6 +425,7 @@ def main() -> int:
     sub = p.add_subparsers(dest="cmd", required=True)
 
     page_help = "ad-hoc IR reports page URL (repeatable) — no config entry needed; download domain is derived from it"
+    fb_help = "PAID escape hatch: parse blocked PDFs via Firecrawl (~1 credit/page). Default off — direct download (free) only; blocked docs are deferred."
 
     pc = sub.add_parser("check", help="discover new report candidates (read-only)")
     pc.add_argument("slug")
@@ -404,11 +438,13 @@ def main() -> int:
     pd.add_argument("--page", action="append", help=page_help)
     pd.add_argument("--url", action="append", help="specific report URL (repeatable)")
     pd.add_argument("--all", action="store_true", help="download every new candidate")
+    pd.add_argument("--firecrawl-fallback", action="store_true", help=fb_help)
     pd.set_defaults(func=cmd_download)
 
     pw = sub.add_parser("watch", help="one-shot: discover + download everything new")
     pw.add_argument("slug", nargs="?", help="company slug; omit to sweep every company in config")
     pw.add_argument("--page", action="append", help=page_help)
+    pw.add_argument("--firecrawl-fallback", action="store_true", help=fb_help)
     pw.set_defaults(func=cmd_watch)
 
     pl = sub.add_parser("list", help="show the download ledger")

@@ -162,8 +162,16 @@ Run the phases in order. **Do not start Phase 2 until Phase 1 collection is repo
    ```
    It is domain-guarded (official IR only) and idempotent (skips anything in `reports/ledger.json`),
    so it is safe to run on every invocation. For each file it writes to `raw/`, add a `manifest.md`
-   row with a fresh `source_id` and `fetch_method: firecrawl`. If no IR reports page is reachable
+   row with a fresh `source_id` (`fetch_method: firecrawl` if parsed via Firecrawl, else
+   `local-file` once you `Read` a directly-downloaded PDF). If no IR reports page is reachable
    (e.g. an unlisted subsidiary with no standalone IR site), skip this and rely on the steps below.
+
+   **Credits:** the watcher's default is **free** — direct download + the `Read` tool parsing the PDF
+   locally. Firecrawl bills ~1 credit per PDF page, so do **not** add `--firecrawl-fallback` by
+   default; reach for it only to capture a *specific* needed document on a site that blocks direct
+   download, and avoid Firecrawl-parsing full annual reports / 20-Fs when a short quarterly release
+   carries the figures you need. If the watcher reports files as *deferred (direct blocked)*, note
+   the gap in the collection report and continue — do not silently burn credits to force them.
 1. **Discover** exact document URLs with `WebSearch`. Force depth with targeted queries, not one
    shallow pass — e.g. `"<parent> segment results <subsidiary> EBITDA FY<year>"`,
    `"<parent> data book <year> filetype:pdf"`, `"<regulator> <country> mobile market report <year>"`,
