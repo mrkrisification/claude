@@ -82,3 +82,32 @@ The skill calls Firecrawl's REST API directly (`/v2/search` for discovery, `/v2/
 snippet captures (`fetch_method: search-snippet`), flagged lower-confidence in `company-summary.md`.
 You can also drop primary PDFs into a company's `raw/` folder (or the upload area) and the skill
 ingests them directly — the `Read` tool parses PDFs natively.
+
+## Report watcher — detect & download new reports
+
+`report_watcher.py` checks a company's investor-relations / reports page, finds report documents
+(quarterly results, full-year results, annual reports, presentations …), works out which are **new**
+since the last run, and downloads them into the company's `raw/` folder — on demand, at runtime.
+
+Discovery uses Firecrawl (IR sites block direct fetches). Downloads try a direct fetch first, then
+fall back to Firecrawl, which parses protected PDFs to markdown (`*.md`) when raw bytes are blocked
+(e.g. `telekom.com` returns 403 to direct fetches). A per-company `reports/ledger.json` records what
+was fetched so nothing is re-downloaded.
+
+```bash
+# one-time: declare the companies + their reports pages
+cp report_watcher.config.example.json report_watcher.config.json   # then edit (git-ignored)
+
+# phase 1 — discover new candidates (read-only; agent reviews these and decides)
+python3 report_watcher.py check <slug>            # or: check <slug> --json
+
+# phase 2 — download (agent executes once it has decided)
+python3 report_watcher.py download <slug> --all                       # every new candidate
+python3 report_watcher.py download <slug> --url <URL> [--url <URL>]    # specific picks
+
+python3 report_watcher.py list <slug>             # what's already on record
+```
+
+The `check` / `download` split is deliberate: `check` only *proposes* new documents, so the agent
+(or a human) decides which are worth keeping before `download` fetches them and updates the ledger.
+Tune precision per company with the optional `patterns` list in the config.
