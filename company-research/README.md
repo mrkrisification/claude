@@ -105,9 +105,22 @@ python3 report_watcher.py check <slug>            # or: check <slug> --json
 python3 report_watcher.py download <slug> --all                       # every new candidate
 python3 report_watcher.py download <slug> --url <URL> [--url <URL>]    # specific picks
 
+# unattended one-shot — discover + download everything new (schedule-friendly)
+python3 report_watcher.py watch <slug>            # one company
+python3 report_watcher.py watch                   # sweep every company in config
+
 python3 report_watcher.py list <slug>             # what's already on record
 ```
 
-The `check` / `download` split is deliberate: `check` only *proposes* new documents, so the agent
-(or a human) decides which are worth keeping before `download` fetches them and updates the ledger.
-Tune precision per company with the optional `patterns` list in the config.
+**Two ways to run it:**
+
+- **Supervised** — `check` *proposes* new documents and the agent/human decides before `download`
+  fetches them. Use when you want a judgement gate.
+- **Unattended (collect-broadly)** — `watch` discovers and downloads everything new in one shot,
+  ideal for a scheduled `/loop`. Safe because of the **domain guard**: the watcher only ever
+  downloads from the official IR domain(s) (config `domains`, else derived from `urls`) — links to
+  third-party newswires/social/CDNs the IR page references are skipped, and even an explicit
+  `--url` off an official domain is refused.
+
+Tune precision per company with the optional `patterns` list; obvious non-documents (financial
+calendars, event listings) are excluded automatically.

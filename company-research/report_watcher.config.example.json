@@ -1,17 +1,19 @@
 {
-  "_comment": "Map each company slug to its investor-relations / reports page(s). Copy this file to report_watcher.config.json and edit. 'patterns' (optional) are extra regexes (matched case-insensitively against the URL) on top of the built-in report patterns — use them when a site's report links don't contain obvious keywords.",
+  "_comment": "Map each company slug to its investor-relations / reports page(s). Copy this file to report_watcher.config.json and edit. 'patterns' (optional) are extra regexes (matched case-insensitively against the URL) on top of the built-in report patterns. 'domains' (optional) restricts downloads to these registrable domains — the watcher only ever fetches from official IR domains; if omitted, the domains are derived from the 'urls' above.",
   "companies": {
     "a1-croatia": {
       "urls": [
         "https://www.a1.group/en/investor-relations/financial-results"
       ],
-      "patterns": []
+      "patterns": [],
+      "domains": ["a1.group"]
     },
     "deutsche-telekom": {
       "urls": [
         "https://www.telekom.com/en/investor-relations/publications/financial-results"
       ],
-      "patterns": ["interim", "quarterly-statement"]
+      "patterns": ["interim", "quarterly-statement"],
+      "domains": ["telekom.com"]
     }
   }
 }

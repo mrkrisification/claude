@@ -44,6 +44,7 @@ import sys
 import urllib.error
 import urllib.request
 from pathlib import Path
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent
 FIRECRAWL_BASE = "https://api.firecrawl.dev/v2"
@@ -148,8 +149,14 @@ def discover_links(urls: list[str], key: str) -> list[str]:
 # ---------------------------------------------------------------------------
 # matching & ledger
 # ---------------------------------------------------------------------------
+# Path markers that are clearly not a report document (event listings, nav…).
+EXCLUDE = ("financial-calendar", "/events/", "/event/", "/glossary", "/sitemap")
+
+
 def is_report(url: str, patterns: list[str]) -> bool:
     u = url.split("#", 1)[0].lower()          # ignore in-page fragments
+    if any(x in u for x in EXCLUDE):
+        return False
     period = any(re.search(p, u) for p in patterns)
     # 1) any document file is a candidate (a bare .pdf almost always is a report)
     if u.endswith(FILE_EXTS):
@@ -160,6 +167,27 @@ def is_report(url: str, patterns: list[str]) -> bool:
     # 3) a non-file URL only counts when it names a *specific* period —
     #    this excludes section landing pages like .../financial-results-2019
     return period and ("report" in u or "result" in u or "interim" in u or "/q" in u)
+
+
+def registrable_domain(url_or_host: str) -> str:
+    """Best-effort registrable domain (last two labels, e.g. report.telekom.com -> telekom.com)."""
+    host = urlsplit(url_or_host).netloc or url_or_host
+    host = host.split("@")[-1].split(":")[0].lower().lstrip(".")
+    parts = host.split(".")
+    return ".".join(parts[-2:]) if len(parts) >= 2 else host
+
+
+def allowed_domains(cfg_company: dict) -> set[str]:
+    """Official domains we'll download from: explicit config list, else derived from the IR URLs."""
+    explicit = cfg_company.get("domains")
+    if explicit:
+        return {registrable_domain(d) for d in explicit}
+    return {registrable_domain(u) for u in cfg_company["urls"]}
+
+
+def select_candidates(links: list[str], patterns: list[str], domains: set[str]) -> list[str]:
+    """Report-like links that live on an official IR domain."""
+    return [u for u in links if is_report(u, patterns) and registrable_domain(u) in domains]
 
 
 def ledger_path(slug: str) -> Path:
@@ -242,7 +270,7 @@ def cmd_check(args) -> int:
     seen = set(ledger.get("downloaded", {}))
 
     links = discover_links(c["urls"], key)
-    candidates = [u for u in links if is_report(u, patterns)]
+    candidates = select_candidates(links, patterns, allowed_domains(c))
     new = [u for u in candidates if u not in seen]
 
     if args.json:
@@ -261,32 +289,65 @@ def cmd_check(args) -> int:
     return 0
 
 
+def fetch_new(slug: str, c: dict, key: str, extra_urls: list[str] | None = None,
+              discover: bool = True) -> int:
+    """Download new reports for one company (domain-guarded). Returns count fetched."""
+    ledger = load_ledger(slug)
+    seen = set(ledger.get("downloaded", {}))
+    domains = allowed_domains(c)
+
+    urls = list(extra_urls or [])
+    if discover:
+        patterns = DEFAULT_PATTERNS + c.get("patterns", [])
+        links = discover_links(c["urls"], key)
+        urls += select_candidates(links, patterns, domains)
+
+    urls = [u for u in dict.fromkeys(urls) if u not in seen]  # dedupe, skip already-have
+    blocked = [u for u in urls if registrable_domain(u) not in domains]
+    for u in blocked:
+        print(f"⚠ skipped (not an official IR domain {sorted(domains)}): {u}")
+    urls = [u for u in urls if u not in blocked]
+
+    if not urls:
+        print(f"[{slug}] nothing new.")
+        return 0
+
+    for url in urls:
+        print(f"[{slug}] ↓ {url}")
+        rec = download_one(url, slug, key)
+        rec["downloaded_at"] = _dt.datetime.now().isoformat()
+        ledger.setdefault("downloaded", {})[url] = rec
+        print(f"          saved {rec['file']}  ({rec['method']})")
+    save_ledger(slug, ledger)
+    print(f"[{slug}] ledger updated ({len(urls)} new) -> {ledger_path(slug).relative_to(ROOT)}")
+    return len(urls)
+
+
 def cmd_download(args) -> int:
     cfg = load_config()
     c = company_cfg(cfg, args.slug)
     key = load_api_key()
-    ledger = load_ledger(args.slug)
-    seen = set(ledger.get("downloaded", {}))
+    if not args.url and not args.all:
+        sys.exit("download needs --url <URL> (repeatable) or --all")
+    fetch_new(args.slug, c, key, extra_urls=args.url, discover=bool(args.all))
+    return 0
 
-    urls = list(args.url or [])
-    if args.all:
-        patterns = DEFAULT_PATTERNS + c.get("patterns", [])
-        links = discover_links(c["urls"], key)
-        urls += [u for u in links if is_report(u, patterns) and u not in seen]
-    urls = [u for u in dict.fromkeys(urls) if u not in seen]  # dedupe, skip already-have
 
-    if not urls:
-        print("Nothing new to download.")
-        return 0
-
-    for url in urls:
-        print(f"↓ {url}")
-        rec = download_one(url, args.slug, key)
-        rec["downloaded_at"] = _dt.datetime.now().isoformat()
-        ledger.setdefault("downloaded", {})[url] = rec
-        print(f"  saved {rec['file']}  ({rec['method']})")
-    save_ledger(args.slug, ledger)
-    print(f"\nLedger updated: {ledger_path(args.slug).relative_to(ROOT)}")
+def cmd_watch(args) -> int:
+    """One-shot unattended collect: discover + download everything new. Schedule-friendly."""
+    cfg = load_config()
+    key = load_api_key()
+    slugs = [args.slug] if args.slug else sorted(cfg.get("companies", {}))
+    if not slugs:
+        sys.exit("No companies in config to watch.")
+    total = 0
+    for slug in slugs:
+        c = company_cfg(cfg, slug)
+        try:
+            total += fetch_new(slug, c, key, discover=True)
+        except SystemExit as e:           # one bad site shouldn't abort the whole sweep
+            print(f"[{slug}] error: {e}")
+    print(f"\nWatch complete: {total} new report(s) across {len(slugs)} company(ies).")
     return 0
 
 
@@ -313,6 +374,10 @@ def main() -> int:
     pd.add_argument("--url", action="append", help="specific report URL (repeatable)")
     pd.add_argument("--all", action="store_true", help="download every new candidate")
     pd.set_defaults(func=cmd_download)
+
+    pw = sub.add_parser("watch", help="one-shot: discover + download everything new (schedule-friendly)")
+    pw.add_argument("slug", nargs="?", help="company slug; omit to sweep every company in config")
+    pw.set_defaults(func=cmd_watch)
 
     pl = sub.add_parser("list", help="show the download ledger")
     pl.add_argument("slug")
