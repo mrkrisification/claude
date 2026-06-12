@@ -343,12 +343,13 @@ FY2024,arpu,mobile,11.2,EUR,S01,true
 Honor the **entity-type depth matrix**: do not fabricate net income / capex rows for a subsidiary
 that does not disclose them — leave them out and record the gap in the summary.
 
-**`_regulators/<code>/data/market.csv` — the full-market dataset (compose / refresh this too).**
+**`_regulators/<code>/data/market.csv` — the full-market dataset (ALWAYS compose this, every run).**
 This per-company profile is a building block; the end goal is a **country market overview combining
-every operator**, and the regulator is the one source that covers the *whole* market. So when you mine
-a regulator report from the shared cache, compose its full-market figures into a `market.csv` **in the
-regulator cache** (not the company folder), keyed by operator so any company in the country — and the
-overview — can read it:
+every operator**, and the regulator is the one source that covers the *whole* market. So **whenever you
+mine a regulator report — even when profiling a single operator — extract the FULL market**, not just
+the focal company: market totals **and every operator's** subscribers/share/ARPU. Compose them into a
+`market.csv` **in the regulator cache** (not the company folder), keyed by operator, so every company
+in the country — and the overview — reads one shared, authoritative market picture:
 ```
 period,operator,metric,segment,value,unit,source_id,estimated
 FY2024,_market,mobile_lines,mobile,140.0,m,R02,false      # market total
@@ -422,6 +423,25 @@ company folder names so company ↔ market data join cleanly.
    - [S07] [Local press on A1 Croatia FY2024](URL) — Outlet, 2025-03
    ```
 
+### Phase 3.5 — Repo hygiene (propose pruning processed sources)
+
+Raw filings are large (a single 20-F or regulator annual report is 15–50 MB) and the repo is cloned
+fresh every cloud session, so committing every binary forever does not scale across many
+operators/countries. After datasets are composed, **propose** (never auto-delete) pruning the heavy raw
+captures whose data has already been extracted. Check sizes and cross-check against the datasets:
+```bash
+du -sh company-research/<slug> company-research/_regulators/<code>      # current footprint
+ls -S company-research/<slug>/raw company-research/_regulators/<code>/raw   # largest first
+```
+A raw capture is a prune candidate only when **all** hold: it is large (say > 5 MB); its `source_id`
+is already referenced in `data/*.csv` (fully processed); and its URL is in `reports/ledger.json` (so it
+re-downloads for free). List candidates to the user with size + `source_id` and let them choose. On
+approval, delete the binary but **preserve provenance**: keep the `manifest.md` row and `ledger.json`
+entry, mark the row `pruned` (with the re-fetch URL), and retain the `pdftotext` extract so every
+figure still traces to text. This keeps `raw/` an authoritative *record* without hoarding bytes that
+are already distilled into `data/`. Never propose pruning a source not yet in `data/`, or one that
+isn't re-fetchable.
+
 ### Phase 4 — Optional PDF (only if the user asks)
 
 Reuse the telecom-pulse export: write a self-contained HTML brief, convert with
@@ -433,7 +453,32 @@ Reuse the telecom-pulse export: write a self-contained HTML brief, convert with
 
 Re-running for an existing company is incremental: add **new** `raw/` captures (new `source_id`s,
 never overwrite existing ones), add/update dataset rows, regenerate `profile.json` and
-`company-summary.md`, and append (never rewrite) `sources.md`. `raw/` is immutable history.
+`company-summary.md`, and append (never rewrite) `sources.md`. `raw/` is an append-only *record*:
+never silently overwrite a capture. The only removal is the supervised prune in Phase 3.5 — and even
+then the `manifest.md` row + `ledger.json` entry (and text extract) stay, so provenance is intact.
+
+---
+
+## Downstream — country market overview (design target; built in a second step)
+
+This skill produces **one operator**. The end goal is a **country market overview combining every
+operator**, assembled in a separate step that simply **unions the aggregation-ready outputs** — so the
+job here is to keep those outputs clean, not to build the overview. Planned shape:
+
+```
+company-research/_markets/<country>/
+  market.csv            # union of every operator's data/*.csv (focal-company rows)
+                        #   + the regulator full-market rows from _regulators/<code>/data/market.csv
+  market-overview.md    # combined view: operators ranked, shares vs the regulator total, multi-year trend
+```
+
+It joins on **operator slug** (same slugs as the company folders), aligned `period` labels
+(`FYxxxx`/`Qn-xxxx`) and currency/unit. The **regulator full-market `market.csv` is the spine**
+(market totals + every operator's share); each operator's own `financials.csv`/`market.csv` supplies the
+company-reported detail. Nothing in the overview is recomputed from `raw/` — it is a pure roll-up, which
+is exactly why per-company composition must use identical names and why regulator data is mined
+whole-market every run. (Country structure also feeds the existing `baselines/<country>/` and the
+`telecom-pulse` skill.)
 
 ---
 
