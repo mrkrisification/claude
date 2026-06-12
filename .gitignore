@@ -1,3 +1,4 @@
 /.env
 
 company-research/report_watcher.config.json
+__pycache__/
