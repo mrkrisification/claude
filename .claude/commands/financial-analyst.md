@@ -75,9 +75,12 @@ configured collection engine is **Firecrawl** — a hosted scraper (real browser
 that fetches server-side, defeating Cloudflare. The API key lives in `.env` as `FIRECRAWL_API_KEY`
 (git-ignored).
 
-Call Firecrawl via its REST API with `curl`. Load the key first:
+Call Firecrawl via its REST API with `curl`. Ensure the key is loaded first — prefer the
+environment variable (set in the environment settings, survives across sessions); fall back to a
+local `.env` if present:
 ```bash
-set -a; . ./.env; set +a   # exports FIRECRAWL_API_KEY
+[ -n "$FIRECRAWL_API_KEY" ] || { [ -f ./.env ] && { set -a; . ./.env; set +a; }; }
+[ -n "$FIRECRAWL_API_KEY" ] || echo "FIRECRAWL_API_KEY not set — see company-research/README.md"
 ```
 
 **Discover** document URLs (`/v2/search`, returns results + optional scraped content):
@@ -98,7 +101,7 @@ Extract `.data.markdown` (e.g. with `jq -r '.data.markdown'`) and write it into 
 
 **Preflight.** Before relying on Firecrawl, confirm reachability once:
 ```bash
-set -a; . ./.env; set +a
+[ -n "$FIRECRAWL_API_KEY" ] || { set -a; . ./.env; set +a; }
 curl -sS -m 20 -o /dev/null -w '%{http_code}' -X POST https://api.firecrawl.dev/v2/scrape \
   -H "Authorization: Bearer $FIRECRAWL_API_KEY" -H "Content-Type: application/json" \
   -d '{"url":"https://firecrawl.dev","formats":["markdown"]}'

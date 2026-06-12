@@ -57,7 +57,10 @@ Bash `curl` return 403 / are egress-blocked). The skill uses **Firecrawl** — a
 retrieves pages with a real browser + residential IP, defeating Cloudflare.
 
 **Status / setup:**
-1. **API key** — stored in `.env` as `FIRECRAWL_API_KEY` (git-ignored, never committed). ✅ done.
+1. **API key** — set `FIRECRAWL_API_KEY` as an **environment variable in the environment settings**
+   (same dialog as network access). This persists across sessions and stays out of git. A local
+   `.env` (git-ignored) also works for the current session, but a fresh cloud session clones only
+   what's in git — so the env-var route is required for new sessions.
 2. **Egress allowlist** — ⚠️ **required, one-time, outside this container.** This environment blocks
    `api.firecrawl.dev` by default (`Host not in allowlist`). Add `api.firecrawl.dev` to the
    environment's **network egress allowlist** so the skill can reach the API. See how this
