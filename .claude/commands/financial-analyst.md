@@ -67,17 +67,50 @@ Regulators (market reports, KPIs, decisions): **RTR** (AT), **HAKOM** (HR), **RA
 **AKOS** (SI), **AEK** (MK), **CRC** (BG), **MinCom/BeIGIE** (BY). Securities/market authorities:
 **HANFA** (HR). These are `[PRIMARY]` sources.
 
-### Locating the collection engine (scraper MCP)
+### Collection engine — Firecrawl
 
 Document collection in this environment is the known failure point: `WebFetch` and Bash `curl`
 are blocked (403 / egress allowlist) for most operator, newswire, and regulator sites. The
-intended collection engine is a **hosted fetch/scraper MCP** (real browser + residential IP —
-defeats Cloudflare and ignores the local egress allowlist).
+configured collection engine is **Firecrawl** — a hosted scraper (real browser + residential IP)
+that fetches server-side, defeating Cloudflare. The API key lives in `.env` as `FIRECRAWL_API_KEY`
+(git-ignored).
 
-At the start of a run, locate it with `ToolSearch` (keywords: `scrape`, `crawl`, `firecrawl`,
-`jina`, `fetch`, `bright data`, `browserbase`). Use whichever scraper MCP is present. **If none is
-configured, do not abort** — fall back per Phase 1.4 and flag the degradation. (Setup notes:
-`company-research/README.md`.)
+Call Firecrawl via its REST API with `curl`. Load the key first:
+```bash
+set -a; . ./.env; set +a   # exports FIRECRAWL_API_KEY
+```
+
+**Discover** document URLs (`/v2/search`, returns results + optional scraped content):
+```bash
+curl -sS -m 60 -X POST https://api.firecrawl.dev/v2/search \
+  -H "Authorization: Bearer $FIRECRAWL_API_KEY" -H "Content-Type: application/json" \
+  -d '{"query":"A1 Group FY2024 segment results Croatia EBITDA","limit":5,
+       "scrapeOptions":{"formats":["markdown"]}}'
+```
+
+**Scrape** a known URL into clean markdown (`/v2/scrape`) — this is how `raw/` captures are filled:
+```bash
+curl -sS -m 120 -X POST https://api.firecrawl.dev/v2/scrape \
+  -H "Authorization: Bearer $FIRECRAWL_API_KEY" -H "Content-Type: application/json" \
+  -d '{"url":"<doc-url>","formats":["markdown"]}'   # PDF/HTML both supported
+```
+Extract `.data.markdown` (e.g. with `jq -r '.data.markdown'`) and write it into the `raw/` capture.
+
+**Preflight.** Before relying on Firecrawl, confirm reachability once:
+```bash
+set -a; . ./.env; set +a
+curl -sS -m 20 -o /dev/null -w '%{http_code}' -X POST https://api.firecrawl.dev/v2/scrape \
+  -H "Authorization: Bearer $FIRECRAWL_API_KEY" -H "Content-Type: application/json" \
+  -d '{"url":"https://firecrawl.dev","formats":["markdown"]}'
+```
+If this returns `Host not in allowlist` / a non-200, Firecrawl is unreachable from this
+environment — **`api.firecrawl.dev` must be added to the network egress allowlist** (see
+`company-research/README.md`). In that case **do not abort**: fall back per Phase 1.4 and flag the
+degradation prominently.
+
+(If a Firecrawl MCP or other scraper MCP is also present — locate it via `ToolSearch` keywords
+`firecrawl`, `scrape`, `crawl` — you may use it instead of the REST calls; the rest of the
+workflow is unchanged.)
 
 ---
 
@@ -102,8 +135,9 @@ Run the phases in order. **Do not start Phase 2 until Phase 1 collection is repo
    `"<parent> data book <year> filetype:pdf"`, `"<regulator> <country> mobile market report <year>"`,
    `site:<parent-ir-domain> <subsidiary>`. Aim for the multi-year segment tables that exist in
    parent annual reports / investor presentations, not just the latest press release.
-2. **Fetch & archive** each target with the scraper MCP. For every captured source, write
-   `raw/YYYY-MM-DD-<source-slug>.md` with this header, then the extracted text:
+2. **Fetch & archive** each target with Firecrawl `/v2/scrape` (or a scraper MCP if present). For
+   every captured source, write `raw/YYYY-MM-DD-<source-slug>.md` with this header, then the
+   extracted markdown:
 
    ```markdown
    ---
@@ -113,11 +147,11 @@ Run the phases in order. **Do not start Phase 2 until Phase 1 collection is repo
    url: <url>
    doc_date: <YYYY-MM-DD or YYYY>
    collected: <today YYYY-MM-DD>
-   fetch_method: mcp:<server> | local-file | search-snippet
+   fetch_method: firecrawl | mcp:<server> | local-file | search-snippet
    primary: true | false
    ---
 
-   <extracted text — preserve tables/figures; trim navigation/boilerplate>
+   <extracted markdown — preserve tables/figures; trim navigation/boilerplate>
    ```
 
    `primary: true` for filings, segment reports, regulator notices, bondholder reports, official
@@ -126,9 +160,10 @@ Run the phases in order. **Do not start Phase 2 until Phase 1 collection is repo
 3. **Local files.** If the user has placed source documents in the uploads area or committed them
    under `raw/`, `Read` them (the Read tool parses PDFs natively) and write a `raw/` capture with
    `fetch_method: local-file`. Prefer these — they are genuine primary documents.
-4. **Fallback** (no scraper MCP, or the URL 403s and no local file): store the `WebSearch` result
-   content as a `raw/` capture with `fetch_method: search-snippet`, `primary: false`. These are
-   lower-confidence and must be flagged as such downstream.
+4. **Fallback** (Firecrawl unreachable — e.g. `api.firecrawl.dev` not allowlisted — or a scrape
+   fails and no local file exists): store the `WebSearch` result content as a `raw/` capture with
+   `fetch_method: search-snippet`, `primary: false`. These are lower-confidence and must be
+   flagged as such downstream.
 5. **Write `raw/manifest.md`** — one table row per capture:
 
    ```markdown
@@ -136,7 +171,7 @@ Run the phases in order. **Do not start Phase 2 until Phase 1 collection is repo
 
    | source_id | title | publisher | doc_date | fetch_method | primary | file |
    |---|---|---|---|---|---|---|
-   | S01 | ... | ... | ... | mcp:firecrawl | true | 2026-06-12-a1-group-fy2024-segment.md |
+   | S01 | ... | ... | ... | firecrawl | true | 2026-06-12-a1-group-fy2024-segment.md |
    ```
 6. **Collection report (to the user, in chat).** State: # primary vs # secondary captures, and
    **which targets could not be collected** (e.g. "HAKOM FY2024 market report — 403, no scraper

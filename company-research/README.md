@@ -50,18 +50,32 @@ profile = json.load(open("company-research/a1-croatia/data/profile.json"))
 fin = list(csv.DictReader(open("company-research/a1-croatia/data/financials.csv")))
 ```
 
-## Collection engine — scraper MCP (setup)
+## Collection engine — Firecrawl (setup)
 
 Most operator, newswire, and regulator sites block this environment's fetch paths (`WebFetch` and
-Bash `curl` return 403 / are egress-blocked). The skill therefore expects a **hosted fetch/scraper
-MCP** — a server that retrieves pages with a real browser + residential IP, which defeats Cloudflare
-and bypasses the local egress allowlist.
+Bash `curl` return 403 / are egress-blocked). The skill uses **Firecrawl** — a hosted scraper that
+retrieves pages with a real browser + residential IP, defeating Cloudflare.
 
-- **Recommended:** Firecrawl MCP. **Alternatives:** Jina Reader, Bright Data, Browserbase.
-- Configure it as an MCP server (see https://code.claude.com/docs/en/claude-code-on-the-web for how
-  this environment is configured). The skill auto-locates whatever scraper MCP is present via
-  `ToolSearch`.
-- **Without a scraper MCP** the skill still runs but falls back to `WebSearch` snippet captures
-  (`fetch_method: search-snippet`), which are lower-confidence and flagged as such in
-  `company-summary.md`. You can also drop primary PDFs into a company's `raw/` folder (or the upload
-  area) and the skill will ingest them directly — the `Read` tool parses PDFs natively.
+**Status / setup:**
+1. **API key** — stored in `.env` as `FIRECRAWL_API_KEY` (git-ignored, never committed). ✅ done.
+2. **Egress allowlist** — ⚠️ **required, one-time, outside this container.** This environment blocks
+   `api.firecrawl.dev` by default (`Host not in allowlist`). Add `api.firecrawl.dev` to the
+   environment's **network egress allowlist** so the skill can reach the API. See how this
+   environment is configured: https://code.claude.com/docs/en/claude-code-on-the-web
+3. **Verify** once allowlisted:
+   ```bash
+   set -a; . ./.env; set +a
+   curl -sS -m 20 -X POST https://api.firecrawl.dev/v2/scrape \
+     -H "Authorization: Bearer $FIRECRAWL_API_KEY" -H "Content-Type: application/json" \
+     -d '{"url":"https://firecrawl.dev","formats":["markdown"]}'
+   ```
+   A JSON body with `data.markdown` means it's working; `Host not in allowlist` means step 2 isn't
+   done yet.
+
+The skill calls Firecrawl's REST API directly (`/v2/search` for discovery, `/v2/scrape` to fill
+`raw/`) — no CLI install needed. A Firecrawl MCP server would also work if you prefer that.
+
+**Fallbacks** (used automatically when Firecrawl is unreachable): the skill drops to `WebSearch`
+snippet captures (`fetch_method: search-snippet`), flagged lower-confidence in `company-summary.md`.
+You can also drop primary PDFs into a company's `raw/` folder (or the upload area) and the skill
+ingests them directly — the `Read` tool parses PDFs natively.
