@@ -1,6 +1,13 @@
-<!-- source: https://s22.q4cdn.com/604986553/files/doc_financials/2025/ar/AS-FILED-AMERICA-MOVIL-SAB-DE-CV-20F-2025.pdf
-     captured: 2026-06-12T09:49:33.533820
-     via: firecrawl (raw bytes unavailable) -->
+---
+source_id: S01
+title: América Móvil, S.A.B. de C.V. — Form 20-F (FY ended Dec 31, 2025)
+publisher: América Móvil / U.S. SEC
+url: https://s22.q4cdn.com/604986553/files/doc_financials/2025/ar/AS-FILED-AMERICA-MOVIL-SAB-DE-CV-20F-2025.pdf
+doc_date: 2026-04-28
+collected: 2026-06-12
+fetch_method: firecrawl
+primary: true
+---
 
 As filed with the Securities and Exchange Commission on April 28, 2026
 UNITED STATES SECURITIES AND EXCHANGE COMMISSION

@@ -1,0 +1,11 @@
+{
+  "company": "america-movil",
+  "downloaded": {
+    "https://s22.q4cdn.com/604986553/files/doc_financials/2025/ar/AS-FILED-AMERICA-MOVIL-SAB-DE-CV-20F-2025.pdf": {
+      "url": "https://s22.q4cdn.com/604986553/files/doc_financials/2025/ar/AS-FILED-AMERICA-MOVIL-SAB-DE-CV-20F-2025.pdf",
+      "file": "america-movil/raw/2026-06-12-AS-FILED-AMERICA-MOVIL-SAB-DE-CV-20F-2025.md",
+      "method": "firecrawl-parsed",
+      "downloaded_at": "2026-06-12T09:49:33"
+    }
+  }
+}
