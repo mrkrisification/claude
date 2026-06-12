@@ -81,24 +81,32 @@ def load_api_key() -> str:
     sys.exit("FIRECRAWL_API_KEY not set (env var or ./.env) — see company-research/README.md")
 
 
-def load_config() -> dict:
+def load_config(required: bool = True) -> dict:
     cfg = ROOT / "report_watcher.config.json"
     if not cfg.is_file():
+        if not required:                 # ad-hoc --page mode needs no config file
+            return {"companies": {}}
         sys.exit(
-            f"No config at {cfg}. Copy report_watcher.config.example.json and edit it."
+            f"No config at {cfg}. Copy report_watcher.config.example.json and edit it, "
+            f"or pass --page <ir-reports-url> for ad-hoc use."
         )
     return json.loads(cfg.read_text())
 
 
-def company_cfg(cfg: dict, slug: str) -> dict:
+def company_cfg(cfg: dict, slug: str, pages: list[str] | None = None) -> dict:
+    """Resolve a company. With `pages` (ad-hoc IR reports URLs) no config entry is
+    needed — the agent passes the page(s) directly; config values, if any, are merged."""
     companies = cfg.get("companies", {})
-    if slug not in companies:
-        sys.exit(f"Unknown company '{slug}'. Known: {', '.join(sorted(companies)) or '(none)'}")
-    c = dict(companies[slug])
-    urls = c.get("urls") or ([c["url"]] if c.get("url") else [])
-    if not urls:
-        sys.exit(f"Company '{slug}' has no 'url'/'urls' in config.")
-    c["urls"] = urls
+    c = dict(companies.get(slug, {}))
+    if pages:
+        c["urls"] = list(pages)          # ad-hoc overrides config urls
+    else:
+        c["urls"] = c.get("urls") or ([c["url"]] if c.get("url") else [])
+    if not c["urls"]:
+        if slug not in companies:
+            sys.exit(f"Unknown company '{slug}'. Pass --page <ir-reports-url>, or add it to config. "
+                     f"Known: {', '.join(sorted(companies)) or '(none)'}")
+        sys.exit(f"Company '{slug}' has no 'url'/'urls' in config — pass --page <ir-reports-url>.")
     return c
 
 
@@ -262,8 +270,8 @@ def download_one(url: str, slug: str, key: str) -> dict:
 # commands
 # ---------------------------------------------------------------------------
 def cmd_check(args) -> int:
-    cfg = load_config()
-    c = company_cfg(cfg, args.slug)
+    cfg = load_config(required=not args.page)
+    c = company_cfg(cfg, args.slug, args.page)
     key = load_api_key()
     patterns = DEFAULT_PATTERNS + c.get("patterns", [])
     ledger = load_ledger(args.slug)
@@ -324,8 +332,8 @@ def fetch_new(slug: str, c: dict, key: str, extra_urls: list[str] | None = None,
 
 
 def cmd_download(args) -> int:
-    cfg = load_config()
-    c = company_cfg(cfg, args.slug)
+    cfg = load_config(required=not args.page)
+    c = company_cfg(cfg, args.slug, args.page)
     key = load_api_key()
     if not args.url and not args.all:
         sys.exit("download needs --url <URL> (repeatable) or --all")
@@ -334,15 +342,17 @@ def cmd_download(args) -> int:
 
 
 def cmd_watch(args) -> int:
-    """One-shot unattended collect: discover + download everything new. Schedule-friendly."""
-    cfg = load_config()
+    """One-shot collect: discover + download everything new. Used by the skill and schedulable."""
+    cfg = load_config(required=not args.page)
     key = load_api_key()
+    if args.page and not args.slug:
+        sys.exit("watch --page requires a <slug> (the company folder to collect into).")
     slugs = [args.slug] if args.slug else sorted(cfg.get("companies", {}))
     if not slugs:
-        sys.exit("No companies in config to watch.")
+        sys.exit("No companies to watch — pass a <slug> with --page, or populate the config.")
     total = 0
     for slug in slugs:
-        c = company_cfg(cfg, slug)
+        c = company_cfg(cfg, slug, args.page)
         try:
             total += fetch_new(slug, c, key, discover=True)
         except SystemExit as e:           # one bad site shouldn't abort the whole sweep
@@ -364,19 +374,24 @@ def main() -> int:
     p = argparse.ArgumentParser(description="Detect & download newly published company reports.")
     sub = p.add_subparsers(dest="cmd", required=True)
 
+    page_help = "ad-hoc IR reports page URL (repeatable) — no config entry needed; download domain is derived from it"
+
     pc = sub.add_parser("check", help="discover new report candidates (read-only)")
     pc.add_argument("slug")
+    pc.add_argument("--page", action="append", help=page_help)
     pc.add_argument("--json", action="store_true")
     pc.set_defaults(func=cmd_check)
 
     pd = sub.add_parser("download", help="download chosen / all-new reports")
     pd.add_argument("slug")
+    pd.add_argument("--page", action="append", help=page_help)
     pd.add_argument("--url", action="append", help="specific report URL (repeatable)")
     pd.add_argument("--all", action="store_true", help="download every new candidate")
     pd.set_defaults(func=cmd_download)
 
-    pw = sub.add_parser("watch", help="one-shot: discover + download everything new (schedule-friendly)")
+    pw = sub.add_parser("watch", help="one-shot: discover + download everything new")
     pw.add_argument("slug", nargs="?", help="company slug; omit to sweep every company in config")
+    pw.add_argument("--page", action="append", help=page_help)
     pw.set_defaults(func=cmd_watch)
 
     pl = sub.add_parser("list", help="show the download ledger")

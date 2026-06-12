@@ -115,6 +115,26 @@ degradation prominently.
 `firecrawl`, `scrape`, `crawl` — you may use it instead of the REST calls; the rest of the
 workflow is unchanged.)
 
+### Report watcher — automatic new-report collection
+
+`company-research/report_watcher.py` is the **first collection action** for any company with a
+reachable investor-relations reports page. It discovers report documents on an official IR page
+(via Firecrawl), filters to the official domain only, skips anything already collected (per-company
+`reports/ledger.json`), and downloads every **new** report into `raw/` — so re-running the skill
+later only picks up genuinely new filings. Drive it ad-hoc with `--page` (no config edit needed):
+
+```bash
+# discover + download every NEW official report into company-research/<slug>/raw/
+python3 company-research/report_watcher.py watch <slug> \
+  --page "<operator-ir-results-url>" --page "<parent-ir-results-url>"
+```
+
+Use `check` instead of `watch` first if you want to eyeball candidates before fetching. The watcher
+only downloads from the IR page's own registrable domain (official sources), and is idempotent
+across sessions. After it runs, treat each file it dropped in `raw/` as a `firecrawl` capture: read
+it, assign a `source_id`, and add a `manifest.md` row (Phase 1.2 / 1.5). For sites that block direct
+bytes the watcher saves the parsed report as `.md` — which is exactly what Phase 2 consumes.
+
 ---
 
 ## Workflow
@@ -133,6 +153,17 @@ Run the phases in order. **Do not start Phase 2 until Phase 1 collection is repo
 
 ### Phase 1 — COLLECT into `raw/` (do NOT compose datasets yet)
 
+0. **Auto-collect official reports first (report watcher).** Identify the operator's — and its
+   parent's — official IR **results/reports page** (Phase 0.4; confirm with one `WebSearch` /
+   Firecrawl search if unknown). Then run the watcher to pull every new official report into `raw/`:
+   ```bash
+   python3 company-research/report_watcher.py watch <company-slug> \
+     --page "<operator-ir-results-url>" [--page "<parent-ir-results-url>"]
+   ```
+   It is domain-guarded (official IR only) and idempotent (skips anything in `reports/ledger.json`),
+   so it is safe to run on every invocation. For each file it writes to `raw/`, add a `manifest.md`
+   row with a fresh `source_id` and `fetch_method: firecrawl`. If no IR reports page is reachable
+   (e.g. an unlisted subsidiary with no standalone IR site), skip this and rely on the steps below.
 1. **Discover** exact document URLs with `WebSearch`. Force depth with targeted queries, not one
    shallow pass — e.g. `"<parent> segment results <subsidiary> EBITDA FY<year>"`,
    `"<parent> data book <year> filetype:pdf"`, `"<regulator> <country> mobile market report <year>"`,
