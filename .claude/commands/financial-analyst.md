@@ -9,6 +9,14 @@ Build a machine-readable financial/market profile for one telecom operator. **Co
 source documents first into a `raw/` archive; compose datasets only from what was collected.**
 Every figure must trace to a collected source — never invent a number that is not in `raw/`.
 
+**Why this exists — the building block for a country market overview.** The single-company profile is
+the unit of work, but the goal is a **country-level market overview that combines every operator**.
+The national **regulator is the full-market backbone** (it reports totals and every operator's share),
+which is why its data is collected once into a shared `_regulators/<code>/` cache and composed into a
+full-market dataset that all operators — and the overview — reuse. So optimise for a **solid,
+aggregation-ready repository**: identical schema across companies, regulator data kept whole-market,
+every number sourced.
+
 The hard case this skill exists for: **unlisted subsidiaries**. They have no standalone filing,
 so their numbers come from a patchwork — the parent's segment reporting, the local regulator, and
 (last resort) press. Conflicting numbers are expected; the design keeps them, with provenance,
@@ -29,9 +37,15 @@ company-research/<company-slug>/
     profile.json                    # identity, ownership, entity_type, parent, regulators,
                                     #   competitors, market position (nested)
     financials.csv                  # tidy/long P&L time-series (see schema below)
-    market.csv                      # subscribers / share / ARPU time-series (see schema below)
+    market.csv                      # this operator's subscribers / share / ARPU time-series
   company-summary.md                # regenerated narrative + "Data confidence & gaps" section
   sources.md                        # append-only dated source log, [PRIMARY] markers, source_id keys
+
+company-research/_regulators/<code>/   # SHARED regulator cache — full-market backbone, reused by
+  raw/                                 #   every operator in that country (and the market overview)
+    manifest.md
+  data/market.csv                      # whole-market totals + EVERY operator's subs/share/ARPU
+  reports/ledger.json
 ```
 
 `<company-slug>`: lowercase, spaces→hyphens, drop punctuation (e.g. `A1 Croatia` → `a1-croatia`).
@@ -260,8 +274,15 @@ Run the phases in order. **Do not start Phase 2 until Phase 1 collection is repo
    press releases. Assign `source_id` sequentially (`S01`, `S02`, …) — it is the join key used
    everywhere downstream.
 3. **Local files.** If the user has placed source documents in the uploads area or committed them
-   under `raw/`, `Read` them (the Read tool parses PDFs natively) and write a `raw/` capture with
-   `fetch_method: local-file`. Prefer these — they are genuine primary documents.
+   under `raw/`, read them and write a `raw/` capture with `fetch_method: local-file`. Prefer these —
+   they are genuine primary documents. **PDF text extraction needs `poppler-utils` in this container**
+   (the `Read` tool errors `pdftoppm is not installed` without it). Install once and extract text:
+   ```bash
+   command -v pdftotext >/dev/null || apt-get install -y -q poppler-utils
+   pdftotext -layout <file.pdf> <file.txt>     # then grep the statement lines you need
+   ```
+   For multi-hundred-page filings (20-F, annual report) extract once with `pdftotext -layout` and grep
+   for the statement headers (e.g. `Operating revenues`, `EBITDA`) rather than paging the whole PDF.
 4. **Fallback** (Firecrawl unreachable — e.g. `api.firecrawl.dev` not allowlisted — or a scrape
    fails and no local file exists): store the `WebSearch` result content as a `raw/` capture with
    `fetch_method: search-snippet`, `primary: false`. These are lower-confidence and must be
@@ -322,17 +343,76 @@ FY2024,arpu,mobile,11.2,EUR,S01,true
 Honor the **entity-type depth matrix**: do not fabricate net income / capex rows for a subsidiary
 that does not disclose them — leave them out and record the gap in the summary.
 
+**`_regulators/<code>/data/market.csv` — the full-market dataset (compose / refresh this too).**
+This per-company profile is a building block; the end goal is a **country market overview combining
+every operator**, and the regulator is the one source that covers the *whole* market. So when you mine
+a regulator report from the shared cache, compose its full-market figures into a `market.csv` **in the
+regulator cache** (not the company folder), keyed by operator so any company in the country — and the
+overview — can read it:
+```
+period,operator,metric,segment,value,unit,source_id,estimated
+FY2024,_market,mobile_lines,mobile,140.0,m,R02,false      # market total
+FY2024,telcel,mobile_subscribers,mobile,87.0,m,R02,false
+FY2024,telcel,mobile_market_share,mobile,62.0,pct,R02,false
+FY2024,at&t-mexico,mobile_market_share,mobile,15.0,pct,R02,false
+```
+Use `operator=_market` for whole-market totals. `source_id`s here are the `R…` ids from the regulator
+cache manifest. Refresh idempotently — a regulator capture is shared, so don't duplicate it per company.
+
+**Aggregation-ready discipline (so a country roll-up just unions the CSVs).** Across *every* company
+use **identical** metric names (`revenue`, `ebitda`, `ebitda_margin`, `mobile_subscribers`,
+`mobile_market_share`, `arpu`…), period labels (`FYxxxx`, `Qn-xxxx`), and currency/unit conventions.
+Put the operator's own reported share in the company `market.csv`; rely on the regulator full-market
+`market.csv` for competitors' shares and market totals. Keep operator slugs consistent with the
+company folder names so company ↔ market data join cleanly.
+
 ### Phase 3 — Summarize & log
 
-1. **`company-summary.md`** — regenerated narrative. End with a required section:
+1. **`company-summary.md`** — regenerated. It is both the human-readable face of the repository **and
+   a building block for the country market overview**, so lead with structured, roll-up-friendly
+   tables, not prose. Write these sections in order:
 
+   **a. Snapshot** — one line: `entity_type · country · parent (ownership%) · regulator(s) · reporting
+   currency · latest period`.
+
+   **b. Financial highlights — multi-year.** A trend table, metrics as rows, **every fiscal year
+   collected** as columns (e.g. FY2020–FY2025) plus the latest quarter; cite `source_id`(s) per row.
+   Omit metrics the entity does not disclose (don't pad).
+   ```markdown
+   | metric (Ps. bn) | FY2022 | FY2023 | FY2024 | FY2025 | 1Q26 | source |
+   |---|---|---|---|---|---|---|
+   | Operating revenue | … | 816.0 | 869.2 | 943.6 | … | S04,S01,S05 |
+   | Operating income  | … | 167.8 | 180.1 | 191.4 | … | S01 |
+   | Net profit        | … | 80.8  | 27.6  | 88.1  | … | S01 |
+   ```
+
+   **c. Market & operations — company vs full market.** Put the company figure **next to the
+   regulator's full-market figure** (the regulator covers every operator, so this is where the profile
+   connects to the market overview): subscribers / RGUs / ARPU / market share, with the market total
+   and competitors' shares from `_regulators/<code>/data/market.csv`.
+   ```markdown
+   | metric | company (src) | regulator full-market (src) |
+   |---|---|---|
+   | Mobile subscribers | 331m group (S01) | MX total 140m lines (R02) |
+   | Mobile share, MX | ~62% Telcel (S05) | Telcel 62% · AT&T 15% · Movistar … (R02) |
+   ```
+
+   **d. Market position & competitive context** — short narrative grounded in the regulator totals/shares.
+
+   **e. Regulatory context** — regulator, recent decisions / spectrum / SMP designations, the basis of
+   the market shares cited.
+
+   **f. Data confidence & gaps** (required):
    ```markdown
    ## Data confidence & gaps
-   - **Conflicts:** FY2024 EBITDA reported as €189m (S01, parent) vs €188m (S07, press) — preferred S01.
-   - **Missing:** standalone net income, capex (not disclosed at subsidiary level).
-   - **Confidence:** 4 primary captures, 2 search-snippet (lower confidence). No scraper MCP — flagged.
+   - **Company vs regulator:** FY2024 MX mobile share 62% (S05, company) vs 61% (R02, IFT) — preferred R02 (full market).
+   - **Conflicts:** FY2024 EBITDA €189m (S01) vs €188m (S07, press) — preferred S01.
+   - **Missing:** standalone capex by country (not disclosed); regulator quarterly series stale (latest FY2022).
+   - **Confidence:** N primary captures, M search-snippet (lower confidence); note any extraction/tooling gaps.
    ```
-2. **`sources.md`** — append a dated block, deduplicated, keyed by `source_id`, `[PRIMARY]` marked:
+
+2. **`sources.md`** — append a dated block, deduplicated, keyed by `source_id`, `[PRIMARY]` marked.
+   Include the regulator `R…` ids from the shared cache (note the `_regulators/<code>/` location):
 
    ```markdown
    ## 2026-06-12 — A1 Croatia

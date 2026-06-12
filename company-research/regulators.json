@@ -9,7 +9,7 @@
         "https://www.ift.org.mx/estadisticas/analisis-especiales-estadisticos-0"
       ],
       "domains": ["ift.org.mx"],
-      "patterns": ["cindicadores", "informe.*estadistic", "\\bite\\d", "indicadores"]
+      "patterns": ["cindicadores", "informe.*estadistic", "\\bite\\d"]
     },
     "hakom": {
       "name": "Hrvatska regulatorna agencija za mrežne djelatnosti (HAKOM)",
