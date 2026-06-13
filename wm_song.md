@@ -49,18 +49,18 @@ jangly bright guitars, hopeful yet wistful, Three Lions style football anthem, s
 ```
 [Intro]
 (old radio crackle, crowd swelling)
-„Tor! Tor! Tor! — i wer' narrisch!"
+„Toooor! Toooor! Toooor! — i wer' narrisch!"
 
 [Verse 1]
 Córdoba, achtundsiebzig — die Nacht, die du nie vergisst,
 als Krankl uns zum Wunder schoss und Finger fast zerriss.
 Ich saß noch auf dem Töpfchen — ich kann mich nicht erinnern,
-drum sag ich: „Behalt dein Córdoba — ich will mein eigenes gewinnen."
+ich sag: „Behalt dein Córdoba — ich will mein eigenes gewinnen."
 
 [Verse 2]
-Neunzig, ich bin vierzehn — wir sitzen vorm Fernseher, du und ich,
-du lachst noch: „Der Glatzerte, der macht's jetzt noch!" — halb im Scherz.
-Dann kommt Schillaci, köpft — und du verstummst mit einem Mal,
+Neunzig, ich bin vierzehn — vor dem Ferhnseher, du und ich,
+„Der Glotzerte, der mocht's jetzt!" — sagst du halb im Scherz.
+Toto Skillatschi, köpft — und du verstummst mit einem Mal,
 er trifft uns mitten ins rot-weiß-rote, ins rot-weiß-rote Herz.
 
 [Pre-Chorus]
@@ -74,16 +74,16 @@ wir holen uns das Wunder, das Wunder von New York!
 
 [Verse 3]
 Zweitausendacht, im Happel — wir steh'n im Regen, du und ich,
-Polen führt, du sagst: „Das wird heut nichts" — und gehst vor Schluss davon.
-Dann, dreiundneunzigste Minute — ein Elfer, und Vastić, er trifft,
-ich dreh mich um vor Glück — und ruf dich an am Telefon.
-Du warst schon nicht mehr im Stadion — doch ich hielt das Handy in die Nacht,
-und durch das Tosen, ganz von fern, hast du dein Wunder mitgemacht.
+Polen führt, du sagst: „Das wird nix mehr" — und machst dich auf den Weg.
+Dann, dreiundneunzigste Minute — ein Elfer, und Vastić macht ihn rein,
+ich spring auf  vor Glück — und ruf dich an am Telefon.
+Du warst am Weg zum Auto — doch ich hielt das Handy in die Nacht,
+und durch das Tosen, ganz von fern, hast du jubelnd mitgemacht.
 
 [Verse 4]
-Einundzwanzig bist du gegangen — für immer, nicht nur aus dem Stadion,
-und diesmal, Papa, diesmal hilft kein einziges Telefon.
-Die große Reise, vierundzwanzig — die hast du nicht mehr gesehn,
+Einundzwanzig bist du gegangen — für immer, nicht aus dem Stadion,
+und diesmal, Papa, diesmal reicht kein Telefon.
+Die Euro vierundzwanzig — die hast du nicht mehr gesehn,
 sie schlagen Holland, drei zu zwei — und ich kann's dir nicht mehr erzähln.
 
 [Pre-Chorus]
@@ -112,7 +112,7 @@ wir holen uns das Wunder, das Wunder von New York!
 [Outro - Verse]
 Und das wird endlich meins — mein Wunder, meine Geschicht,
 die erzähl ich dreißig Jahre lang — ob meine Kinder wollen oder nicht.
-Und irgendwann, da stöhnt mein Kind: „Papa, nicht schon wieder New York!" —
+Und irgendwann, da stöhnen sie: „Papa, nicht schon wieder New York!" —
 genau wie ich's zu dir gesagt hab. Und ich lach. Und ich denk an dich.
 
 [Outro - Group Vocals]
