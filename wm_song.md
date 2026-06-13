@@ -232,8 +232,6 @@ Es ist so weit, es ist so weit,
 nach all den Jahren — jetzt ist unsre Zeit!
 So viele Sommer ohne uns - das ist fix net normal.
 Heuer ist es anders - wir holn uns den Pokal!
-Heuer ist es anders - wir holn uns den Pokal!
-
 
 [Verse 3]
 Zweitausendacht, im eigenen Land, im Happel Stadion,
@@ -242,15 +240,13 @@ Doch es gibt kein Wunder - nach der Gruppe ist denn Schluss
 So kennen wir's seit immer -  auf Hoffnung folgt Verdruss.
 
 [Verse 4]
-Wir warten auf den nächsten Sommer, immer Vierter, nie ganz oben,
-Quali-Krämpfe, Herzschmerz-Spiele — wir sind's gewohnt.
-Doch vierundzwanzig, gegen Holland — drei zu zwei, Sabitzer trifft,
-Gruppensieg, Frankreich hinter uns — endlich, denken wir, jetzt geht's!
-Dann kommt die Türkei im Achtelfinal — und es ist wieder aus,
-typisch österreichisch, sagen wir — und lieben's trotzdem, genau so.
+Die Euro vierundzwanzig - wir sind wieder dabei 
+Dramatik gegen Holland - Sabitzer drei zu zwei.
+Der Gruppensieg - wir feiern - doch Österreich ahnt es schon
+Die Runde drauf im Regen ist wieder Endstation.
 
 [Pre-Chorus]
-Drum heuer — heuer ist es anders, das spüren wir...
+Doch heuer — heuer ist es anders, das spüren wir...
 
 [Chorus]
 Es ist so weit, es ist so weit,
@@ -260,11 +256,11 @@ Heuer ist es anders - wir holn uns den Pokal!
 
 [Bridge - Breakdown]
 (quiet, one voice and claps, whole stadium)
-Und wenn die Hymne spielt, und ganz Österreich steht,
-dann wissen wir — diesmal nicht wie immer, diesmal geht's bis zum Schluss.
+Und wenn die Hymne spielt, und ganz Österreich Fahne weht,
+dann wissen wir, wie immer, worum es heute geht.
 (building energy)
-Wir geh'n nicht nach Haus — diesmal bleiben wir dort,
-und den Pokal, den holen wir — für uns alle, für jeden Sommer, den wir hofften.
+diesmal ist nicht wie immer - diesmal ist's ein anderes Spiel
+diesmal ist nicht wie immer - der Pokal der ist das Ziel
 
 [Final Chorus - Group Vocals]
 Es ist so weit, es ist so weit,
