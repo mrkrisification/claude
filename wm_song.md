@@ -220,7 +220,7 @@ wir warten und wir hoffen — stehn fast immer nur im Regen.
 [Verse 2]
 Italia NeunzehnNeunzig, ganz Österreich fiebert mit,
 Diesmal ist es anders, doch wir kommen nie in Tritt.
-Und dann gegen Italien - wir kennen keinen Schmerz.
+Und dann gegen Italien - wir ahnen schon den Schmerz.
 Vialli flankt, Skillatschi trifft ins rot-weiß-rote Herz.
 
 [Pre-Chorus]
