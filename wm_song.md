@@ -23,6 +23,8 @@ EM 2008 (gemeinsam im Happel, Vastićs Elfer — und Papa schon gegangen) →
 - **EM 2024:** Sabitzer, 3:2 gegen die Niederlande, Gruppensieg vor Frankreich — die große
   Reise, die er **nicht mehr erlebt** hat.
 - **WM 2026:** Finale im Raum New York (MetLife) → das Wunder, „gemeinsam" mit ihm geholt.
+- **Der Vollkreis:** New York wird zum eigenen „Córdoba" — die Geschichte, mit der der Sohn
+  jetzt selbst seine Kinder dreißig Jahre lang „quält", genau so wie der Vater einst ihn.
 
 ---
 
@@ -100,9 +102,15 @@ nach all de Jahr — jetzt is unsre Zeit!
 So vü Sommer ohne uns — jetzt san mir wieder dort,
 mir holn uns des Wunder, des Wunder von New York!
 
+[Outro - Verse]
+Und des wird endlich meins — mei Wunder, mei Geschicht,
+de verzöhl i dreißg Jahr lang — ob meine Kinder wolln oder ned.
+Und irgendwann sogn s': „Papa, ned schon wieder New York!" —
+genau so, wia i's zu dir g'sogt hob. Und i lach, und denk an di.
+
 [Outro - Group Vocals]
 (Hey-oh, oh-oh-oh-oh)
-Des is für di, Papa...
+Des is mei Wunder, Papa — und des is für di.
 (Österreich!)
 ```
 
@@ -119,6 +127,9 @@ Des is für di, Papa...
 - **Anrede im „du":** der ganze Song ist ein Gespräch mit dem Vater → maximale Nähe.
 - **Hook bleibt dein Motiv:** „jetzt is unsre Zeit / das Wunder von New York" — trotzig,
   erwartungsfroh, grölbar; der Payoff der Bridge „des holn ma … für di" macht's zur Widmung.
+- **Der Vollkreis (Outro):** V1 „Behalt dein Córdoba, Papa — i wü mei eigenes" wird ganz am
+  Ende eingelöst: „Papa, ned schon wieder New York!" sagen jetzt die eigenen Kinder — genau
+  die Zeile, die der Sohn einst zum Vater gesagt hat. Schmerz wird zu weitergereichter Freude.
 
 ## 🔧 Tuning-Tipps für Suno
 
@@ -134,8 +145,9 @@ Des is für di, Papa...
 
 ## ✏️ Offene Varianten
 
-- **Schärfere Córdoba-Kante:** statt „Behalt dein Córdoba, Papa" die härtere Linie
-  „Scheiß auf Córdoba, Papa — i wü mei eigenes Wunder". Mehr Wucht, weniger zart.
+- **Córdoba-Zeile = entschieden:** die zarte Fassung „Behalt dein Córdoba, Papa — i wü mei
+  eigenes" bleibt, weil sie den Outro-Vollkreis aufbaut. (Die harte „Scheiß auf Córdoba"
+  würde den Vater-Faden brechen.)
 - **Frankreich '98 / 28 Jahre** wurde zugunsten der Vater-Erzählung getrimmt; bei Bedarf
   als kurze Zeile in V4 zurückholen („achtaneunzg gegen Italien aus — dann achtazwanzg Jahr").
 - **V4-Schlusszeile** alternativ direkter: „du wärst so stolz gwesn, Papa".
