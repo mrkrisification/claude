@@ -212,20 +212,20 @@ to euphoric, rowdy yet anthemic
 „Toooor! Toooor! Toooor! — i wer' narrisch!"
 
 [Verse 1]
-Córdoba, achtundsiebzig — was Österreich nie vergisst,
+Córdoba, achtundsiebzig — was Österreich wohl nie vergisst,
 als Krankl uns zum Wunder schoss, und's Finger fast zerriss.
 Seit damals tragen wir das mit — Legende, Fluch und Segen,
 wir warten und wir hoffen — stehn fast immer nur im Regen.
 
 [Verse 2]
-Italia NeunzehnNeunzig, ganz Österreich fiebert mit,
+WM NeunzehnNeunzig - ganz Österreich fiebert wieder mit,
 Diesmal ist es anders, doch wir kommen nie in Tritt.
 Und dann gegen Italien - wir ahnen schon den Schmerz.
-Vialli flankt, Skillatschi trifft ins rot-weiß-rote Herz.
+Vialli flankt, Skillatschi trifft - ins rot-weiß-rote Herz.
 
 [Pre-Chorus]
 Und wir warten — Jahr für Jahr
-Jahr für Jahr
+
 
 [Chorus]
 Es ist so weit, es ist so weit,
@@ -234,14 +234,17 @@ So viele Sommer ohne uns - das ist fix net normal.
 Heuer ist es anders - wir holn uns den Pokal!
 
 [Verse 3]
-Zweitausendacht, im eigenen Land, im Happel Stadion,
+Zweitausendacht, im eigenen Land - im Happel Stadion,
 Polen führt,  Vastic trifft - Hoffnung für die Nation
-Doch es gibt kein Wunder - nach der Gruppe ist denn Schluss
+Am Ende gibt's kein Wunder - nach der Gruppe ist schon Schluss
 So kennen wir's seit immer -  auf Hoffnung folgt Verdruss.
+
+[drop]
+(building energy)
 
 [Verse 4]
 Die Euro vierundzwanzig - wir sind wieder dabei 
-Dramatik gegen Holland - Sabitzer drei zu zwei.
+Dramatik gegen Holland - Sabitzer - drei zu zwei.
 Der Gruppensieg - wir feiern - doch Österreich ahnt es schon
 Die Runde drauf im Regen ist wieder Endstation.
 
@@ -256,7 +259,7 @@ Heuer ist es anders - wir holn uns den Pokal!
 
 [Bridge - Breakdown]
 (quiet, one voice and claps, whole stadium)
-Und wenn die Hymne spielt, und ganz Österreich Fahne weht,
+Und wenn die Hymne spielt,  und auch die Fahne weht,
 dann wissen wir, wie immer, worum es heute geht.
 (building energy)
 diesmal ist nicht wie immer - diesmal ist's ein anderes Spiel
