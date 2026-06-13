@@ -193,6 +193,17 @@ wieder das bittere Aus gegen die Türkei → WM 2026: jetzt ist unsre Zeit.
 
 ---
 
+## 🎛️ Style-Feld (Version 2)
+
+```
+Austropop terrace anthem, Austrian/Viennese dialect, raw stadium gang-vocal chant,
+massive crowd singalong, stomping drums and hand-claps, acoustic guitars with
+distorted electric stabs, chant-like call-and-response energy, bittersweet build
+to euphoric, rowdy yet anthemic
+```
+
+---
+
 ## 📝 Lyrics-Feld (Version 2)
 
 ```
