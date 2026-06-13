@@ -209,7 +209,7 @@ to euphoric, rowdy yet anthemic
 ```
 [Intro]
 (old radio crackle, crowd swelling)
-„Toooor! Toooor! Toooor! — i wer' narrisch!"
+„Toooor! Toooor! Toooor! — i werd' narrisch!"
 
 [Verse 1]
 Córdoba, achtundsiebzig — was Österreich wohl nie vergisst,
