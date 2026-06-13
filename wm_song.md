@@ -212,33 +212,34 @@ to euphoric, rowdy yet anthemic
 „Toooor! Toooor! Toooor! — i wer' narrisch!"
 
 [Verse 1]
-Córdoba, achtundsiebzig — die Nacht, die jeder kennt,
-als Krankl uns zum Wunder schoss, auch wer's nur vom Erzählen kennt.
+Córdoba, achtundsiebzig — was Österreich nie vergisst,
+als Krankl uns zum Wunder schoss, und's Finger fast zerriss.
 Seit damals tragen wir das mit — Legende, Fluch und Segen,
-wir warten und wir hoffen — seit fast fünfzig Jahren.
+wir warten und wir hoffen — stehn fast immer nur im Regen.
 
 [Verse 2]
-Neunzig, Italia, ganz Österreich vor dem Fernseher, gebannt,
-„Der Toto macht uns fertig" — und er köpft uns aus dem Turnier.
-Raus in der Vorrunde, wieder amal — ins rot-weiß-rote Herz,
-und a jeder kennt den Schmerz, auch wer net amal dort war.
+Italia NeunzehnNeunzig, ganz Österreich fiebert mit,
+Diesmal ist es anders, doch wir kommen nie in Tritt.
+Und dann gegen Italien - wir kennen keinen Schmerz.
+Vialli flankt, Skillatschi trifft ins rot-weiß-rote Herz.
 
 [Pre-Chorus]
-Und wir warten — Jahr für Jahr, Generation für Generation...
+Und wir warten — Jahr für Jahr
+Jahr für Jahr
 
 [Chorus]
 Es ist so weit, es ist so weit,
 nach all den Jahren — jetzt ist unsre Zeit!
-So viel Schmerz, so viel Hoffen — jetzt holen wir den Pokal,
-und des is — fix net normal!
+So viele Sommer ohne uns - das ist fix net normal.
+Heuer ist es anders - wir holn uns den Pokal!
+Heuer ist es anders - wir holn uns den Pokal!
+
 
 [Verse 3]
-Zweitausendacht, im eigenen Land, im Happel-Stadion, ganz Wien hält den Atem an,
-Polen führt, schon glauben wir's nicht mehr — die Köpfe geh'n schon runter.
-Dreiundneunzigste Minute — ein Elfer, und Vastić macht ihn rein,
-ganz Österreich springt auf — für einen Moment ist alles möglich.
-Dann verlier'n wir's doch noch — typisch, sagen wir, und lachen,
-„wenigstens war's wieder amal knapp" — so kennen wir's seit Jahren.
+Zweitausendacht, im eigenen Land, im Happel Stadion,
+Polen führt,  Vastic trifft - Hoffnung für die Nation
+Doch es gibt kein Wunder - nach der Gruppe ist denn Schluss
+So kennen wir's seit immer -  auf Hoffnung folgt Verdruss.
 
 [Verse 4]
 Wir warten auf den nächsten Sommer, immer Vierter, nie ganz oben,
@@ -254,8 +255,8 @@ Drum heuer — heuer ist es anders, das spüren wir...
 [Chorus]
 Es ist so weit, es ist so weit,
 nach all den Jahren — jetzt ist unsre Zeit!
-So viel Schmerz, so viel Hoffen — jetzt holen wir den Pokal,
-und des is — fix net normal!
+So viele Sommer ohne uns - das ist fix net normal.
+Heuer ist es anders - wir holn uns den Pokal!
 
 [Bridge - Breakdown]
 (quiet, one voice and claps, whole stadium)
@@ -268,11 +269,12 @@ und den Pokal, den holen wir — für uns alle, für jeden Sommer, den wir hofft
 [Final Chorus - Group Vocals]
 Es ist so weit, es ist so weit,
 nach all den Jahren — jetzt ist unsre Zeit!
-So viel Schmerz, so viel Hoffen — jetzt holen wir den Pokal,
-und des is — fix net normal!
+So viele Sommer ohne uns - das ist fix net normal.
+Heuer ist es anders - wir holn uns den Pokal!
 
 [Outro - Group Vocals]
 (Hey-oh, oh-oh-oh-oh)
-Fix net normal — und genau drum sind wir dabei.
+So viele Sommer ohne uns - das ist fix net normal.
+Heuer ist es anders - wir holn uns den Pokal!
 (Österreich!)
 ```
