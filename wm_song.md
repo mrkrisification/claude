@@ -37,9 +37,10 @@ EM 2008 (zusammen im Happel, Vastićs Elfer — Papa schon weg, hört ihn am Tel
 ## 🎛️ Style-Feld (in Suno ins „Style of Music"-Feld)
 
 ```
-anthemic terrace singalong, mid-tempo building to euphoric, melodic and bittersweet,
-warm male lead vocal in German, huge crowd gang-vocal chorus, hand-claps and foot-stomps,
-jangly bright guitars, hopeful yet wistful, Three Lions style football anthem, stadium crowd
+Austropop football anthem, Austrian Viennese dialect inflection, warm weathered male lead,
+Mundart storytelling phrasing, Three Lions style terrace singalong, mid-tempo building to euphoric,
+acoustic-driven guitars with a few electric stabs, huge crowd gang-vocal chorus,
+hand-claps and foot-stomps, bittersweet yet hopeful, stadium crowd
 ```
 
 ---
@@ -153,6 +154,13 @@ Das ist mein Wunder, Papa — und das ist für dich.
 - **Bridge = Gänsehaut:** Style um `a cappella crowd, claps, stadium reverb` erweitern,
   dann `building from intimate verse to euphoric massed chorus`.
 - Mehrere Generationen laufen lassen, die mit dem stärksten Chorus-Lift behalten.
+- **Österreichische Stimme statt „Toten-Hosen"-Default:** Region im Style-Feld nach vorne
+  (`Austropop, Austrian/Viennese dialect inflection`), Punk-Cues raus (`acoustic-driven` statt
+  `driven/jangly guitars`), Vokal-Charakter benennen (`warm weathered baritone`). „German" allein
+  → bundesdeutscher Default. Für Stimm-Varianz frisch generieren statt Persona/Continue vom Clip.
+- **Mundart-Färbung über die Lyrics:** phonetische Schreibung zieht den Akzent mit — deine
+  „Skillatschi / Glotzerte / mocht's / nix" wirken genau dafür. Mehr davon (z. B. „wos", „ned",
+  „is") verstärkt's; sparsam dosieren, sonst verschluckt Suno Wörter.
 
 ## ✏️ Offene Varianten
 
