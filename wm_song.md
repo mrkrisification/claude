@@ -169,3 +169,99 @@ Das ist mein Wunder, Papa — und das ist für dich.
 - **Frankreich '98 / 28 Jahre** zugunsten der Vater-Erzählung getrimmt; bei Bedarf als kurze
   Zeile zurückholen.
 - **Outro-Schlusszeile** alternativ ohne Augenzwinkern: „und ich lach — und ich wein. Für dich."
+
+---
+---
+
+# Version 2 — „Fix net normal" (kollektive Fan-Hymne, ohne Papa-Bezug)
+
+**Vibe:** gleiche DNA wie Version 1 (Three-Lions-artige Terrace-Hymne, bittersüß →
+hoffnungsvoll), aber jetzt als **kollektives Gedächtnis aller ÖFB-Fans** — „wir" statt
+„du/Papa". Die Szenen sind die geteilten Wunden/Mythen der österreichischen
+Fußball-Seele.
+**Refrain-Hook geändert:** statt „das Wunder von New York" jetzt der Reim
+„Pokal" / „fix net normal" — Anspielung auf die inoffizielle Hymne „Fix net normal".
+**Neuer Anker:** nach EM 2024 (Sabitzer, 3:2 gegen Holland, Gruppensieg) folgt das
+bittere Aus gegen die Türkei im Achtelfinale — der typische ÖFB-Bruch zwischen
+Hoffnung und Absturz.
+
+**Ziel-Bogen:** Córdoba '78 (Mythos, den alle kennen) → Italia '90 / Schillaci
+(Generationen-Trauma) → EM 2008 im eigenen Land, Vastić-Elfer 93. Minute gegen Polen,
+kurzes Aufflammen, dann doch raus → die langen Jahre dazwischen („immer Vierter",
+Quali-Krämpfe) → EM 2024: Sabitzer, 3:2 gegen Holland, Gruppensieg — und dann doch
+wieder das bittere Aus gegen die Türkei → WM 2026: jetzt ist unsre Zeit.
+
+---
+
+## 📝 Lyrics-Feld (Version 2)
+
+```
+[Intro]
+(old radio crackle, crowd swelling)
+„Toooor! Toooor! Toooor! — i wer' narrisch!"
+
+[Verse 1]
+Córdoba, achtundsiebzig — die Nacht, die jeder kennt,
+als Krankl uns zum Wunder schoss, auch wer's nur vom Erzählen kennt.
+Seit damals tragen wir das mit — Legende, Fluch und Segen,
+wir warten und wir hoffen — seit fast fünfzig Jahren.
+
+[Verse 2]
+Neunzig, Italia, ganz Österreich vor dem Fernseher, gebannt,
+„Der Toto macht uns fertig" — und er köpft uns aus dem Turnier.
+Raus in der Vorrunde, wieder amal — ins rot-weiß-rote Herz,
+und a jeder kennt den Schmerz, auch wer net amal dort war.
+
+[Pre-Chorus]
+Und wir warten — Jahr für Jahr, Generation für Generation...
+
+[Chorus]
+Es ist so weit, es ist so weit,
+nach all den Jahren — jetzt ist unsre Zeit!
+So viel Schmerz, so viel Hoffen — jetzt holen wir den Pokal,
+und des is — fix net normal!
+
+[Verse 3]
+Zweitausendacht, im eigenen Land, im Happel-Stadion, ganz Wien hält den Atem an,
+Polen führt, schon glauben wir's nicht mehr — die Köpfe geh'n schon runter.
+Dreiundneunzigste Minute — ein Elfer, und Vastić macht ihn rein,
+ganz Österreich springt auf — für einen Moment ist alles möglich.
+Dann verlier'n wir's doch noch — typisch, sagen wir, und lachen,
+„wenigstens war's wieder amal knapp" — so kennen wir's seit Jahren.
+
+[Verse 4]
+Wir warten auf den nächsten Sommer, immer Vierter, nie ganz oben,
+Quali-Krämpfe, Herzschmerz-Spiele — wir sind's gewohnt.
+Doch vierundzwanzig, gegen Holland — drei zu zwei, Sabitzer trifft,
+Gruppensieg, Frankreich hinter uns — endlich, denken wir, jetzt geht's!
+Dann kommt die Türkei im Achtelfinal — und es ist wieder aus,
+typisch österreichisch, sagen wir — und lieben's trotzdem, genau so.
+
+[Pre-Chorus]
+Drum heuer — heuer ist es anders, das spüren wir...
+
+[Chorus]
+Es ist so weit, es ist so weit,
+nach all den Jahren — jetzt ist unsre Zeit!
+So viel Schmerz, so viel Hoffen — jetzt holen wir den Pokal,
+und des is — fix net normal!
+
+[Bridge - Breakdown]
+(quiet, one voice and claps, whole stadium)
+Und wenn die Hymne spielt, und ganz Österreich steht,
+dann wissen wir — diesmal nicht wie immer, diesmal geht's bis zum Schluss.
+(building energy)
+Wir geh'n nicht nach Haus — diesmal bleiben wir dort,
+und den Pokal, den holen wir — für uns alle, für jeden Sommer, den wir hofften.
+
+[Final Chorus - Group Vocals]
+Es ist so weit, es ist so weit,
+nach all den Jahren — jetzt ist unsre Zeit!
+So viel Schmerz, so viel Hoffen — jetzt holen wir den Pokal,
+und des is — fix net normal!
+
+[Outro - Group Vocals]
+(Hey-oh, oh-oh-oh-oh)
+Fix net normal — und genau drum sind wir dabei.
+(Österreich!)
+```
