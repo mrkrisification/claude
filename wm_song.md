@@ -1,24 +1,27 @@
-# WM-Song Österreich — „Unsere Zeit" (Wer, wenn nicht wir?)
+# WM-Song Österreich — „Heuer holen wir's heim"
 
-**Genre:** Driven Stadium Rock, aggressiv, mit Mitgröl-Hymnen-Refrain
-**Sprache:** Hochdeutsch mit dezentem österreichischem Einschlag
-**Grundtenor:** trotzig & erwartungsfroh — „diesmal ist es so weit, das ist unsere Zeit"
-**Story-Anker:**
-- 28 Jahre ohne WM (letzte Teilnahme 1998)
-- starke EM 2024, unglückliches Aus im Achtelfinale → der Schmerz als Treibstoff
-- jetzt: Trotz, Hunger, Aufbruch
+**Vibe:** wie „Three Lions / Football's Coming Home" — bittersüße Terrace-Hymne.
+Die schmerzhaften Beinah-Momente liebevoll-selbstironisch erzählen, dann die große
+hoffnungsvolle Mitgröl-Welle.
+**Sprache:** Hochdeutsch mit dezentem österreichischem Einschlag (Signal-Wort: „heuer").
+**Haltung:** neues Selbstvertrauen — „Scheiß auf Córdoba", wir schreiben unser eigenes Wunder.
+**Ziel-Bogen:** Córdoba '78 → Schillaci '90 → Frankreich '98 → Sabitzer EM24 → das Wunder von New York (WM 2026).
 
-**Hook-Konzept:** Chant „Wer, wenn nicht wir — das ist unsere Zeit!"
-plus wortloser „Hey-oh"-Gröl-Part als Stadion-Singalong.
+**Story-Anker (faktisch geprüft):**
+- **Córdoba 1978:** Krankl, 3:2 gegen (West-)Deutschland — legendär, aber bedeutungslos (beide bereits ausgeschieden).
+- **WM 1990:** Schillaci köpft das 1:0 für Italien (79.), Österreich raus.
+- **WM 1998 (Frankreich):** sieglos als Gruppendritter raus; alle ÖFB-Tore fielen erst in der Nachspielzeit (Polster vs. Kamerun, Vastić vs. Chile, Herzog-Elfer vs. Italien).
+- **EM 2024:** Sabitzer, 3:2 gegen die Niederlande (80.) → Gruppensieg, Fundament des neuen Selbstvertrauens.
+- **New York:** WM-2026-Finale im Raum New York (MetLife) → das neue, selbstgeschriebene Wunder.
 
 ---
 
 ## 🎛️ Style-Feld (in Suno ins „Style of Music"-Feld)
 
 ```
-driven stadium rock, aggressive distorted guitars, pounding tom-heavy drums,
-gang-vocal chant chorus, gritty male lead in German, huge terrace singalong,
-fist-pumping, 150 bpm feel, raw and anthemic, terrace-chant energy
+anthemic football terrace singalong, britpop stadium anthem, jangly bright guitars,
+mid-tempo building to euphoric, huge crowd gang vocals, bittersweet but hopeful,
+warm male lead in German, Three Lions style, big communal chorus
 ```
 
 ---
@@ -27,88 +30,82 @@ fist-pumping, 150 bpm feel, raw and anthemic, terrace-chant energy
 
 ```
 [Intro]
-(crowd chant building, lone drum)
+(lone guitar, distant terrace singing, a referee's whistle)
 
 [Verse 1]
-Achtundzwanzig Jahre, so viele Sommer ohne uns,
-wir haben zugeschaut, wie die andern fahr'n.
-Letztes Mal so nah dran — ein Schritt, dann war es aus,
-sie haben uns heimgeschickt — doch wir kommen wieder raus.
-
-[Pre-Chorus]
-Irgendwas ist anders, ihr spürt es genau,
-das war nicht das Ende — das war erst der Anlauf.
-(Steht auf!)
-
-[Chorus]
-Wer, wenn nicht wir? (HEY!)
-Wann, wenn nicht jetzt? (HEY!)
-Achtundzwanzig Jahre Hunger — und diesmal ist es so weit,
-Wer, wenn nicht wir — das ist unsere Zeit!
-
-[Post-Chorus - Group Vocals]
-Hey-oh, oh-oh-oh-oh
-Hey-oh — unsere Zeit!
+Krankl, drei zu zwei gegen Deutschland — die Nacht, von der sie schwärmen,
+verschweigen aber gern: es war'n eh beide längst daheim.
+Ein Wunder ohne Wirkung, ein Denkmal nur aus Lärm —
+und trotzdem zehrt das halbe Land seit vierzig Jahr davon allein.
 
 [Verse 2]
-Kein Schritt mehr zurück jetzt — wir haben das Warten satt,
-für jeden hier im Stadion, für jeden, der noch glaubt.
-Diesmal fahren wir nicht heim, bevor es wirklich zählt,
-diesmal schreiben wir's selber — und keiner nimmt's uns weg.
+Neunzig köpft uns Schillaci raus — ein Stich, der bis heut wehtut,
+und achtundneunzig fällt in Frankreich jedes Tor erst in der letzten Minut'.
+Drei Spiele, nie ein Sieg, immer zu knapp und viel zu spät,
+wir fahren heim mit viel Applaus — und sonst nix, wie eh und je.
 
 [Pre-Chorus]
-Irgendwas ist anders, ihr spürt es genau,
-das war nicht das Ende — das war erst der Anlauf.
-(Steht auf!)
+Doch dann Sabitzer, Berlin, drei zu zwei gegen Holland,
+und auf einmal steht ein ganzes Land wieder auf.
+Schluss mit „hätt'" und „wär'" — schau uns an, was wir können,
+und der Weg, der nach New York führt, fangt grade erst an.
 
 [Chorus]
-Wer, wenn nicht wir? (HEY!)
-Wann, wenn nicht jetzt? (HEY!)
-Achtundzwanzig Jahre Hunger — und diesmal ist es so weit,
-Wer, wenn nicht wir — das ist unsere Zeit!
+Drum heuer holen wir's heim, holen wir's heim, holen wir's —
+heuer holen wir's heim.
+So viele Jahr daneben, so viele Sommer ohne uns —
+doch heuer, ich schwör's euch, holen wir's heim.
 
-[Post-Chorus - Group Vocals]
-Hey-oh, oh-oh-oh-oh
-Hey-oh — unsere Zeit!
+[Verse 3]
+Behalt dein Córdoba, Papa — ich hab dich gern, das weißt du —
+aber ich brauch kein altes Wunder mehr, ich schreib mir endlich eins, das bleibt.
+
+[Pre-Chorus]
+Kein „beinah" mehr, kein „fast" — kein Sommer mehr von außen,
+diesmal sind wir die Geschichte, über die sie morgen staunen.
+
+[Chorus]
+Heuer holen wir's heim, holen wir's heim, holen wir's —
+heuer holen wir's heim.
+So viele Jahr daneben, so viele Sommer ohne uns —
+doch heuer, ich schwör's euch, holen wir's heim.
 
 [Bridge - Breakdown]
-(nur Bass und Stampfen, eine einzelne Stimme)
-Für jeden, der nie aufgehört hat... für jeden Sommer, den wir nicht dabei war'n...
+(nur Stimme und Klatschen, das ganze Stadion)
+Und wenn in New York die Lichter angehn... und die Hymne uns trägt...
 (building energy)
-das hier ist für euch — jetzt holen wir's uns heim!
+dann schreiben wir's neu — und diesmal bleibt's!
 
-[Final Chorus]
-(double-time drums, full gang vocals)
-Wer, wenn nicht wir? (HEY!)
-Wann, wenn nicht jetzt? (HEY!)
-Achtundzwanzig Jahre Hunger — und diesmal ist es so weit,
-Wer, wenn nicht wir — das ist unsere Zeit!
+[Final Chorus - full crowd]
+Heuer holen wir's heim, holen wir's heim, holen wir's —
+(Österreich!) heuer holen wir's heim.
+So viele Jahr daneben, so viele Sommer ohne uns —
+doch heuer, ich schwör's euch, holen wir's heim.
 
 [Outro - Group Vocals]
-Hey-oh, oh-oh-oh-oh
-Hey-oh — unsere Zeit!
-(Österreich!)
+Holen wir's heim... holen wir's heim...
+(Österreich!) heuer holen wir's heim.
 ```
 
 ---
 
-## 🎤 Aufbau-Logik
+## 🎤 Warum das funktioniert (Soul & Three-Lions-DNA)
 
-- **Refrain = Chant mit Payoff:** „Wer, wenn nicht wir? / Wann, wenn nicht jetzt?" liefert den
-  trotzigen Anschub, die letzte Zeile löst auf in „das ist unsere Zeit!" — erwartungsfroh.
-- **Story im Text:** „Achtundzwanzig Jahre" (Wartezeit) und „letztes Mal so nah dran — ein Schritt,
-  dann war es aus" (EM-2024-Achtelfinale) machen den Song konkret statt floskelhaft.
-- **Gröl-Hook:** `Hey-oh, oh-oh-oh-oh / Hey-oh — unsere Zeit!` — wortlos + ein Schlagwort,
-  das jeder sofort mitgrölt (das „Sweet Caroline"-Element).
-- **Bridge - Breakdown:** runterbremsen, eine Stimme, „für jeden Sommer, den wir nicht dabei war'n",
-  dann `(building energy)` → der „alle springen auf"-Moment vor dem Final Chorus.
-- **Dezenter Austria-Einschlag:** bewusst sparsam, sauberes Hochdeutsch, damit Suno klar singt.
+- **Szenen statt Parolen:** echte Spielmomente (Krankl, Schillaci, '98er Nachspielzeit-Tore,
+  Sabitzer) geben dem Song Biografie — das ist die Seele.
+- **Liebevolle Selbstironie:** „verschweigen aber gern: es war'n eh beide längst daheim" /
+  „und sonst nix, wie eh und je" — der bittersüße Three-Lions-Ton.
+- **Konkrete Ich-Stimme:** der Sohn, der mit Papas Córdoba-Geschichten aufwuchs und jetzt
+  sein eigenes Wunder will („Behalt dein Córdoba, Papa") → Haltung & Wandel.
+- **Grölbarer Hook:** „holen wir's heim, holen wir's heim, holen wir's" — repetitiv & hoffnungsvoll
+  wie „it's coming home", aber aktiv/selbstbewusst.
+- **Bogen mit Ziel:** vom alten Mythos bis „das Wunder von New York" (WM 2026) — Vergangenheit
+  als Schmerz, Zukunft als Versprechen.
 
 ## 🔧 Tuning-Tipps für Suno
 
-- Wenn der Refrain zu brav klingt → im Style-Feld `shouted gang vocals`, `harder edge` ergänzen.
-- Wenn `(HEY!)` / `(Steht auf!)` mitgesungen statt gerufen wird → `[shouted]` direkt davor testen.
-- „Achtundzwanzig" wird manchmal zerhackt → bei Bedarf als Ziffer `28 Jahre` schreiben und hören,
-  was sauberer kommt.
-- Mehrere Generationen laufen lassen und die mit dem stärksten Chorus-Lift behalten.
-- Für eine reine Stadion-Version: Style um `stadium crowd ambience, recorded live` erweitern.
+- „Schillaci", „Sabitzer", „Córdoba" sauber? Eigennamen testweise phonetisch schreiben, falls
+  Suno sie verschluckt (z. B. „Skilatschi", „Sabitza").
+- „achtundneunzig" / „vierzig Jahr" werden manchmal zerhackt → ggf. als Ziffer testen.
+- Refrain soll anschwellen: Style um `building from intimate verse to euphoric massed chorus` ergänzen.
+- Für Gänsehaut-Bridge: `a cappella crowd, claps, stadium reverb` ins Style-Feld.
