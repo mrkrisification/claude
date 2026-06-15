@@ -360,6 +360,15 @@ FY2024,at&t-mexico,mobile_market_share,mobile,15.0,pct,R02,false
 Use `operator=_market` for whole-market totals. `source_id`s here are the `R…` ids from the regulator
 cache manifest. Refresh idempotently — a regulator capture is shared, so don't duplicate it per company.
 
+> **Reality check (learned on Croatia/HAKOM): many regulator summaries are TOTALS-ONLY.** Do not assume
+> the regulator hands you every operator's split — several (e.g. HAKOM's English quarterly reports) publish
+> only whole-market aggregates (`operator=_market`): total lines, total broadband, total revenue, and *no*
+> per-operator share. When that happens: (1) still compose the totals — they are the denominators the
+> overview needs; (2) record the totals-only limitation in `_regulators/<code>/data/README.md`; (3) get
+> per-operator shares from the next-best source — the **operators' own self-reported subscriber bases**, a
+> deeper regulator portal (e.g. `sat.hakom.hr`), or the country `baseline.md` — never invent them. Mark the
+> source on each row; a share derived by you (operator subs ÷ market total) is `estimated=true`.
+
 **Aggregation-ready discipline (so a country roll-up just unions the CSVs).** Across *every* company
 use **identical** metric names (`revenue`, `ebitda`, `ebitda_margin`, `mobile_subscribers`,
 `mobile_market_share`, `arpu`…), period labels (`FYxxxx`, `Qn-xxxx`), and currency/unit conventions.
@@ -479,6 +488,18 @@ company-reported detail. Nothing in the overview is recomputed from `raw/` — i
 is exactly why per-company composition must use identical names and why regulator data is mined
 whole-market every run. (Country structure also feeds the existing `baselines/<country>/` and the
 `telecom-pulse` skill.)
+
+> **Reconcile, don't just divide (learned on Croatia).** The roll-up's most valuable output is often the
+> *reconciliation*, not a clean share table. The regulator, the operators, and the baseline routinely
+> measure the market three incompatible ways — e.g. operator-reported "subscribers" (active base, may add
+> M2M) ≠ regulator "mobile lines"; an operator's "fixed broadband" may actually be **RGUs** (broadband +
+> TV + voice); a listed parent's revenue may bundle other countries/equipment/wholesale. Symptom: the
+> operators' figures **over- or under-shoot the regulator total** (in Croatia HT + A1 reported mobile bases
+> alone = 98% of HAKOM's total, leaving no room for Telemach). So: do **not** compute
+> `operator subs ÷ regulator total` into a precise share when the bases don't reconcile — surface the
+> mismatch instead, normalize definitions first where you can, and lead the overview with the caveats.
+> A noisy reconciliation that names the three inconsistencies is more useful (and honest) than a tidy fake
+> share table.
 
 ### Shared parent-group cache (design target — dedupe HQ reports across markets)
 
