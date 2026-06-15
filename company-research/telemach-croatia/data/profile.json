@@ -1,0 +1,15 @@
+{
+  "company": "Telemach Croatia",
+  "slug": "telemach-croatia",
+  "entity_type": "private",
+  "country": "Croatia",
+  "parent": { "name": "United Group (KKR / BC Partners)", "ownership_pct": 100 },
+  "regulators": ["HAKOM", "HANFA"],
+  "competitors": ["Hrvatski Telekom", "A1 Croatia"],
+  "market_position": {
+    "summary": "Convergent cable + mobile challenger; fixed-broadband strong #2. No standalone financials disclosed; Croatian market metrics sourced from HAKOM.",
+    "sources": ["S01"]
+  },
+  "data_availability": "group-level only — no Croatia-segment financials are public; market metrics via HAKOM",
+  "last_updated": "2026-06-15"
+}

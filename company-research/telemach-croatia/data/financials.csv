@@ -1,0 +1,8 @@
+period,metric,value,currency,unit,basis,estimated,source_id,is_preferred,note
+FY2023,parent_group_revenue,2791,EUR,m,consolidated,true,S01,true,United Group GROUP total (all markets) — NOT Telemach Croatia-specific; no Croatia split disclosed
+FY2023,parent_group_ebitda,988,EUR,m,consolidated,true,S01,true,United Group GROUP EBITDAal; margin 35%
+FY2023,parent_group_ebitda_margin,35,,pct,consolidated,true,S01,true,group EBITDAal margin
+FY2023,parent_group_mobile_subscribers,7.34,,m,consolidated,true,S01,true,group-wide mobile subscribers (all markets)
+FY2023,parent_group_broadband_households,5.30,,m,consolidated,true,S01,true,group-wide broadband households (all markets)
+Q3-2025,parent_group_revenue_ltm,2700,EUR,m,consolidated,true,S02,true,United Group GROUP last-twelve-month revenue (post Serbia sale); quarterly revenue ~2000m
+Q3-2025,parent_group_ebitda_ltm,680,EUR,m,consolidated,true,S02,true,group adjusted EBITDAal ~Q3; +7% YoY
