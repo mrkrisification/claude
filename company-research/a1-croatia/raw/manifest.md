@@ -21,3 +21,4 @@ Notes:
 - A duplicate of S01 exists in raw/ (2026-06-12-A1_At_a_glance_2024_EN.pdf, byte-different scan of the same data book) — treated as the same source S01; not given a separate id.
 - FY2025 standalone Croatia segment figures are NOT disclosed: S04 folds Croatia into the "International" aggregate (states only "Croatia 11% of Group revenues").
 - .md index pages (annual-financial-reports.md, quarterly-results-*.md) intentionally excluded.
+| S12 | 2025-10-31 | poslovni.hr (FINA-derived) | A1 Hrvatska d.o.o. statutory revenue & net profit (Top-505) | FY2024, FY2023 | 2026-06-15-fina-a1-hrvatska-statutory.md |

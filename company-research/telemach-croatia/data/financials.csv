@@ -1,11 +1,16 @@
 period,metric,value,currency,unit,basis,estimated,source_id,is_preferred,note
-FY2025,revenue,328.36,EUR,m,standalone,false,S03,true,FINA statutory accounts (Telemach Hrvatska d.o.o.); +7.47% YoY
+FY2023,revenue,278.5,EUR,m,standalone,false,S04,true,FINA via poslovni.hr Top-505 (total revenue)
+FY2024,revenue,310.1,EUR,m,standalone,false,S04,true,FINA via Top-505 / SeeNews; +11.35% YoY (+€26.9m)
+FY2024,revenue,305.5,EUR,m,standalone,true,S03,false,"FINA Info.BIZ ukupni-prihodi basis (= 328.36/1.0747); conflicts with S04 310.1 — different revenue line"
+FY2025,revenue,328.36,EUR,m,standalone,false,S03,true,FINA statutory; +7.47% YoY
 FY2025,ebitda,107.18,EUR,m,standalone,false,S03,true,FINA; EBITDA margin ~32.6%
 FY2025,ebitda_margin,32.6,,pct,standalone,true,S03,true,derived 107.18/328.36
 FY2025,ebit,49.70,EUR,m,standalone,false,S03,true,FINA
+FY2023,net_income,,EUR,m,standalone,true,S05,true,"net LOSS in FY2023 (ictbusiness: 'nakon gubitka u 2023'); sign known (negative), amount not disclosed"
+FY2024,net_income,9.3,EUR,m,standalone,false,S04,true,FINA via ictbusiness/SeeNews (9.28m); turnaround from FY2023 loss
 FY2025,net_income,8.57,EUR,m,standalone,false,S03,true,FINA; -7.55% YoY
-FY2024,revenue,305.5,EUR,m,standalone,true,S03,true,derived from FY2025 +7.47% YoY (FINA); confirm against FINA RGFI FY2024 filing
-FY2024,net_income,9.27,EUR,m,standalone,true,S03,true,derived from FY2025 -7.55% YoY (FINA)
-FY2023,parent_group_revenue,2791,EUR,m,consolidated,true,S01,true,United Group GROUP total (all markets) — NOT Telemach Croatia-specific; no Croatia split disclosed
-FY2023,parent_group_ebitda,988,EUR,m,consolidated,true,S01,true,United Group GROUP EBITDAal; margin 35%
-Q3-2025,parent_group_revenue_ltm,2700,EUR,m,consolidated,true,S02,true,United Group GROUP last-twelve-month revenue (post Serbia sale)
+FY2024,employees,641,,count,standalone,false,S04,true,Top-505 (FY2023: 527)
+FY2025,employees,632,,count,standalone,false,S03,true,FINA (by hours worked; -1.40%)
+FY2024,total_assets,710.0,EUR,m,standalone,false,S04,true,SeeNews (€709.997m)
+FY2023,parent_group_revenue,2791,EUR,m,consolidated,true,S01,true,United Group GROUP total — context only (not Telemach Croatia)
+Q3-2025,parent_group_revenue_ltm,2700,EUR,m,consolidated,true,S02,true,United Group GROUP LTM revenue (post Serbia sale) — context only

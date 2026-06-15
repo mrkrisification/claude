@@ -20,3 +20,6 @@ FY2024,ebitda,224,EUR,m,segment,true,S02,false,"A1 Group Results Report 2024, Se
 FY2024,ebitda_margin,39.3,EUR,pct,segment,true,S02,true,"A1 Group Results Report 2024, Segment Croatia table: EBITDA margin 39.3%"
 FY2024,mobile_subscribers,2158,EUR,thousands,segment,true,S01,true,"A1 At a Glance 2024, Croatia Market position panel: Mobile subscribers 2,158 (in 1,000)"
 FY2024,fixed_broadband_subscribers,722,EUR,thousands,segment,true,S01,true,"A1 At a Glance 2024, Croatia Market position panel: RGUs 722 (in 1,000; RGUs proxy for fixed broadband)"
+FY2023,net_income,24.08,EUR,m,standalone,false,S12,true,"FINA statutory (A1 Hrvatska d.o.o.); not in parent segment reporting"
+FY2024,net_income,25.09,EUR,m,standalone,false,S12,true,"FINA statutory (A1 Hrvatska d.o.o.); not in parent segment reporting"
+FY2024,revenue,579.1,EUR,m,standalone,false,S12,false,"FINA statutory legal-entity revenue; corroborates segment €570m (S02) to ~1.5%"

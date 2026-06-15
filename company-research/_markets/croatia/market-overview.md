@@ -27,20 +27,24 @@ below. HAKOM reports only **whole-market totals** — no per-operator splits exi
 | Operator | Revenue | EBITDA | Margin | Net income | Basis |
 |---|---|---|---|---|---|
 | **Hrvatski Telekom** | €1,101.6m | €416.2m (AL) | 37.8% | €141.9m | Group consolidated *(incl. Montenegro, equipment, wholesale)* |
-| **A1 Croatia** | €570m | €224m | 39.3% | n/d | parent segment (estimated) |
-| **Telemach Croatia** | ~€305.5m¹ | n/d | — | ~€9.3m¹ | FINA statutory (legal entity) |
+| **A1 Croatia** | €570m (seg) / €579m (stat) | €224m | 39.3% | **€25.1m** | parent segment + FINA net |
+| **Telemach Croatia** | €310.1m | n/d (FY25 €107.2m) | ~34% | €9.3m | FINA statutory (legal entity) |
 
-¹ Telemach FY2024 is derived from FINA's stated YoY deltas. **FY2025 actuals (FINA): revenue €328.4m,
-EBITDA €107.2m (32.6% margin), EBIT €49.7m, net profit €8.6m, 632 employees.** Source: FINA Info.BIZ
-statutory accounts for Telemach Hrvatska d.o.o. — the standalone legal-entity filing the parent's IR
-never published.
+A1's parent-segment revenue (€570m) is **confirmed** by A1 Hrvatska d.o.o.'s statutory filing (€579.1m,
+~1.5% apart), and the registry supplies A1's **net income** (€25.1m FY2024) that segment reporting omits.
+Telemach's FY2024 figures are the FINA/registry statutory accounts.
 
-Multi-year (EUR m): HT revenue 1,039 → 1,102 → 1,142 (FY23→25), EBITDA 398 → 416 → 430.
-A1 revenue 470 → 525 → 570 (FY22→24), EBITDA 161 → 189 → 224. Telemach FY2025 €328m / €107m EBITDA.
-The **revenue ranking is now grounded: HT (~€1.0bn Croatia-only) > A1 (€570m) > Telemach (€328m)** — and
-the margin ladder runs A1 39% > HT 38% > Telemach 33% (challenger, heavier relative investment). A1
-carries the fastest EBITDA growth (+18.7% FY2024); A1's FY2025 Croatia segment is not disclosed
-(folded into "International"; ≈11% of A1 Group revenue).
+**Multi-year (EUR m):**
+- HT revenue 1,039 → 1,102 → 1,142 (FY23→25), EBITDA 398 → 416 → 430.
+- A1 revenue (statutory) 532 → 579 (FY23→24), EBITDA seg 189 → 224, net 24.1 → 25.1.
+- **Telemach revenue 278.5 → 310.1 → 328.4 (FY23→25)** — steady challenger growth; net result swung from a
+  **loss in FY2023** to €9.3m (FY24) to €8.6m (FY25); FY2025 EBITDA €107.2m (~33% margin). Source: FINA
+  statutory accounts (Telemach Hrvatska d.o.o.), republished in the Croatian business press (Top-505).
+
+Grounded picture: **HT (~€1.0bn Croatia-only) ≫ A1 (€579m) > Telemach (€328m)**; margins A1 39% > HT 38%
+> Telemach ~33% (the aggressive-pricing challenger, recently turned profitable). A1 carries the fastest
+EBITDA growth (+18.7% FY2024); A1's FY2025 Croatia segment is not separately disclosed (folded into
+"International").
 
 ## Subscribers & market share — why we do NOT publish a share table
 
@@ -87,8 +91,8 @@ Not comparable to HT's pure broadband count; flagged for re-extraction.
 ## Data confidence & provenance
 
 - **High:** market totals (HAKOM, FY2022–FY2025); HT financials (listed, FY2021–FY2025, audited);
-  A1 Croatia revenue/EBITDA (parent segment, FY2022–FY2024); **Telemach revenue/EBITDA/net profit
-  (FINA statutory, FY2025; FY2024 derived).**
+  A1 Croatia revenue/EBITDA (parent segment, FY2022–FY2024) + statutory **net income** (FINA);
+  **Telemach revenue FY2023–FY2025, net income FY2024–FY2025, EBITDA FY2025 (FINA statutory / Top-505).**
 - **Low / missing:** all per-operator market **shares**; Telemach **subscriber** counts; A1 FY2025
   segment; clean fixed-broadband subscriber counts.
 - Every figure in `data/market.csv` cites a cross-folder `source_id` tracing to a `raw/` capture.
