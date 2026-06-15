@@ -24,3 +24,7 @@ FY2023,a1-croatia,ebitda,total,189,EUR_m,a1-croatia/S05,true
 FY2024,a1-croatia,ebitda,total,224,EUR_m,a1-croatia/S01,true
 FY2024,a1-croatia,mobile_subscribers,mobile,2.158,m,a1-croatia/S01,true
 FY2024,a1-croatia,fixed_broadband_subscribers,fixed,0.722,m,a1-croatia/S01,true
+FY2024,telemach-croatia,revenue,total,305.5,EUR_m,telemach-croatia/S03,true
+FY2025,telemach-croatia,revenue,total,328.36,EUR_m,telemach-croatia/S03,false
+FY2025,telemach-croatia,ebitda,total,107.18,EUR_m,telemach-croatia/S03,false
+FY2025,telemach-croatia,net_income,total,8.57,EUR_m,telemach-croatia/S03,false

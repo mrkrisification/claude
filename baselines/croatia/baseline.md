@@ -11,9 +11,14 @@ Three-player oligopoly. Tele2 Croatia ceased to exist as a brand in 2020 (rebran
 
 | Operator | Owner | Mobile share (subs) | Revenue trend | Notes |
 |---|---|---|---|---|
-| Hrvatski Telekom (HT) | Deutsche Telekom (51%+) | ~46% | +3.6% revenue FY2025; net profit €143M | Market leader; fixed dominant; FTTP build-out leader; network quality score 888.2 (2024) |
-| Telemach Croatia | United Group | ~35% | Private; no public financials | Formerly Tele2; 98.9% 5G population coverage (end-2024); aggressive pricing |
-| A1 Croatia | A1 Group (Telekom Austria) | ~20% | EBITDA +18.7% FY2024; revenue +11% Q2 2025 | ~2M customers; convergent cable+mobile; EBITDA margin ~37% |
+| Hrvatski Telekom (HT) | Deutsche Telekom (51%+) | ~46% (⚠ see note) | FY2025 rev €1,142M, EBITDA AL €430M, net €143M (HT Group, incl. Montenegro) | Market leader; fixed dominant; FTTP build-out leader |
+| Telemach Croatia | United Group | ~35% (⚠ see note) | Private; standalone accounts public via FINA — FY2025 rev €328M, EBITDA €107M, net €8.6M | Formerly Tele2; 98.9% 5G pop. coverage (end-2024); aggressive pricing |
+| A1 Croatia | A1 Group (Telekom Austria) | ~20% (⚠ see note) | FY2024 segment rev €570M, EBITDA €224M (+18.7%) | ~2.16M mobile subs; convergent cable+mobile; EBITDA margin ~39% |
+
+> ⚠ **Mobile-share figures (46/35/20) are unreconciled and likely stale/mislabeled.** They contradict the
+> operators' own reported bases (A1 alone reports ~2.16M mobile subs — not a 20% share). HAKOM publishes
+> whole-market totals only (no operator split), and operator "subscribers" vs HAKOM "mobile lines" use
+> different definitions. See `company-research/_markets/croatia/market-overview.md` for the reconciliation.
 
 **Total telecom revenues:** EUR 1.87B (2025), +3.6% YoY (HAKOM). Fixed +5.1%, mobile +2.9%.
 **MNO market value:** ~USD 1.91B (2025), projected USD 2.18B by 2030 (CAGR 2.58%).
@@ -78,7 +83,7 @@ Three-player oligopoly. Tele2 Croatia ceased to exist as a brand in 2020 (rebran
 
 ## Key Tensions to Track
 
-1. **Telemach financial resilience** — Private company (United Group parent); no public financials. If parent-group pressure materialises, €230M capex commitment could be deferred, benefiting HT
+1. **Telemach financial resilience** — Private (United Group parent); no investor-relations disclosure, but standalone accounts are public via FINA (FY2025 rev €328M, EBITDA €107M, thin net €8.6M → margin/leverage worth watching). If parent-group pressure materialises, the €230M capex commitment could be deferred, benefiting HT
 2. **HT capex normalization** — FY2025 was peak capex; 2026 guidance is "moderate capex decline"; watch whether fiber build pace slows or accelerates on NRRP funding
 3. **A1 growth sustainability** — Exceptional EBITDA growth 2024–2025; sustainability depends on convergence bundle take-up in 2026
 4. **HAKOM SMP deregulation scope** — Expansion beyond 72 markets would further erode HT's fixed dominance

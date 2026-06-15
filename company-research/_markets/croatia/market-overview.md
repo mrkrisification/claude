@@ -28,12 +28,19 @@ below. HAKOM reports only **whole-market totals** — no per-operator splits exi
 |---|---|---|---|---|---|
 | **Hrvatski Telekom** | €1,101.6m | €416.2m (AL) | 37.8% | €141.9m | Group consolidated *(incl. Montenegro, equipment, wholesale)* |
 | **A1 Croatia** | €570m | €224m | 39.3% | n/d | parent segment (estimated) |
-| **Telemach Croatia** | n/d | n/d | n/d | n/d | private — no Croatia disclosure |
+| **Telemach Croatia** | ~€305.5m¹ | n/d | — | ~€9.3m¹ | FINA statutory (legal entity) |
+
+¹ Telemach FY2024 is derived from FINA's stated YoY deltas. **FY2025 actuals (FINA): revenue €328.4m,
+EBITDA €107.2m (32.6% margin), EBIT €49.7m, net profit €8.6m, 632 employees.** Source: FINA Info.BIZ
+statutory accounts for Telemach Hrvatska d.o.o. — the standalone legal-entity filing the parent's IR
+never published.
 
 Multi-year (EUR m): HT revenue 1,039 → 1,102 → 1,142 (FY23→25), EBITDA 398 → 416 → 430.
-A1 revenue 470 → 525 → 570 (FY22→24), EBITDA 161 → 189 → 224. **A1 carries the higher margin and the
-faster EBITDA growth** (+18.7% FY2024); HT is ~2× A1's scale but lower-margin and slower-growing.
-A1's FY2025 Croatia segment is **not disclosed** (folded into "International"; ≈11% of A1 Group revenue).
+A1 revenue 470 → 525 → 570 (FY22→24), EBITDA 161 → 189 → 224. Telemach FY2025 €328m / €107m EBITDA.
+The **revenue ranking is now grounded: HT (~€1.0bn Croatia-only) > A1 (€570m) > Telemach (€328m)** — and
+the margin ladder runs A1 39% > HT 38% > Telemach 33% (challenger, heavier relative investment). A1
+carries the fastest EBITDA growth (+18.7% FY2024); A1's FY2025 Croatia segment is not disclosed
+(folded into "International"; ≈11% of A1 Group revenue).
 
 ## Subscribers & market share — why we do NOT publish a share table
 
@@ -70,15 +77,19 @@ Not comparable to HT's pure broadband count; flagged for re-extraction.
 4. **HT scope mismatch:** HT Group revenue includes Montenegro + equipment + wholesale, so it overstates
    HT's *Croatian retail* market revenue; only the Croatia subscriber KPIs are clean.
 5. **A1 fixed metric mislabel:** 722k is RGUs, not broadband subs.
-6. **Telemach is the structural blind spot:** no Croatia financials (private-in-private), and HAKOM
-   doesn't split it out — so it is invisible in both the financial and the subscriber view.
+6. **Telemach's financials came from the company registry, not the parent.** It was a *sourcing* gap, not
+   a disclosure gap: as a Croatian d.o.o., Telemach Hrvatska files **statutory accounts with FINA** (FY2025
+   revenue €328m, EBITDA €107m, net €8.6m). The lesson generalises — for a private subsidiary the national
+   **company/financial registry** (FINA in HR; Companies House UK; Bundesanzeiger DE; etc.) is a primary
+   source, ahead of press/web. Telemach remains **subscriber-invisible** only because HAKOM publishes no
+   operator split.
 
 ## Data confidence & provenance
 
 - **High:** market totals (HAKOM, FY2022–FY2025); HT financials (listed, FY2021–FY2025, audited);
-  A1 Croatia revenue/EBITDA (parent segment, FY2022–FY2024).
-- **Low / missing:** all per-operator market shares; Telemach Croatia financials & subscribers;
-  A1 FY2025 segment; clean fixed-broadband subscriber counts.
+  A1 Croatia revenue/EBITDA (parent segment, FY2022–FY2024); **Telemach revenue/EBITDA/net profit
+  (FINA statutory, FY2025; FY2024 derived).**
+- **Low / missing:** all per-operator market **shares**; Telemach **subscriber** counts; A1 FY2025
+  segment; clean fixed-broadband subscriber counts.
 - Every figure in `data/market.csv` cites a cross-folder `source_id` tracing to a `raw/` capture.
   Money normalized to EUR millions (`EUR_m`); HT FY2021–FY2022 originals are in HRK (see HT `financials.csv`).
-</content>

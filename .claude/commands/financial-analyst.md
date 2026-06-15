@@ -57,11 +57,33 @@ Classification drives ambition. Do not chase data the entity does not disclose.
 | `entity_type` | Primary sources to seek | Metrics to compose | Acceptable gaps |
 |---|---|---|---|
 | `listed` | Own annual report, 20-F, quarterly results, data book | Full P&L (revenue, EBITDA, margin, net income, capex), 3-yr history | few |
-| `subsidiary` | **Parent segment reporting**, parent data book, regulator market reports, securities-authority filings | Revenue, EBITDA, margin, subscribers, market share (segment-derived → `estimated=true`); net income / capex best-effort | net income, capex, sub-segment detail |
-| `private` | **Bondholder reports** (groups that issue Eurobonds, e.g. United Group), regulator reports, press | Snapshot: revenue/EBITDA/subscribers where disclosed | most period detail |
+| `subsidiary` | **Parent segment reporting**, parent data book, **national company registry** (statutory accounts), regulator market reports, securities-authority filings | Revenue, EBITDA, margin, subscribers, market share (segment-derived → `estimated=true`); net income / capex best-effort | net income, capex, sub-segment detail |
+| `private` | **National company registry** (statutory standalone accounts — primary), **bondholder reports** (Eurobond issuers, e.g. United Group), regulator reports, Firecrawl web/press | Standalone revenue/EBITDA/EBIT/net profit (registry); subscribers where disclosed | quarterly cadence, subscriber splits |
 
 For a subsidiary, **the parent's segment reporting is the realistic ceiling** of standalone data.
 Scope to that; flag the rest as a gap rather than guessing.
+
+### Sourcing fallback ladder (when the primary source is thin — esp. private/subsidiary)
+
+Do not conclude "no financials" after only checking the parent's investor-relations site. A telco that
+discloses nothing to investors usually still has a public statutory footprint. Escalate in order, stopping
+when you have the figure (record which rung each `source_id` came from):
+
+1. **Own filings** (listed) → **parent segment reporting** (subsidiary) → **bondholder reports** (private
+   Eurobond issuers, e.g. United Group).
+2. **National company registry — statutory annual accounts.** Private subsidiaries (`d.o.o.`, `GmbH`,
+   `Ltd`…) must file standalone accounts publicly. This is a **primary** source giving real
+   revenue/EBITDA/EBIT/net-profit for the legal entity — `basis=standalone`, `estimated=false`.
+   Registries: **FINA Info.BIZ / sudreg** (HR), **Companies House** (UK), **Bundesanzeiger** (DE),
+   **AJPES** (SI), **APR** (RS), registry/court filings elsewhere. *(Croatia proof: Telemach Hrvatska
+   d.o.o. — invisible in United Group's IR, but FY2025 revenue €328m / EBITDA €107m / net €8.6m sits in
+   FINA.)*
+3. **Regulator** market reports — for market context/totals (rarely per-operator financials).
+4. **Web research via Firecrawl — last resort, lower confidence.** Use `mcp__firecrawl__firecrawl_search`
+   (or the watcher's search hint) to find **press releases, local business-press articles, and
+   company-data aggregators** (e.g. SeeNews, poslovna.hr, Bisnode). Treat as `estimated=true`, cite the
+   outlet, and prefer to corroborate against a registry/filing figure. Keep conflicting values as separate
+   rows (see Phase 2).
 
 ### Known parents & regulators (reuse existing repo knowledge)
 

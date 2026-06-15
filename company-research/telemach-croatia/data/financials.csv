@@ -1,8 +1,11 @@
 period,metric,value,currency,unit,basis,estimated,source_id,is_preferred,note
+FY2025,revenue,328.36,EUR,m,standalone,false,S03,true,FINA statutory accounts (Telemach Hrvatska d.o.o.); +7.47% YoY
+FY2025,ebitda,107.18,EUR,m,standalone,false,S03,true,FINA; EBITDA margin ~32.6%
+FY2025,ebitda_margin,32.6,,pct,standalone,true,S03,true,derived 107.18/328.36
+FY2025,ebit,49.70,EUR,m,standalone,false,S03,true,FINA
+FY2025,net_income,8.57,EUR,m,standalone,false,S03,true,FINA; -7.55% YoY
+FY2024,revenue,305.5,EUR,m,standalone,true,S03,true,derived from FY2025 +7.47% YoY (FINA); confirm against FINA RGFI FY2024 filing
+FY2024,net_income,9.27,EUR,m,standalone,true,S03,true,derived from FY2025 -7.55% YoY (FINA)
 FY2023,parent_group_revenue,2791,EUR,m,consolidated,true,S01,true,United Group GROUP total (all markets) — NOT Telemach Croatia-specific; no Croatia split disclosed
 FY2023,parent_group_ebitda,988,EUR,m,consolidated,true,S01,true,United Group GROUP EBITDAal; margin 35%
-FY2023,parent_group_ebitda_margin,35,,pct,consolidated,true,S01,true,group EBITDAal margin
-FY2023,parent_group_mobile_subscribers,7.34,,m,consolidated,true,S01,true,group-wide mobile subscribers (all markets)
-FY2023,parent_group_broadband_households,5.30,,m,consolidated,true,S01,true,group-wide broadband households (all markets)
-Q3-2025,parent_group_revenue_ltm,2700,EUR,m,consolidated,true,S02,true,United Group GROUP last-twelve-month revenue (post Serbia sale); quarterly revenue ~2000m
-Q3-2025,parent_group_ebitda_ltm,680,EUR,m,consolidated,true,S02,true,group adjusted EBITDAal ~Q3; +7% YoY
+Q3-2025,parent_group_revenue_ltm,2700,EUR,m,consolidated,true,S02,true,United Group GROUP last-twelve-month revenue (post Serbia sale)

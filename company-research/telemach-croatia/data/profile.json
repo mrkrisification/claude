@@ -7,9 +7,9 @@
   "regulators": ["HAKOM", "HANFA"],
   "competitors": ["Hrvatski Telekom", "A1 Croatia"],
   "market_position": {
-    "summary": "Convergent cable + mobile challenger; fixed-broadband strong #2. No standalone financials disclosed; Croatian market metrics sourced from HAKOM.",
-    "sources": ["S01"]
+    "summary": "Convergent cable + mobile challenger; #3 operator by revenue (FY2025 €328m, FINA). Standalone financials from the Croatian company registry; subscriber/market-share metrics via HAKOM.",
+    "sources": ["S03"]
   },
-  "data_availability": "group-level only — no Croatia-segment financials are public; market metrics via HAKOM",
+  "data_availability": "standalone P&L from FINA statutory accounts (revenue/EBITDA/net profit); no parent investor-relations split; subscriber counts via HAKOM (totals only)",
   "last_updated": "2026-06-15"
 }
