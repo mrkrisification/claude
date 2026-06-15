@@ -1,0 +1,19 @@
+{
+  "downloaded": {
+    "https://united.group/united-group-b-v-continues-successful-growth-path-in-2023-with-record-results/": {
+      "downloaded_at": "2026-06-15T14:08:26.322752",
+      "est_credits": 2,
+      "file": "telemach-croatia/raw/2026-06-15-united-group-b-v-continues-successful-growth-path-in-2023-with-record-results.md",
+      "method": "firecrawl-parsed",
+      "url": "https://united.group/united-group-b-v-continues-successful-growth-path-in-2023-with-record-results/"
+    },
+    "https://united.group/united-group-b-v-continues-to-deliver-strong-growth-in-the-third-quarter-of-2025/": {
+      "downloaded_at": "2026-06-15T14:08:29.531785",
+      "est_credits": 1,
+      "file": "telemach-croatia/raw/2026-06-15-united-group-b-v-continues-to-deliver-strong-growth-in-the-third-quarter-of-2025.md",
+      "method": "firecrawl-parsed",
+      "url": "https://united.group/united-group-b-v-continues-to-deliver-strong-growth-in-the-third-quarter-of-2025/"
+    }
+  },
+  "id": "telemach-croatia"
+}

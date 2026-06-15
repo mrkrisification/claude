@@ -18,9 +18,21 @@
       "domains": ["a1.group", "a1.com"]
     },
     "hrvatski-telekom": {
-      "urls": ["https://www.t.ht.hr/en/investor-relations"],
-      "search": "Hrvatski Telekom quarterly annual financial report results",
-      "domains": ["ht.hr"]
+      "_note": "Listed operator with its own filings. List the specific IR report subpages (not the t.ht.hr alias, which only exposes recent quarters); 'strict' + patterns keep the financial backbone (annual reports, audited statements, full-year consolidated results) out of sustainability/governance noise.",
+      "urls": [
+        "https://www.hrvatskitelekom.hr/ht-grupa/en/investor-relations/annual-reports",
+        "https://www.hrvatskitelekom.hr/ht-grupa/en/investor-relations/financial-reports/quarterly-reports",
+        "https://www.hrvatskitelekom.hr/ht-grupa/en/investor-relations/financial-reports/audited-financial-statements"
+      ],
+      "search": "Hrvatski Telekom HT Group annual report audited financial statements quarterly",
+      "strict": true,
+      "patterns": ["annual_report", "financial_statements", "ht_group_20\\d{2}_results", "tfi-pod_ht_group"],
+      "domains": ["ht.hr", "hrvatskitelekom.hr"]
+    },
+    "telemach-croatia": {
+      "_note": "Private operator inside a private parent (United Group). No public standalone or country-segment financials — only group-level press releases (collect specific ones with `download --url`). Country market metrics come from the regulator (HAKOM). Documents the realistic ceiling for a private-in-private operator.",
+      "urls": ["https://united.group/news"],
+      "domains": ["united.group"]
     },
     "deutsche-telekom": {
       "urls": [

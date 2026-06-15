@@ -1,5 +1,82 @@
 {
   "downloaded": {
+    "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/izvjesca/ANNUAL_REPORT_ENG_2021.pdf": {
+      "downloaded_at": "2026-06-15T14:05:59.734495",
+      "file": "hrvatski-telekom/raw/2026-06-15-ANNUAL_REPORT_ENG_2021.pdf",
+      "method": "direct",
+      "sha256_16": "c686994630a339d2",
+      "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/izvjesca/ANNUAL_REPORT_ENG_2021.pdf"
+    },
+    "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/izvjesca/ANNUAL_REPORT_ENG_2022.pdf": {
+      "downloaded_at": "2026-06-15T14:06:00.909980",
+      "file": "hrvatski-telekom/raw/2026-06-15-ANNUAL_REPORT_ENG_2022.pdf",
+      "method": "direct",
+      "sha256_16": "0f1b46a34b32a54f",
+      "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/izvjesca/ANNUAL_REPORT_ENG_2022.pdf"
+    },
+    "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/izvjesca/ANNUAL_REPORT_ENG_2023.pdf": {
+      "downloaded_at": "2026-06-15T14:06:04.266827",
+      "file": "hrvatski-telekom/raw/2026-06-15-ANNUAL_REPORT_ENG_2023.pdf",
+      "method": "direct",
+      "sha256_16": "7505d541a5ebf205",
+      "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/izvjesca/ANNUAL_REPORT_ENG_2023.pdf"
+    },
+    "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/izvjesca/ANNUAL_REPORT_ENG_2024_1.pdf": {
+      "downloaded_at": "2026-06-15T14:06:05.781797",
+      "file": "hrvatski-telekom/raw/2026-06-15-ANNUAL_REPORT_ENG_2024_1.pdf",
+      "method": "direct",
+      "sha256_16": "751565cca1394930",
+      "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/izvjesca/ANNUAL_REPORT_ENG_2024_1.pdf"
+    },
+    "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/izvjesca/ANNUAL_REPORT_ENG_2025.pdf": {
+      "downloaded_at": "2026-06-15T14:06:07.851832",
+      "file": "hrvatski-telekom/raw/2026-06-15-ANNUAL_REPORT_ENG_2025.pdf",
+      "method": "direct",
+      "sha256_16": "6357ec804285acc7",
+      "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/izvjesca/ANNUAL_REPORT_ENG_2025.pdf"
+    },
+    "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/revidirana/2023/Financial_statements_2023_HT_Group_Separate_ENG_final.pdf": {
+      "downloaded_at": "2026-06-15T14:06:11.613666",
+      "file": "hrvatski-telekom/raw/2026-06-15-Financial_statements_2023_HT_Group_Separate_ENG_final.pdf",
+      "method": "direct",
+      "sha256_16": "9b61bd580e682180",
+      "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/revidirana/2023/Financial_statements_2023_HT_Group_Separate_ENG_final.pdf"
+    },
+    "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2021/q4/HT_Group_2021_Results_ENG.pdf": {
+      "downloaded_at": "2026-06-15T14:06:45.290546",
+      "file": "hrvatski-telekom/raw/2026-06-15-HT_Group_2021_Results_ENG.pdf",
+      "method": "direct",
+      "sha256_16": "50685ad4bed2f5c1",
+      "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2021/q4/HT_Group_2021_Results_ENG.pdf"
+    },
+    "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2022/q4/HT_Group_2022_Results_ENG.pdf": {
+      "downloaded_at": "2026-06-15T14:06:49.058413",
+      "file": "hrvatski-telekom/raw/2026-06-15-HT_Group_2022_Results_ENG.pdf",
+      "method": "direct",
+      "sha256_16": "9dc5b759d6ddee3d",
+      "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2022/q4/HT_Group_2022_Results_ENG.pdf"
+    },
+    "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2023/q1/TFI-POD_HT_Group_31.03.2023.eng.xlsx": {
+      "downloaded_at": "2026-06-15T14:06:51.554622",
+      "file": "hrvatski-telekom/raw/2026-06-15-TFI-POD_HT_Group_31.03.2023.eng.xlsx",
+      "method": "direct",
+      "sha256_16": "8367eed1522da9c9",
+      "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2023/q1/TFI-POD_HT_Group_31.03.2023.eng.xlsx"
+    },
+    "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2023/q4/HT_Group_2023_Results_ENG.pdf": {
+      "downloaded_at": "2026-06-15T14:06:52.222869",
+      "file": "hrvatski-telekom/raw/2026-06-15-HT_Group_2023_Results_ENG.pdf",
+      "method": "direct",
+      "sha256_16": "7186d89119ca5368",
+      "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2023/q4/HT_Group_2023_Results_ENG.pdf"
+    },
+    "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2024/q4/HT_Group_2024_Results_ENG.pdf": {
+      "downloaded_at": "2026-06-15T14:06:52.633541",
+      "file": "hrvatski-telekom/raw/2026-06-15-HT_Group_2024_Results_ENG.pdf",
+      "method": "direct",
+      "sha256_16": "71028ccb09d39c48",
+      "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2024/q4/HT_Group_2024_Results_ENG.pdf"
+    },
     "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2025/q2/HT_Group_Q2_2025_Results_ENG.pdf": {
       "downloaded_at": "2026-06-12T14:02:55.151672",
       "file": "hrvatski-telekom/raw/2026-06-12-HT_Group_Q2_2025_Results_ENG.pdf",
@@ -35,6 +112,13 @@
       "sha256_16": "0fa691a87806eee6",
       "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2025/q2/TFI-POD_HT_d.d._30.06.2025.eng.xlsx"
     },
+    "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2025/q4/HT_Group_2025_Results_ENG.pdf": {
+      "downloaded_at": "2026-06-15T14:06:53.179162",
+      "file": "hrvatski-telekom/raw/2026-06-15-HT_Group_2025_Results_ENG.pdf",
+      "method": "direct",
+      "sha256_16": "07ae9d02613f460c",
+      "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2025/q4/HT_Group_2025_Results_ENG.pdf"
+    },
     "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2026/q1/HT_Group_Q1_2026_Results_ENG.pdf": {
       "downloaded_at": "2026-06-12T14:03:07.486029",
       "file": "hrvatski-telekom/raw/2026-06-12-HT_Group_Q1_2026_Results_ENG.pdf",
@@ -69,6 +153,13 @@
       "method": "direct",
       "sha256_16": "c69e223fbd11c52a",
       "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/rezultati/en/2026/q1/TFI-POD_HT_d.d._31.03.2026.eng.xlsx"
+    },
+    "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/skupstina/2025/en/Financial_statements_2024_Croatian_Telecom_ENG.pdf": {
+      "downloaded_at": "2026-06-15T14:06:57.957872",
+      "file": "hrvatski-telekom/raw/2026-06-15-Financial_statements_2024_Croatian_Telecom_ENG.pdf",
+      "method": "direct",
+      "sha256_16": "85302c0c9dcb5646",
+      "url": "https://static.hrvatskitelekom.hr/webresources/tht/pdf/investitori/skupstina/2025/en/Financial_statements_2024_Croatian_Telecom_ENG.pdf"
     },
     "https://www.t.ht.hr/webresources/tht/pdf/Digital_atlas_HT_Group_ENG.pdf": {
       "downloaded_at": "2026-06-12T14:03:30.165340",
