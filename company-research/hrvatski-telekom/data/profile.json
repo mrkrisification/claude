@@ -1,0 +1,18 @@
+{
+  "company": "Hrvatski Telekom",
+  "slug": "hrvatski-telekom",
+  "entity_type": "listed",
+  "country": "Croatia",
+  "parent": {
+    "name": "Deutsche Telekom (via Magyar Telekom)",
+    "ownership_pct": 54.6,
+    "note": "As of 31 Dec 2025 / Q1-2026, the majority shareholder of record is Deutsche Telekom Europe B.V. with 54.6% of share capital (S16, S07); ultimately controlled by Deutsche Telekom AG. Earlier filings reported 53.54% (FY2024, S15). Deutsche Telekom historically holds HT through its DT Europe holding structure rather than directly through Magyar Telekom; group executives overlap with Magyar Telekom."
+  },
+  "regulators": ["HAKOM", "HANFA"],
+  "competitors": ["A1 Croatia", "Telemach Croatia"],
+  "market_position": {
+    "summary": "Croatia's leading telecom operator and #1 telecom brand; largest investor in the market, ~44% mobile customer market share.",
+    "sources": ["S16", "S01"]
+  },
+  "last_updated": "2026-06-15"
+}
