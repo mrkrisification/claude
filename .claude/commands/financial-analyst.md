@@ -468,11 +468,12 @@ then the `manifest.md` row + `ledger.json` entry (and text extract) stay, so pro
 
 ---
 
-## Downstream — country market overview (design target; built in a second step)
+## Downstream — country market overview (the per-market summary)
 
 This skill produces **one operator**. The end goal is a **country market overview combining every
 operator**, assembled in a separate step that simply **unions the aggregation-ready outputs** — so the
-job here is to keep those outputs clean, not to build the overview. Planned shape:
+per-operator job is to keep those outputs clean. Reference implementation:
+`company-research/_markets/croatia/` (HT + A1 + Telemach + HAKOM). Shape:
 
 ```
 company-research/_markets/<country>/
@@ -500,6 +501,33 @@ whole-market every run. (Country structure also feeds the existing `baselines/<c
 > mismatch instead, normalize definitions first where you can, and lead the overview with the caveats.
 > A noisy reconciliation that names the three inconsistencies is more useful (and honest) than a tidy fake
 > share table.
+
+**Build it once ≥2 operators in a country are composed.** It is a pure roll-up — recompute nothing from
+`raw/`. Produce two files (template: `_markets/croatia/`):
+
+`data/market.csv` — the machine union. Same schema as the regulator cache
+(`period,operator,metric,segment,value,unit,source_id,estimated`), with **cross-folder `source_id`s** so
+provenance survives the union (`hakom/R08`, `hrvatski-telekom/S04`, `a1-croatia/S01`). Normalize money to
+`EUR_m`, subscribers to `m`, shares to `pct`. Carry the regulator `_market` totals + each operator's key
+metrics (revenue, ebitda, net_income, subscribers).
+
+`market-overview.md` — the narrative summary. Standard sections:
+1. **Header** — assembled date; "composed by union of <operators> + <regulator>"; state the cross-folder
+   `source_id` convention and the EUR_m/m/pct normalization.
+2. **Market size** — the regulator whole-market totals as a multi-year table (mobile lines, fixed
+   broadband, TV, total revenue); note penetration trends.
+3. **Operator financials** — an FY table (revenue, EBITDA, margin, net income, `basis`) for the
+   best-covered year + a multi-year revenue/EBITDA trend line. Call out **scope mismatches** (a listed
+   parent's revenue may bundle other countries / equipment / wholesale; a subsidiary's is segment-only).
+4. **Subscribers & shares** — apply *reconcile-don't-divide*: regulator totals and operator-reported
+   bases **side by side**; derive a share only if they reconcile, else show the mismatch and the gaps.
+5. **Cross-operator findings** — the definitional inconsistencies, the regulator's coverage gaps, any
+   operator invisible in the data (private-in-private), and metric mislabels (RGUs vs broadband).
+6. **Data confidence & provenance** — high / low / missing; every figure traces to a cross-folder
+   `source_id`.
+
+Lead with the **reconciliation**, not a tidy share table — for a real market the honest summary is the one
+that names what doesn't line up.
 
 ### Shared parent-group cache (design target — dedupe HQ reports across markets)
 
