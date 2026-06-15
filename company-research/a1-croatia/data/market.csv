@@ -1,0 +1,10 @@
+period,metric,segment,value,unit,source_id,estimated
+FY2022,mobile_subscribers,a1-croatia,2000,thousands,S06,true
+FY2022,fixed_broadband_subscribers,a1-croatia,700,thousands,S06,true
+FY2022,arpu,a1-croatia,10.9,EUR,S06,true
+FY2023,mobile_subscribers,a1-croatia,2000,thousands,S05,true
+FY2023,fixed_broadband_subscribers,a1-croatia,700,thousands,S05,true
+FY2023,arpu,a1-croatia,11.5,EUR,S05,true
+FY2024,mobile_subscribers,a1-croatia,2158,thousands,S01,true
+FY2024,fixed_broadband_subscribers,a1-croatia,722,thousands,S01,true
+FY2024,arpu,a1-croatia,12.0,EUR,S01,true

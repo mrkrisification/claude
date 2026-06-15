@@ -1,0 +1,17 @@
+{
+  "company": "A1 Croatia",
+  "slug": "a1-croatia",
+  "entity_type": "subsidiary",
+  "country": "Croatia",
+  "parent": {
+    "name": "A1 Group (Telekom Austria)",
+    "ownership_pct": 100
+  },
+  "regulators": ["HAKOM", "HANFA"],
+  "competitors": ["Hrvatski Telekom", "Telemach Croatia"],
+  "market_position": {
+    "summary": "#2 provider of mobile and fixed-line services in Croatia (by service-revenue market share); ~11% of A1 Group revenue and EBITDA in 2024.",
+    "sources": ["S01", "S02"]
+  },
+  "last_updated": "2026-06-15"
+}
