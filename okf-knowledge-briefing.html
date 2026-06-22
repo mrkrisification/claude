@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Open Knowledge Format — Internal Briefing</title>
+
+<!-- ===========================================
+     FONTS — Cobalt Grid three-face system:
+     Newsreader (serif statements) · Hanken Grotesk (labels/body) · DM Mono (chrome)
+     =========================================== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..500;1,6..72,400..500&family=Hanken+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ===========================================
+   THEME TOKENS — Cobalt Grid (strictly two-color)
+   Change these to retheme the whole deck.
+   =========================================== */
+:root{
+    --paper:#F0EBDE;        /* warm cream canvas — the only surface */
+    --paper-2:#E6E0CE;      /* slightly deeper cream (used sparingly) */
+    --ink:#1F2BE0;          /* electric cobalt — the only ink color */
+    --ink-soft:#5560E5;     /* lighter cobalt for secondary marks */
+    --grid:rgba(31,43,224,0.10);   /* 10% cobalt — permanent graph paper */
+    --ink-faint:rgba(31,43,224,0.18); /* 18% cobalt — row dividers */
+
+    --font-display:"Newsreader", Georgia, serif;
+    --font-body:"Hanken Grotesk", sans-serif;
+    --font-mono:"DM Mono", ui-monospace, monospace;
+
+    /* Stage-scaled type (authored at 1920×1080) */
+    --hero:142px; --display:118px; --headline:70px; --row-headline:33px;
+    --table-name:27px; --lede:26px; --body:21px; --micro:15px; --mono:16px;
+
+    --edge:80px;
+    --stage-bg:#cfc9ba;     /* pillarbox/letterbox tone outside the stage */
+    --slide-bg:transparent; /* slides are transparent so the stage grid shows through */
+
+    --ease:cubic-bezier(0.16,1,0.3,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* ===========================================
+   FIXED 16:9 STAGE — viewport-base.css (verbatim)
+   Slides authored at 1920×1080, scaled as a whole.
+   =========================================== */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--stage-bg,#000);}
+.deck-viewport{position:fixed;inset:0;overflow:hidden;background:var(--stage-bg,#000);}
+.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--slide-bg,#fff);}
+.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;visibility:hidden;opacity:0;pointer-events:none;background:var(--slide-bg,#fff);}
+.slide.active,.slide.visible{visibility:visible;opacity:1;pointer-events:auto;z-index:1;}
+img,video,canvas,svg{max-width:100%;max-height:100%;}
+.deck-controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1000;}
+@media print{
+    html,body{width:1920px;height:auto;overflow:visible;background:#fff;}
+    .deck-viewport{position:static;overflow:visible;background:#fff;}
+    .deck-stage{position:static;width:auto;height:auto;transform:none !important;background:none;}
+    .slide{position:relative;display:block !important;visibility:visible !important;opacity:1 !important;pointer-events:auto !important;width:1920px;height:1080px;break-after:page;page-break-after:always;}
+    .slide:last-child{break-after:auto;page-break-after:auto;}
+    .deck-controls{display:none !important;}
+}
+@media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.2s !important;}
+}
+
+/* ===========================================
+   COBALT GRID CANVAS
+   Permanent graph-paper grid lives on the stage, behind every slide.
+   Slides are transparent so the grid is always visible.
+   =========================================== */
+.deck-stage{background:var(--paper);}
+.deck-stage::before{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(to right,var(--grid) 1px,transparent 1px),
+                     linear-gradient(to bottom,var(--grid) 1px,transparent 1px);
+    background-size:44px 44px;
+}
+.slide{background:transparent;color:var(--ink);font-family:var(--font-body);}
+
+/* ===========================================
+   UNIVERSAL CHROME FRAME (per slide)
+   Top + bottom 1.5px cobalt hairlines, page number, nav hint.
+   =========================================== */
+.slide .hair{position:absolute;left:var(--edge);right:var(--edge);height:1.5px;background:var(--ink);z-index:4;}
+.slide .hair.top{top:40px;}
+.slide .hair.bot{bottom:44px;}
+.slide .pagenum{position:absolute;right:var(--edge);bottom:64px;font-family:var(--font-mono);font-size:var(--mono);color:var(--ink);letter-spacing:0.06em;z-index:4;}
+.slide .navhint{position:absolute;left:var(--edge);bottom:64px;font-family:var(--font-mono);font-size:13px;color:var(--ink);letter-spacing:0.08em;opacity:0.4;z-index:4;}
+
+/* Content frame inside the chrome */
+.frame{position:absolute;left:var(--edge);right:var(--edge);top:130px;bottom:130px;z-index:2;}
+
+/* ===========================================
+   TYPOGRAPHY ROLES
+   =========================================== */
+.hero{font-family:var(--font-display);font-weight:400;font-size:var(--hero);line-height:0.92;letter-spacing:-0.008em;color:var(--ink);}
+.display{font-family:var(--font-display);font-weight:400;font-size:var(--display);line-height:0.96;letter-spacing:-0.005em;color:var(--ink);}
+.hl{font-family:var(--font-display);font-weight:400;font-size:var(--headline);line-height:0.96;letter-spacing:-0.004em;color:var(--ink);}
+em{font-style:italic;}
+.lede{font-family:var(--font-body);font-weight:400;font-size:var(--lede);line-height:1.45;color:var(--ink);}
+.body{font-family:var(--font-body);font-weight:400;font-size:var(--body);line-height:1.5;color:var(--ink);}
+.micro{font-family:var(--font-body);font-weight:600;font-size:var(--micro);letter-spacing:0.18em;text-transform:uppercase;color:var(--ink);}
+.micro-soft{color:var(--ink);opacity:0.55;}
+.mono{font-family:var(--font-mono);font-weight:400;font-size:var(--mono);letter-spacing:0.05em;color:var(--ink);}
+
+/* ===========================================
+   TOPBAR (section header) — Newsreader headline + mono lab-tag + 1.5px rule
+   =========================================== */
+.topbar{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1.5px solid var(--ink);padding-bottom:20px;}
+.topbar .tag{font-family:var(--font-mono);font-size:var(--mono);letter-spacing:0.08em;color:var(--ink);padding-bottom:8px;white-space:nowrap;}
+
+/* Masthead (cover) */
+.masthead{display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);font-size:var(--mono);letter-spacing:0.06em;color:var(--ink);}
+.masthead .r{opacity:0.6;}
+.rule15{height:1.5px;background:var(--ink);}
+
+/* Index list (cover footer + spec list) */
+.idx-row{display:grid;grid-template-columns:64px 1fr;gap:18px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--ink-faint);}
+.idx-row .num{font-family:var(--font-mono);font-size:var(--mono);color:var(--ink);}
+.idx-row .rh{font-family:var(--font-display);font-size:var(--row-headline);line-height:1.05;color:var(--ink);}
+.idx-row .bd{font-family:var(--font-body);font-size:var(--body);line-height:1.42;color:var(--ink);margin-top:6px;}
+
+/* Two-column compare cards (bordered regions, flat) */
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1.5px solid var(--ink);}
+.col{padding:34px 40px 30px;}
+.col + .col{border-left:1.5px solid var(--ink);}
+.col h4{font-family:var(--font-body);font-weight:600;font-size:var(--micro);letter-spacing:0.18em;text-transform:uppercase;color:var(--ink);margin-bottom:6px;}
+.col .lead{font-family:var(--font-display);font-size:34px;line-height:1.05;color:var(--ink);margin-bottom:20px;}
+.col ul{list-style:none;}
+.col li{font-family:var(--font-body);font-size:var(--body);line-height:1.42;color:var(--ink);padding-left:24px;position:relative;margin-bottom:14px;}
+.col li::before{content:"—";position:absolute;left:0;color:var(--ink);opacity:0.55;}
+
+/* Pull / banner line */
+.pull{border-top:1px solid var(--ink);margin-top:26px;padding-top:18px;display:flex;gap:16px;align-items:baseline;}
+.pull .q{font-family:var(--font-display);font-size:30px;line-height:1.15;color:var(--ink);}
+.pull .src{font-family:var(--font-mono);font-size:14px;letter-spacing:0.05em;color:var(--ink);opacity:0.6;white-space:nowrap;}
+
+/* Ledger table (wiki vs DB) */
+.ledger{display:flex;flex-direction:column;}
+.ledger .lr{display:grid;grid-template-columns:1.25fr 0.42fr;gap:28px;align-items:center;padding:15px 0;border-bottom:1px solid var(--ink-faint);}
+.ledger .lr.head{border-bottom:1.5px solid var(--ink);padding-bottom:12px;}
+.ledger .lr .name{font-family:var(--font-display);font-size:var(--table-name);line-height:1.12;color:var(--ink);}
+.ledger .lr.head .name,.ledger .lr.head .dest{font-family:var(--font-body);font-weight:600;font-size:var(--micro);letter-spacing:0.16em;text-transform:uppercase;}
+.ledger .lr .dest{font-family:var(--font-mono);font-size:var(--mono);letter-spacing:0.05em;color:var(--ink);text-align:right;}
+.ledger .lr .dest b{font-weight:500;}
+
+/* Storage ladder chips */
+.ladder{display:flex;align-items:stretch;gap:0;border:1.5px solid var(--ink);}
+.ladder .step{flex:1;padding:20px 22px;}
+.ladder .step + .step{border-left:1px solid var(--ink-faint);}
+.ladder .step .n{font-family:var(--font-mono);font-size:14px;letter-spacing:0.05em;color:var(--ink);opacity:0.6;}
+.ladder .step .t{font-family:var(--font-display);font-size:30px;line-height:1;color:var(--ink);margin:8px 0 8px;}
+.ladder .step .d{font-family:var(--font-body);font-size:17px;line-height:1.4;color:var(--ink);}
+.ladder .step.best{background:var(--paper-2);}
+.ladder .step.best .tagbest{font-family:var(--font-body);font-weight:600;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);display:inline-block;margin-top:8px;border:1px solid var(--ink);padding:3px 8px;}
+
+/* Code / frontmatter block (mono on faint cream panel, flat) */
+.code{font-family:var(--font-mono);font-size:18px;line-height:1.65;color:var(--ink);border:1.5px solid var(--ink);padding:22px 26px;white-space:pre;}
+.code .k{opacity:0.55;}
+.code .dash{color:var(--ink);}
+
+/* ===========================================
+   ARCHITECTURE DIAGRAM PRIMITIVES (flat boxes + cobalt rules)
+   =========================================== */
+.dbox{border:1.5px solid var(--ink);padding:16px 20px;background:var(--paper);}
+.dbox .bt{font-family:var(--font-body);font-weight:600;font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);}
+.dbox .bn{font-family:var(--font-display);font-size:23px;line-height:1.05;color:var(--ink);margin-top:4px;}
+.dbox .bsub{font-family:var(--font-mono);font-size:13px;letter-spacing:0.04em;color:var(--ink);opacity:0.65;margin-top:6px;}
+.dbox.meta{background:var(--paper-2);}
+.kb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.kb .sub{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+.kb .leaf{font-family:var(--font-mono);font-size:14px;letter-spacing:0.03em;color:var(--ink);border-left:2px solid var(--ink-faint);padding:5px 0 5px 12px;}
+.kb .leaf.raw{opacity:0.62;}
+.connector{height:30px;border-left:1.5px solid var(--ink);margin-left:50%;}
+
+/* notes column */
+.notes{display:flex;flex-direction:column;gap:14px;}
+.note{display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:baseline;}
+.note .nn{font-family:var(--font-mono);font-size:14px;color:var(--ink);}
+.note .nt{font-family:var(--font-body);font-size:18px;line-height:1.38;color:var(--ink);}
+.note .nt b{font-weight:700;}
+
+/* Stacked layers (second brain) */
+.layer{border:1.5px solid var(--ink);padding:26px 32px;}
+.layer .lh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;}
+.layer .lh .lt{font-family:var(--font-display);font-size:36px;color:var(--ink);}
+.layer .lh .ltag{font-family:var(--font-mono);font-size:14px;letter-spacing:0.05em;color:var(--ink);opacity:0.65;}
+.layer .row{display:flex;gap:14px;flex-wrap:wrap;}
+.layer .pill{font-family:var(--font-body);font-size:17px;color:var(--ink);border:1px solid var(--ink-faint);padding:8px 16px;}
+.flow-between{display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 0;}
+.flow-between .fx{font-family:var(--font-mono);font-size:14px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink);opacity:0.7;}
+.flow-between .arr{font-family:var(--font-mono);font-size:22px;color:var(--ink);}
+
+/* Colophon credits */
+.credits{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;border-top:1.5px solid var(--ink);padding-top:24px;}
+.credits .c .ct{font-family:var(--font-body);font-weight:600;font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);margin-bottom:10px;}
+.credits .c .cb{font-family:var(--font-body);font-size:17px;line-height:1.45;color:var(--ink);}
+
+/* ===========================================
+   PIXEL-GLITCH COLUMN + QR BLOCK (signature decoration)
+   =========================================== */
+.glitch{position:absolute;z-index:3;pointer-events:none;}
+.qr{position:absolute;z-index:5;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);gap:2px;background:var(--paper);padding:4px;box-shadow:0 0 0 1.5px var(--paper);}
+.qr i{background:transparent;}
+.qr i.on{background:var(--ink);}
+
+/* ===========================================
+   ENTRANCE ANIMATIONS — trigger on .slide.visible
+   =========================================== */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity 0.7s var(--ease),transform 0.7s var(--ease);}
+.slide.visible .reveal{opacity:1;transform:none;}
+.slide.visible .d1{transition-delay:0.08s}.slide.visible .d2{transition-delay:0.18s}
+.slide.visible .d3{transition-delay:0.28s}.slide.visible .d4{transition-delay:0.38s}
+.slide.visible .d5{transition-delay:0.48s}.slide.visible .d6{transition-delay:0.58s}
+.slide.visible .d7{transition-delay:0.68s}.slide.visible .d8{transition-delay:0.78s}
+
+/* Edit affordance */
+.edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer;}
+.edit-toggle{position:fixed;top:16px;left:16px;z-index:10001;opacity:0;pointer-events:none;transition:opacity .3s ease;
+    font-family:var(--font-mono);font-size:13px;letter-spacing:0.05em;background:var(--ink);color:var(--paper);border:none;padding:8px 12px;cursor:pointer;}
+.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto;}
+.edit-toggle.active{background:var(--paper);color:var(--ink);box-shadow:0 0 0 1.5px var(--ink);}
+[contenteditable="true"]{outline:1.5px dashed var(--ink-soft);outline-offset:4px;cursor:text;}
+
+/* progress */
+.progress{position:fixed;bottom:0;left:0;height:3px;background:var(--ink);z-index:1000;transition:width .35s var(--ease);}
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- ============================================================
+     SLIDE 1 — COVER
+     ============================================================ -->
+<section class="slide title-slide">
+    <div class="hair top"></div><div class="hair bot"></div>
+    <span class="navhint">← / → · space to advance</span><span class="pagenum">01 / 08</span>
+
+    <!-- signature pixel-glitch column, right edge -->
+    <svg class="glitch" style="right:0;top:0;width:430px;height:1080px;" viewBox="0 0 430 1080" preserveAspectRatio="none" fill="none">
+        <defs><pattern id="scan" width="14" height="14" patternUnits="userSpaceOnUse">
+            <rect width="3" height="14" fill="#1F2BE0" opacity="0.85"/></pattern></defs>
+        <rect x="300" y="60"  width="130" height="150" fill="url(#scan)"/>
+        <rect x="230" y="210" width="200" height="150" fill="url(#scan)"/>
+        <rect x="120" y="360" width="310" height="150" fill="url(#scan)"/>
+        <rect x="230" y="510" width="200" height="150" fill="url(#scan)"/>
+        <rect x="320" y="660" width="110" height="150" fill="url(#scan)"/>
+        <rect x="250" y="810" width="180" height="150" fill="url(#scan)"/>
+    </svg>
+    <!-- QR punctuation -->
+    <div class="qr reveal d2" style="right:120px;top:60px;width:84px;height:84px;">
+        <i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i>
+        <i></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i>
+        <i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i>
+        <i></i><i></i><i class="on"></i><i class="on"></i><i></i><i></i><i class="on"></i><i class="on"></i>
+        <i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i>
+        <i></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i></i>
+        <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i>
+        <i></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i>
+    </div>
+
+    <div class="frame" style="top:70px;bottom:96px;right:480px;display:flex;flex-direction:column;">
+        <div class="masthead reveal d1"><span>Knowledge Catalog Bulletin / 0.1</span><span class="r">Internal Briefing</span></div>
+        <div class="rule15 reveal d1" style="margin-top:16px;"></div>
+
+        <div class="micro micro-soft reveal d2" style="margin-top:74px;">A field report on agent-readable knowledge</div>
+        <h1 class="hero reveal d3" style="margin-top:18px;">The Open<br>Knowledge <em>Format</em></h1>
+        <p class="lede reveal d4" style="margin-top:32px;max-width:880px;">How Google's thin spec and Karpathy's LLM-wiki pattern turn raw fileshares into compiled, cross-linked knowledge — and the architectures worth building on top of them.</p>
+
+        <div style="margin-top:auto;">
+            <div class="rule15 reveal d5"></div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:18px;">
+                <div class="reveal d5" style="padding-right:24px;"><div class="mono" style="opacity:.6;font-size:13px;">01</div><div class="body" style="margin-top:4px;">What OKF is</div></div>
+                <div class="reveal d6" style="padding-right:24px;"><div class="mono" style="opacity:.6;font-size:13px;">02</div><div class="body" style="margin-top:4px;">Karpathy × OKF</div></div>
+                <div class="reveal d7" style="padding-right:24px;"><div class="mono" style="opacity:.6;font-size:13px;">03</div><div class="body" style="margin-top:4px;">Corporate meta-layer</div></div>
+                <div class="reveal d8"><div class="mono" style="opacity:.6;font-size:13px;">04</div><div class="body" style="margin-top:4px;">Second brain & the data boundary</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 2 — THE SHIFT
+     ============================================================ -->
+<section class="slide">
+    <div class="hair top"></div><div class="hair bot"></div>
+    <span class="navhint">← / →</span><span class="pagenum">02 / 08</span>
+    <div class="frame">
+        <div class="topbar reveal d1">
+            <div class="hl">From retrieval to <em>compiled</em> knowledge</div>
+            <div class="tag">01 / THE SHIFT</div>
+        </div>
+
+        <div class="cols2 reveal d2" style="margin-top:34px;">
+            <div class="col">
+                <h4>The paradigm today — RAG</h4>
+                <div class="lead">Stateless retrieval</div>
+                <ul>
+                    <li>Documents are dumped into a vector database; at query time the model searches for relevant chunks.</li>
+                    <li>The LLM rediscovers knowledge from scratch on every question — there is no accumulation.</li>
+                    <li>Subtle questions that need five documents must be re-pieced together every single time.</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h4>The shift — a compiled wiki</h4>
+                <div class="lead">Stateful, compounding</div>
+                <ul>
+                    <li>A set of human-readable, LLM-maintained markdown files — one per concept.</li>
+                    <li>Cross-referenced, with provenance and version history via git.</li>
+                    <li>Pay the compilation cost once; queries are cheap and accurate because the thinking is done.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="pull reveal d3">
+            <div class="q">"Knowledge as compiled code: your raw docs are the source files; the wiki is the binary."</div>
+            <div class="src">Why it struck a nerve — LLMs don't<br>find the bookkeeping tedious.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 3 — WHAT OKF IS
+     ============================================================ -->
+<section class="slide">
+    <div class="hair top"></div><div class="hair bot"></div>
+    <span class="navhint">← / →</span><span class="pagenum">03 / 08</span>
+    <div class="frame">
+        <div class="topbar reveal d1">
+            <div class="hl">What OKF actually is</div>
+            <div class="tag">02 / THE SPEC · v0.1</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1.15fr 0.85fr;gap:56px;margin-top:30px;align-items:start;">
+            <!-- left: the rules -->
+            <div>
+                <div class="idx-row reveal d2" style="padding-top:6px;"><div class="num">01</div><div><div class="rh">Format, not platform</div><div class="bd">A directory of markdown files with YAML frontmatter. <span style="font-family:var(--font-mono);font-size:17px;">cat</span> a file to read it; <span style="font-family:var(--font-mono);font-size:17px;">git clone</span> to distribute. No SDK, no registry, no central authority.</div></div></div>
+                <div class="idx-row reveal d3"><div class="num">02</div><div><div class="rh">One required field</div><div class="bd">Every concept needs exactly one thing — a <span style="font-family:var(--font-mono);font-size:17px;">type:</span> field. Everything else is left to the producer.</div></div></div>
+                <div class="idx-row reveal d4"><div class="num">03</div><div><div class="rh">Two reserved filenames + a graph</div><div class="bd"><span style="font-family:var(--font-mono);font-size:17px;">index.md</span> (listing) and <span style="font-family:var(--font-mono);font-size:17px;">log.md</span> (history). Concepts cross-link with bundle-relative markdown links — the directory becomes a graph.</div></div></div>
+                <div class="idx-row reveal d5" style="border-bottom:none;"><div class="num">04</div><div><div class="rh">Deliberately permissive</div><div class="bd">Unknown types and fields are preserved on round-trip; missing optional fields, unknown types and broken links never cause rejection.</div></div></div>
+            </div>
+            <!-- right: a concept doc -->
+            <div class="reveal d3">
+                <div class="micro" style="margin-bottom:14px;">A concept document</div>
+                <div class="code"><span class="dash">---</span>
+<span class="k">type:</span> BigQuery Table
+<span class="k">title:</span> Customer Orders
+<span class="k">description:</span> One row per
+  completed customer order.
+<span class="k">resource:</span> https://…
+<span class="k">tags:</span> [sales, orders]
+<span class="dash">---</span>
+
+<span class="k"># Schema</span>   <span class="k"># Examples</span>
+<span class="k"># Citations</span></div>
+                <div class="body reveal d5" style="margin-top:20px;opacity:0.8;">Producer / consumer are independent: a human-authored bundle is consumed by an agent. <b>The format is the contract.</b></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 4 — KARPATHY × OKF
+     ============================================================ -->
+<section class="slide">
+    <div class="hair top"></div><div class="hair bot"></div>
+    <span class="navhint">← / →</span><span class="pagenum">04 / 08</span>
+    <div class="frame">
+        <div class="topbar reveal d1">
+            <div class="hl">Karpathy <em>×</em> OKF — workflow + format</div>
+            <div class="tag">03 / THE COMBINATION</div>
+        </div>
+
+        <div class="cols2 reveal d2" style="margin-top:34px;">
+            <div class="col">
+                <h4>Karpathy's gist → how to behave</h4>
+                <div class="lead">The workflow</div>
+                <ul>
+                    <li><b>Ingest</b> — read a new source, integrate it into existing pages.</li>
+                    <li><b>Query</b> — answer from the already-synthesized wiki, no re-chunking.</li>
+                    <li><b>Lint</b> — audit for contradictions, orphans, missing links.</li>
+                    <li>An <em>idea file</em>, not a spec — every team's instance is bespoke and doesn't interoperate.</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h4>OKF's spec → how to format</h4>
+                <div class="lead">The file format</div>
+                <ul>
+                    <li>Frontmatter with <span style="font-family:var(--font-mono);font-size:17px;">type</span>, reserved filenames, link conventions.</li>
+                    <li>The <em>minimum</em> standardization needed for interoperability.</li>
+                    <li>The interoperability bet: producers and consumers converge → knowledge stops being siloed.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="pull reveal d3">
+            <div class="q">Hand the agent both in one <span style="font-family:var(--font-mono);font-size:26px;">CLAUDE.md</span>: Karpathy = behaviour, OKF = schema.</div>
+            <div class="src">The only real delta OKF adds<br>is the frontmatter block.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 5 — ARCHITECTURE I · CORPORATE META-LAYER
+     ============================================================ -->
+<section class="slide">
+    <div class="hair top"></div><div class="hair bot"></div>
+    <span class="navhint">← / →</span><span class="pagenum">05 / 08</span>
+    <div class="frame">
+        <div class="topbar reveal d1">
+            <div class="hl">Architecture I — the corporate meta-layer</div>
+            <div class="tag">04 / WIKI-OF-WIKIS</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1.35fr 0.65fr;gap:50px;margin-top:30px;align-items:start;">
+            <!-- diagram -->
+            <div>
+                <div class="dbox meta reveal d2" style="width:60%;margin:0 auto;text-align:center;">
+                    <div class="bt">Meta layer · index of indexes</div>
+                    <div class="bn">A chat / agent enters here</div>
+                    <div class="bsub">routes to the right KB — pure navigation, no content of its own</div>
+                </div>
+                <div class="connector reveal d2"></div>
+                <div class="rule15 reveal d3"></div>
+                <div class="kb-grid reveal d3" style="margin-top:22px;">
+                    <div class="dbox kb"><div class="bt">KB · Project X</div><div class="sub"><span class="leaf">index.md</span><span class="leaf">concepts/ — wiki</span><span class="leaf raw">raw/ — immutable</span></div></div>
+                    <div class="dbox kb"><div class="bt">KB · Infrastructure</div><div class="sub"><span class="leaf">index.md</span><span class="leaf">concepts/ — wiki</span><span class="leaf raw">raw/ — immutable</span></div></div>
+                    <div class="dbox kb"><div class="bt">KB · Architecture</div><div class="sub"><span class="leaf">index.md</span><span class="leaf">concepts/ — wiki</span><span class="leaf raw">raw/ — immutable</span></div></div>
+                </div>
+                <div class="body reveal d4" style="margin-top:18px;opacity:0.75;">Each KB is a single-purpose OKF bundle. The agent reads the meta <span style="font-family:var(--font-mono);font-size:17px;">index.md</span>, dives into the relevant sub-bundle, and follows links down to <span style="font-family:var(--font-mono);font-size:17px;">raw/</span> when it needs the original source.</div>
+            </div>
+            <!-- decisions -->
+            <div class="notes">
+                <div class="micro reveal d3" style="margin-bottom:4px;">Decisions worth making explicit</div>
+                <div class="note reveal d4"><div class="nn">①</div><div class="nt"><b>Ownership.</b> One person / small group per KB feeds sources, triggers ingest, lints. Without it, wikis rot.</div></div>
+                <div class="note reveal d5"><div class="nn">②</div><div class="nt"><b>Cross-KB linking.</b> OKF doesn't define it — set your own convention in the meta <span style="font-family:var(--font-mono);font-size:16px;">CLAUDE.md</span>.</div></div>
+                <div class="note reveal d6"><div class="nn">③</div><div class="nt"><b>RAG as overflow valve.</b> Layer it over compiled pages for cross-KB synthesis — complement, not replacement.</div></div>
+                <div class="note reveal d7"><div class="nn">④</div><div class="nt"><b>The real risk.</b> Whether owners actually maintain their KBs — not the architecture itself.</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 6 — ARCHITECTURE II · SECOND BRAIN
+     ============================================================ -->
+<section class="slide">
+    <div class="hair top"></div><div class="hair bot"></div>
+    <span class="navhint">← / →</span><span class="pagenum">06 / 08</span>
+    <div class="frame">
+        <div class="topbar reveal d1">
+            <div class="hl">Architecture II — the second brain / digital twin</div>
+            <div class="tag">05 / KNOW vs DO</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 0.34fr;gap:48px;margin-top:30px;align-items:center;">
+            <div>
+                <div class="layer reveal d2">
+                    <div class="lh"><div class="lt">Operational layer</div><div class="ltag">live · action · MCP</div></div>
+                    <div class="row">
+                        <span class="pill">Mail / calendar / tasks via MCP</span>
+                        <span class="pill">Scheduled triggers — 8am inbox scan</span>
+                        <span class="pill">Score urgency &amp; deadlines</span>
+                        <span class="pill">Draft replies — never auto-send</span>
+                    </div>
+                </div>
+                <div class="flow-between reveal d3"><span class="arr">↑</span><span class="fx">feeds context both ways</span><span class="arr">↓</span></div>
+                <div class="layer reveal d4">
+                    <div class="lh"><div class="lt">Knowledge layer</div><div class="ltag">compiled · stable · OKF</div></div>
+                    <div class="row">
+                        <span class="pill">Karpathy / OKF wiki</span>
+                        <span class="pill">Decisions, project context</span>
+                        <span class="pill">Meeting outcomes ingested</span>
+                        <span class="pill">Operational agent reads it for context</span>
+                    </div>
+                </div>
+            </div>
+            <div class="reveal d3">
+                <div class="display" style="font-size:62px;line-height:1.0;">The wiki <em>knows.</em><br>The brain <em>does.</em></div>
+                <div class="body" style="margin-top:20px;opacity:0.8;">Same pattern, different problem: <b>knowing</b> is a compiled-wiki job; <b>doing</b> needs live tool access, triggers and a tighter trust model. Conflating them builds systems that do everything and nothing reliably.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 7 — THE BOUNDARY · WIKI vs DB
+     ============================================================ -->
+<section class="slide">
+    <div class="hair top"></div><div class="hair bot"></div>
+    <span class="navhint">← / →</span><span class="pagenum">07 / 08</span>
+    <div class="frame">
+        <div class="topbar reveal d1">
+            <div class="hl">The boundary — wiki vs. database</div>
+            <div class="tag">06 / INVESTOR-RELATIONS EXAMPLE</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1.15fr 0.85fr;gap:54px;margin-top:28px;align-items:start;">
+            <!-- ledger -->
+            <div class="ledger reveal d2">
+                <div class="lr head"><div class="name">What it is</div><div class="dest">Where it lives</div></div>
+                <div class="lr"><div class="name">Writing style guide &amp; disclosure policy</div><div class="dest"><b>WIKI</b></div></div>
+                <div class="lr"><div class="name">Narrative framing &amp; KPI definitions</div><div class="dest"><b>WIKI</b></div></div>
+                <div class="lr"><div class="name">Why a metric changed last quarter</div><div class="dest"><b>WIKI</b></div></div>
+                <div class="lr"><div class="name">Revenue, EBITDA, balance-sheet figures</div><div class="dest"><b>DB · MCP</b></div></div>
+                <div class="lr"><div class="name">KPI values, time series, segment data</div><div class="dest"><b>DB · MCP</b></div></div>
+                <div class="lr" style="border-bottom:none;"><div class="name">The raw delta vs. last quarter</div><div class="dest"><b>DB · MCP</b></div></div>
+                <div class="body reveal d3" style="margin-top:16px;opacity:0.78;">The wiki tells the agent <em>how to think and write</em>; the DB gives it <em>what to say</em>. The moment you copy-paste numbers into markdown, you've crossed the wrong boundary.</div>
+            </div>
+            <!-- storage ladder -->
+            <div>
+                <div class="micro reveal d3" style="margin-bottom:14px;">Simplest storage — no full database</div>
+                <div class="ladder reveal d4">
+                    <div class="step"><div class="n">START</div><div class="t">CSV</div><div class="d">Files in a folder, read by Claude Code. Finance lives in Excel; git-versioned.</div></div>
+                    <div class="step best"><div class="n">SWEET SPOT</div><div class="t">SQLite</div><div class="d">One file, real SQL &amp; joins, zero infra. ~20-line MCP server.<span class="tagbest">recommended</span></div></div>
+                    <div class="step"><div class="n">IF ANALYTICAL</div><div class="t">DuckDB</div><div class="d">Columnar &amp; time-series; reads CSV / Parquet directly. Still a single file.</div></div>
+                </div>
+                <div class="note reveal d5" style="margin-top:22px;"><div class="nn">!</div><div class="nt">Structured data must be <b>queried, not read</b> — a pure chat will hallucinate aggregations. The OKF wiki's <span style="font-family:var(--font-mono);font-size:16px;">resource:</span> pointer is the map; the file is the territory.</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 8 — WILL IT WIN / TAKEAWAYS (colophon)
+     ============================================================ -->
+<section class="slide">
+    <div class="hair top"></div><div class="hair bot"></div>
+    <span class="navhint">end of briefing</span><span class="pagenum">08 / 08</span>
+
+    <!-- mirrored glitch column, left edge (colophon convention) -->
+    <svg class="glitch" style="left:0;top:0;width:320px;height:1080px;" viewBox="0 0 320 1080" preserveAspectRatio="none" fill="none">
+        <defs><pattern id="scan2" width="14" height="14" patternUnits="userSpaceOnUse">
+            <rect width="3" height="14" fill="#1F2BE0" opacity="0.85"/></pattern></defs>
+        <rect x="0"  y="120" width="120" height="150" fill="url(#scan2)"/>
+        <rect x="0"  y="270" width="210" height="150" fill="url(#scan2)"/>
+        <rect x="0"  y="420" width="90"  height="150" fill="url(#scan2)"/>
+        <rect x="0"  y="570" width="180" height="150" fill="url(#scan2)"/>
+        <rect x="0"  y="720" width="120" height="150" fill="url(#scan2)"/>
+    </svg>
+
+    <div class="frame" style="left:380px;">
+        <div class="micro micro-soft reveal d1" style="margin-top:40px;">Will OKF become the standard?</div>
+        <h2 class="display reveal d2" style="margin-top:18px;">Bet on the <em>pattern,</em><br>not the brand.</h2>
+        <p class="lede reveal d3" style="margin-top:24px;max-width:1050px;">Uncertain as a named spec — but the underlying bet (markdown + git as the substrate for agent-readable knowledge) looks solid, and migration between markdown standards is an afternoon of find-and-replace.</p>
+
+        <div class="credits reveal d4" style="margin-top:auto;">
+            <div class="c"><div class="ct">Likely outcome</div><div class="cb">Loose convergence — like REST. <span style="font-family:var(--font-mono);font-size:15px;">type:</span> frontmatter and <span style="font-family:var(--font-mono);font-size:15px;">index.md</span> / <span style="font-family:var(--font-mono);font-size:15px;">log.md</span> as de-facto conventions.</div></div>
+            <div class="c"><div class="ct">Why it sticks</div><div class="cb">Every major agent already reads local markdown; git gives history for free; adoption cost ≈ zero.</div></div>
+            <div class="c"><div class="ct">The real risk</div><div class="cb">Not picking the wrong standard — picking <em>no</em> structure and keeping the wild fileshare.</div></div>
+            <div class="c"><div class="ct">For the initiative</div><div class="cb">Small owned KBs + meta-layer · wiki for knowledge, MCP/DB for live data · start report-only.</div></div>
+        </div>
+    </div>
+</section>
+
+</main>
+</div>
+
+<!-- chrome outside the stage -->
+<div class="progress" id="progress"></div>
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)">✎ edit</button>
+
+<script>
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   =========================================== */
+class SlidePresentation{
+    constructor(){
+        this.slides=[...document.querySelectorAll('.slide')];
+        this.current=0;
+        this.stage=document.getElementById('deckStage');
+        this.progress=document.getElementById('progress');
+        this.setupStageScale();
+        this.setupKeyboardNav();
+        this.setupTouchNav();
+        this.setupWheelNav();
+        this.show(0);
+    }
+    setupStageScale(){
+        const scale=()=>{
+            const f=Math.min(innerWidth/1920,innerHeight/1080);
+            const x=(innerWidth-1920*f)/2, y=(innerHeight-1080*f)/2;
+            this.stage.style.transform=`translate(${x}px,${y}px) scale(${f})`;
+        };
+        scale();addEventListener('resize',scale);
+    }
+    setupKeyboardNav(){
+        addEventListener('keydown',e=>{
+            if(e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true')return;
+            if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();this.next();}
+            else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.prev();}
+            else if(e.key==='Home'){this.show(0);}
+            else if(e.key==='End'){this.show(this.slides.length-1);}
+        });
+    }
+    setupTouchNav(){
+        let x0=null;
+        addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+        addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50){dx<0?this.next():this.prev();}x0=null;},{passive:true});
+    }
+    setupWheelNav(){
+        let lock=false;
+        addEventListener('wheel',e=>{
+            if(lock)return;if(Math.abs(e.deltaY)<24)return;
+            lock=true;e.deltaY>0?this.next():this.prev();
+            setTimeout(()=>lock=false,650);
+        },{passive:true});
+    }
+    show(i){
+        this.current=Math.max(0,Math.min(i,this.slides.length-1));
+        this.slides.forEach((s,n)=>{const a=n===this.current;s.classList.toggle('active',a);s.classList.toggle('visible',a);});
+        this.progress.style.width=((this.current+1)/this.slides.length*100)+'%';
+    }
+    next(){this.show(this.current+1);}
+    prev(){this.show(this.current-1);}
+}
+const deck=new SlidePresentation();
+
+/* ===========================================
+   INLINE TEXT EDITING (hotzone hover + E key)
+   =========================================== */
+const editor={
+    isActive:false,
+    toggleEditMode(){
+        this.isActive=!this.isActive;
+        const btn=document.getElementById('editToggle');
+        btn.classList.toggle('active',this.isActive);
+        btn.classList.toggle('show',this.isActive);
+        btn.textContent=this.isActive?'✓ done':'✎ edit';
+        document.querySelectorAll('.hl,.hero,.display,.lede,.body,.rh,.bd,.q,.src,.name,.dest,.t,.d,.nt,.cb,.ct,.bn,.bt,.lead,.pill,.leaf,.micro').forEach(el=>{
+            el.setAttribute('contenteditable',this.isActive?'true':'false');
+        });
+    }
+};
+document.getElementById('editToggle').addEventListener('click',()=>editor.toggleEditMode());
+const hz=document.getElementById('editHotzone'),et=document.getElementById('editToggle');let ht=null;
+hz.addEventListener('mouseenter',()=>{clearTimeout(ht);et.classList.add('show');});
+hz.addEventListener('mouseleave',()=>{ht=setTimeout(()=>{if(!editor.isActive)et.classList.remove('show');},400);});
+et.addEventListener('mouseenter',()=>clearTimeout(ht));
+et.addEventListener('mouseleave',()=>{ht=setTimeout(()=>{if(!editor.isActive)et.classList.remove('show');},400);});
+hz.addEventListener('click',()=>editor.toggleEditMode());
+addEventListener('keydown',e=>{if((e.key==='e'||e.key==='E')&&e.target.getAttribute('contenteditable')!=='true')editor.toggleEditMode();});
+</script>
+</body>
+</html>
