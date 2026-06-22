@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Briefing</title>
+
+<!-- ===========================================
+     FONTS — Cobalt Grid three-face system (matches the OKF briefing):
+     Newsreader (serif statements) · Hanken Grotesk (labels/body) · DM Mono (chrome)
+     =========================================== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..500;1,6..72,400..500&family=Hanken+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ===========================================
+   THEME TOKENS — Cobalt Grid (strictly two-color)
+   =========================================== */
+:root{
+    --paper:#F0EBDE;
+    --paper-2:#E6E0CE;
+    --ink:#1F2BE0;
+    --ink-soft:#5560E5;
+    --grid:rgba(31,43,224,0.10);
+    --ink-faint:rgba(31,43,224,0.18);
+
+    --font-display:"Newsreader", Georgia, serif;
+    --font-body:"Hanken Grotesk", sans-serif;
+    --font-mono:"DM Mono", ui-monospace, monospace;
+
+    --hero:142px; --display:118px; --headline:70px; --row-headline:33px;
+    --table-name:30px; --lede:30px; --body:21px; --micro:15px; --mono:16px;
+
+    --edge:80px;
+    --stage-bg:#cfc9ba;
+    --slide-bg:transparent;
+
+    --ease:cubic-bezier(0.16,1,0.3,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* ===========================================
+   FIXED 16:9 STAGE — viewport-base (slides authored at 1920×1080)
+   =========================================== */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--stage-bg,#000);}
+.deck-viewport{position:fixed;inset:0;overflow:hidden;background:var(--stage-bg,#000);}
+.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--slide-bg,#fff);}
+.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;visibility:hidden;opacity:0;pointer-events:none;background:var(--slide-bg,#fff);}
+.slide.active,.slide.visible{visibility:visible;opacity:1;pointer-events:auto;z-index:1;}
+img,video,canvas,svg{max-width:100%;max-height:100%;}
+@media print{
+    html,body{width:1920px;height:auto;overflow:visible;background:#fff;}
+    .deck-viewport{position:static;overflow:visible;background:#fff;}
+    .deck-stage{position:static;width:auto;height:auto;transform:none !important;background:none;}
+    .slide{position:relative;display:block !important;visibility:visible !important;opacity:1 !important;pointer-events:auto !important;width:1920px;height:1080px;break-after:page;page-break-after:always;}
+    .slide:last-child{break-after:auto;page-break-after:auto;}
+}
+@media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.2s !important;}
+}
+
+/* ===========================================
+   COBALT GRID CANVAS — permanent graph paper behind every slide
+   =========================================== */
+.deck-stage{background:var(--paper);}
+.deck-stage::before{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(to right,var(--grid) 1px,transparent 1px),
+                     linear-gradient(to bottom,var(--grid) 1px,transparent 1px);
+    background-size:44px 44px;
+}
+.slide{background:transparent;color:var(--ink);font-family:var(--font-body);}
+
+/* ===========================================
+   UNIVERSAL CHROME FRAME (per slide)
+   =========================================== */
+.slide .hair{position:absolute;left:var(--edge);right:var(--edge);height:1.5px;background:var(--ink);z-index:4;}
+.slide .hair.top{top:40px;}
+.slide .hair.bot{bottom:44px;}
+.slide .pagenum{position:absolute;right:var(--edge);bottom:64px;font-family:var(--font-mono);font-size:var(--mono);color:var(--ink);letter-spacing:0.06em;z-index:4;}
+.slide .navhint{position:absolute;left:var(--edge);bottom:64px;font-family:var(--font-mono);font-size:13px;color:var(--ink);letter-spacing:0.08em;opacity:0.4;z-index:4;}
+
+.frame{position:absolute;left:var(--edge);right:var(--edge);top:130px;bottom:130px;z-index:2;}
+
+/* ===========================================
+   TYPOGRAPHY ROLES
+   =========================================== */
+.hl{font-family:var(--font-display);font-weight:400;font-size:var(--headline);line-height:0.96;letter-spacing:-0.004em;color:var(--ink);}
+em{font-style:italic;}
+.lede{font-family:var(--font-body);font-weight:400;font-size:var(--lede);line-height:1.42;color:var(--ink);}
+.body{font-family:var(--font-body);font-weight:400;font-size:var(--body);line-height:1.5;color:var(--ink);}
+.micro{font-family:var(--font-body);font-weight:600;font-size:var(--micro);letter-spacing:0.18em;text-transform:uppercase;color:var(--ink);}
+.micro-soft{color:var(--ink);opacity:0.55;}
+.mono{font-family:var(--font-mono);font-weight:400;font-size:var(--mono);letter-spacing:0.05em;color:var(--ink);}
+
+/* TOPBAR (section header) */
+.topbar{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1.5px solid var(--ink);padding-bottom:20px;}
+.topbar .tag{font-family:var(--font-mono);font-size:var(--mono);letter-spacing:0.08em;color:var(--ink);padding-bottom:8px;white-space:nowrap;}
+
+.rule15{height:1.5px;background:var(--ink);}
+
+/* Index list (numbered rows) */
+.idx-row{display:grid;grid-template-columns:64px 1fr;gap:18px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--ink-faint);}
+.idx-row .num{font-family:var(--font-mono);font-size:var(--mono);color:var(--ink);}
+.idx-row .rh{font-family:var(--font-display);font-size:var(--row-headline);line-height:1.08;color:var(--ink);}
+.idx-row .bd{font-family:var(--font-body);font-size:var(--body);line-height:1.42;color:var(--ink);margin-top:6px;opacity:0.75;}
+
+/* Pull / banner line */
+.pull{border-top:1px solid var(--ink);margin-top:26px;padding-top:18px;display:flex;gap:16px;align-items:baseline;}
+.pull .q{font-family:var(--font-display);font-size:38px;line-height:1.1;color:var(--ink);}
+.pull .src{font-family:var(--font-mono);font-size:14px;letter-spacing:0.05em;color:var(--ink);opacity:0.6;white-space:nowrap;}
+
+/* Ledger table (guardrails) */
+.ledger{display:flex;flex-direction:column;}
+.ledger .lr{display:grid;grid-template-columns:0.5fr 1.25fr;gap:28px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--ink-faint);}
+.ledger .lr.head{border-bottom:1.5px solid var(--ink);padding-bottom:12px;}
+.ledger .lr .key{font-family:var(--font-display);font-size:var(--table-name);line-height:1.12;color:var(--ink);}
+.ledger .lr.head .key,.ledger .lr.head .val{font-family:var(--font-body);font-weight:600;font-size:var(--micro);letter-spacing:0.16em;text-transform:uppercase;}
+.ledger .lr .val{font-family:var(--font-body);font-size:var(--body);line-height:1.4;color:var(--ink);opacity:0.78;}
+
+/* compact supporting list (slide 1) */
+.kv{display:grid;grid-template-columns:170px 1fr;gap:24px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--ink-faint);}
+.kv .k{font-family:var(--font-body);font-weight:600;font-size:var(--micro);letter-spacing:0.16em;text-transform:uppercase;color:var(--ink);}
+.kv .v{font-family:var(--font-body);font-size:var(--body);line-height:1.45;color:var(--ink);}
+
+/* signature pixel-glitch column */
+.glitch{position:absolute;z-index:3;pointer-events:none;}
+
+/* ===========================================
+   ENTRANCE ANIMATIONS — trigger on .slide.visible
+   =========================================== */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity 0.7s var(--ease),transform 0.7s var(--ease);}
+.slide.visible .reveal{opacity:1;transform:none;}
+.slide.visible .d1{transition-delay:0.08s}.slide.visible .d2{transition-delay:0.18s}
+.slide.visible .d3{transition-delay:0.28s}.slide.visible .d4{transition-delay:0.38s}
+.slide.visible .d5{transition-delay:0.48s}.slide.visible .d6{transition-delay:0.58s}
+.slide.visible .d7{transition-delay:0.68s}.slide.visible .d8{transition-delay:0.78s}
+
+/* progress */
+.progress{position:fixed;bottom:0;left:0;height:3px;background:var(--ink);z-index:1000;transition:width .35s var(--ease);}
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- ============================================================
+     SLIDE 1 — THE TASK
+     ============================================================ -->
+<section class="slide">
+    <div class="hair top"></div><div class="hair bot"></div>
+    <span class="navhint">← / → · space to advance</span><span class="pagenum">01 / 03</span>
+
+    <!-- signature pixel-glitch column, right edge -->
+    <svg class="glitch" style="right:0;top:0;width:360px;height:1080px;" viewBox="0 0 360 1080" preserveAspectRatio="none" fill="none">
+        <defs><pattern id="scan" width="14" height="14" patternUnits="userSpaceOnUse">
+            <rect width="3" height="14" fill="#1F2BE0" opacity="0.85"/></pattern></defs>
+        <rect x="240" y="120" width="120" height="150" fill="url(#scan)"/>
+        <rect x="170" y="300" width="190" height="150" fill="url(#scan)"/>
+        <rect x="260" y="600" width="100" height="150" fill="url(#scan)"/>
+        <rect x="190" y="780" width="170" height="150" fill="url(#scan)"/>
+    </svg>
+
+    <div class="frame" style="right:420px;">
+        <div class="topbar reveal d1">
+            <div class="hl">Build one small<br><em>knowledge base.</em></div>
+            <div class="tag">01 / YOUR FIRST TASK</div>
+        </div>
+
+        <p class="lede reveal d2" style="margin-top:34px;max-width:900px;">
+            Pick a topic you own. Compile what's known about it into a handful of clean,
+            linked markdown files — a wiki one agent can read and reason over.
+        </p>
+
+        <div style="margin-top:26px;max-width:1000px;">
+            <div class="kv reveal d3"><div class="k">Source</div><div class="v">SharePoint, if you have a good document set there — or any source you already have.</div></div>
+            <div class="kv reveal d4"><div class="k">Scale</div><div class="v">Small and single-topic. One person, one subject. Not a platform.</div></div>
+            <div class="kv reveal d5" style="border-bottom:none;"><div class="k">Sharing</div><div class="v">Yours by default. The strongest ones we promote into shared knowledge.</div></div>
+        </div>
+
+        <div class="pull reveal d6">
+            <div class="q">Your data, your rules — the good ones we share.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 2 — THE GUARDRAILS
+     ============================================================ -->
+<section class="slide">
+    <div class="hair top"></div><div class="hair bot"></div>
+    <span class="navhint">← / →</span><span class="pagenum">02 / 03</span>
+
+    <div class="frame">
+        <div class="topbar reveal d1">
+            <div class="hl">Why it's <em>safe</em> to start.</div>
+            <div class="tag">02 / THE GUARDRAILS</div>
+        </div>
+
+        <div class="ledger reveal d2" style="margin-top:30px;">
+            <div class="lr"><div class="key">Documents, not people</div><div class="val">No meeting recording. We work from artifacts, not behavior.</div></div>
+            <div class="lr"><div class="key">You release it</div><div class="val">Nothing enters shared memory until its owner says so.</div></div>
+            <div class="lr"><div class="key">Access never widens</div><div class="val">Restricted stays restricted. Sharing a doc never broadens who can see it.</div></div>
+            <div class="lr"><div class="key">Private stays private</div><div class="val">Your own notes are yours. Contributing is always voluntary.</div></div>
+            <div class="lr" style="border-bottom:none;"><div class="key">Everything is traceable</div><div class="val">Every fact points back to its source and who released it.</div></div>
+        </div>
+
+        <div class="pull reveal d3">
+            <div class="q">Trust first. Capability follows.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 3 — GET STARTED (questions only, no deadline)
+     ============================================================ -->
+<section class="slide">
+    <div class="hair top"></div><div class="hair bot"></div>
+    <span class="navhint">← / →</span><span class="pagenum">03 / 03</span>
+
+    <div class="frame">
+        <div class="topbar reveal d1">
+            <div class="hl">Four questions <em>to begin.</em></div>
+            <div class="tag">03 / GET STARTED</div>
+        </div>
+
+        <div style="margin-top:30px;max-width:1280px;">
+            <div class="idx-row reveal d2"><div class="num">01</div><div><div class="rh">What topic do you know well enough to own?</div></div></div>
+            <div class="idx-row reveal d3"><div class="num">02</div><div><div class="rh">Where does the material already live?</div></div></div>
+            <div class="idx-row reveal d4"><div class="num">03</div><div><div class="rh">What do people actually ask about it?</div></div></div>
+            <div class="idx-row reveal d5" style="border-bottom:none;"><div class="num">04</div><div><div class="rh">What's shareable — and what stays private?</div></div></div>
+        </div>
+
+        <div class="micro micro-soft reveal d6" style="margin-top:30px;">Pick one. Start small.</div>
+    </div>
+</section>
+
+</main>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<script>
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   =========================================== */
+class SlidePresentation{
+    constructor(){
+        this.slides=[...document.querySelectorAll('.slide')];
+        this.current=0;
+        this.stage=document.getElementById('deckStage');
+        this.progress=document.getElementById('progress');
+        this.setupStageScale();
+        this.setupKeyboardNav();
+        this.setupTouchNav();
+        this.setupWheelNav();
+        this.show(0);
+    }
+    setupStageScale(){
+        const scale=()=>{
+            const f=Math.min(innerWidth/1920,innerHeight/1080);
+            const x=(innerWidth-1920*f)/2, y=(innerHeight-1080*f)/2;
+            this.stage.style.transform=`translate(${x}px,${y}px) scale(${f})`;
+        };
+        scale();addEventListener('resize',scale);
+    }
+    setupKeyboardNav(){
+        addEventListener('keydown',e=>{
+            if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();this.next();}
+            else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.prev();}
+            else if(e.key==='Home'){this.show(0);}
+            else if(e.key==='End'){this.show(this.slides.length-1);}
+        });
+    }
+    setupTouchNav(){
+        let x0=null;
+        addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+        addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50){dx<0?this.next():this.prev();}x0=null;},{passive:true});
+    }
+    setupWheelNav(){
+        let lock=false;
+        addEventListener('wheel',e=>{
+            if(lock)return;if(Math.abs(e.deltaY)<24)return;
+            lock=true;e.deltaY>0?this.next():this.prev();
+            setTimeout(()=>lock=false,650);
+        },{passive:true});
+    }
+    show(i){
+        this.current=Math.max(0,Math.min(i,this.slides.length-1));
+        this.slides.forEach((s,n)=>{const a=n===this.current;s.classList.toggle('active',a);s.classList.toggle('visible',a);});
+        this.progress.style.width=((this.current+1)/this.slides.length*100)+'%';
+    }
+    next(){this.show(this.current+1);}
+    prev(){this.show(this.current-1);}
+}
+const deck=new SlidePresentation();
+</script>
+</body>
+</html>
