@@ -5,35 +5,59 @@ specific file you need.** Do not read every file; pick the right one.
 
 ## How to use this index
 
-- Need a **number** (revenue, EBITDA, headcount, ...)? → go to `data/financials.duckdb`
+- Need a **number** (revenue, EBITDA, headcount, ...)? → query `data/financials.duckdb`
   (see `data/SCHEMA.md`), not the prose below.
-- Need **what management said / why / strategy / risk**? → open the relevant
-  `reports/<year>/` file below.
-- Tracking **one metric across many years**? → see `metrics/` (these summarise the
-  cross-year story; underlying figures still live in DuckDB).
+- Need **what happened / why / strategy / structure**? → open the relevant page below.
+- Numbers are never read out of prose — they live in DuckDB.
 
-## Reports
+## Start here
+- **`overview.md`** — the group anchor: what A1 is, ownership/control history, brand
+  evolution, how to read the financials.
+- **`timeline.md`** — dated structural events 1998-2025 (the spine), each linked to its year note.
 
-> Update this table as each report is ingested. Status: ⬜ not started · 🟡 partial · ✅ done
+## Reports (per-year highlights, sourced)
 
-| Fiscal Year | Report PDF        | Markdown            | Wiki notes              | DuckDB | Status |
-|-------------|-------------------|---------------------|-------------------------|--------|--------|
-| FY1998      | pdfs/1998.pdf     | markdown/1998.md    | reports/1998/           | ⬜     | ⬜     |
-| ...         | ...               | ...                 | ...                     | ⬜     | ⬜     |
-| FY2024      | pdfs/2024.pdf     | markdown/2024.md    | reports/2024/           | ⬜     | ⬜     |
+Per-year notes live in `reports/<year>/overview.md`. **All 28 fiscal years 1998-2025
+have a sourced highlights note** (✅). Numbers for each year are in DuckDB. Deeper
+`narrative.md` / `## Open questions` sections are added on demand.
+
+| Span | Wiki notes | Theme |
+|------|--------|-------|
+| 1998-2002 | ✅ | Liberalisation, IPO (2000), early CEE mobile, mobilkom buyback |
+| 2003-2009 | ✅ | UMTS, MobilTel/Bulgaria (2005), Belarus (2007), 2008 restructuring |
+| 2010-2016 | ✅ | A1 brand, América Móvil, 2013 spectrum auction, recovery |
+| 2017-2025 | ✅ | A1 Digital, IFRS 16, 5G/fibre, A1 Group rebrand, EuroTeleSites spin-off |
+
+Full-text `markdown/` conversions are **not** generated yet — the wiki is sourced directly
+from the PDFs in `pdfs/` (each note cites report + page).
 
 ## Cross-year metric views
 
-| Metric            | File                      | Notes                          |
-|-------------------|---------------------------|--------------------------------|
-| Revenue           | metrics/revenue.md        | total + by segment if reported |
-| EBITDA / margin   | metrics/ebitda.md         |                                |
-| Employees         | metrics/employees.md      | headcount basis may change     |
-| Capex             | metrics/capex.md          |                                |
+| Metric | File | Status |
+|--------|------|--------|
+| Revenue | `metrics/revenue.md` | ✅ narrative |
+| EBITDA (definitions, EBITDAaL, restructuring) | `metrics/ebitda.md` | ✅ narrative |
+| EBIT / net income / capex / FCF / employees / net debt | — | DB only (add `metrics/*.md` on demand) |
+
+## Database
+
+`data/financials.duckdb` (`financials` table) holds 10 metrics — revenue, ebitda,
+ebitda_excl_restructuring, ebitda_after_leases, ebit, net_income, capex,
+free_cash_flow, net_debt, employees — with per-row provenance (`source_year`,
+`source_page`, `restated_flag`, `notes`). Loader: `scripts/load_financials.py`;
+schema + conventions: `data/SCHEMA.md`.
+
+## How this wiki grows
+Seeded with the durable pages (overview, timeline), per-year highlights for every
+year, and two cornerstone metric narratives. It then **compounds on demand**: when a
+question is answered (e.g. "what happened in 2008?"), the sourced answer is written
+into the relevant year/metric page. Every claim cites a report + page.
 
 ## Known structural notes about A1's reports
-
-- Reporting entity / brand naming has changed over the years — record the entity name
-  as reported each year in that report's overview.
-- Segment definitions are not stable across decades; note breaks when you spot them.
-- Older (1998-era) PDFs may be scans → expect OCR, lower table-extraction confidence.
+- Reporting entity / brand naming changed over the years (Telekom Austria → A1 Telekom
+  Austria Group → A1 Group) — see `overview.md`.
+- Segment definitions and key-figure labels are not stable across decades; `metrics/ebitda.md`
+  documents the most consequential (EBITDA) case, per-year notes flag others.
+- Earliest reports (1998-1999) were in Austrian Schilling / EUR-billions; precise EUR-million
+  early figures come from the FY2000 report's three-year summary. (All reports carry an
+  extractable text layer — no OCR was required.)
