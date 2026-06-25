@@ -4,3 +4,5 @@ pdfplumber>=0.11
 # sandbox base image ships cryptography without cffi, which panics the rust
 # binding on import. Pin it explicitly so a fresh session self-heals.
 cffi>=1.16
+# matplotlib: used by the chart/query helper scripts (e.g. revenue/EBITDA plots).
+matplotlib>=3.8
