@@ -1,2 +1,6 @@
 duckdb>=1.0
 pdfplumber>=0.11
+# cffi: cryptography (pulled in by pdfplumber -> pdfminer.six) needs it, but the
+# sandbox base image ships cryptography without cffi, which panics the rust
+# binding on import. Pin it explicitly so a fresh session self-heals.
+cffi>=1.16
