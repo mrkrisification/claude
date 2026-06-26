@@ -23,7 +23,8 @@ over 25 years. One row = one reported figure.
 Keep this list authoritative; add to it rather than inventing synonyms.
 `revenue`, `ebitda`, `ebitda_excl_restructuring`, `ebitda_after_leases`, `ebit`,
 `net_income`, `capex`, `free_cash_flow`, `total_assets`, `net_debt`, `equity`,
-`employees`, `ebitda_margin`, `mobile_subscribers`, `fixed_rgus`.
+`employees`, `ebitda_margin`, `mobile_subscribers`, `fixed_rgus`,
+`broadband_rgus`, `mobile_postpaid_subscribers`, `arpu`, `arpl`, `churn_rate`.
 
 If a report uses a different label, map it to the canonical name and record the
 original wording in `notes`.
@@ -54,6 +55,17 @@ By-segment metric coverage:
 | `capex` | FY2010–FY2025 | EUR_million | `load_segment_ops.py` | yes (Σctry + corporate) |
 | `mobile_subscribers` | FY2022–FY2025 | thousand | `load_segment_ops.py` | **no** — see note |
 | `fixed_rgus` | FY2021–FY2025 | thousand | `load_segment_ops.py` | yes (Σctry ≈ Group) |
+| `broadband_rgus` | FY2020–FY2024 | thousand | `load_segment_ops2.py` | — |
+| `mobile_postpaid_subscribers` | FY2020–FY2024 | thousand | `load_segment_ops2.py` | — |
+| `arpu` (mobile) | FY2020–FY2024 | EUR | `load_segment_ops2.py` | rate metric |
+| `arpl` (fixed) | FY2020–FY2024 | EUR | `load_segment_ops2.py` | rate metric |
+| `churn_rate` (mobile) | FY2022–FY2025 | percent | `load_segment_ops2.py` | rate metric |
+
+Operational KPIs come from the factsheets' "Customer KPIs by Segment_Extd"
+(Wireline/Wireless detail; dropped in the FY2025 factsheet, hence ending FY2024)
+and "CustomerKPI by Segment_h" (churn). Loaded only where the factsheet states a
+value; not every country reports every KPI (e.g. no fixed/broadband where there is
+no fixed business). `arpu`/`arpl`/`churn_rate` are rate metrics — never summed.
 
 **Pre-2010 (FY2007–FY2009):** the group reported by function, not country, so the
 only per-country split is the *Mobile Communication* segment (mobile-only, excl.
