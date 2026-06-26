@@ -6,3 +6,8 @@ pdfplumber>=0.11
 cffi>=1.16
 # matplotlib: used by the chart/query helper scripts (e.g. revenue/EBITDA plots).
 matplotlib>=3.8
+# openpyxl + xlrd: read the analyst factsheets for per-country segment data
+# (scripts/load_segments.py). xlrd 1.2.0 is the last version that reads legacy
+# .xls (2007-2016 factsheets); newer xlrd dropped .xls support.
+openpyxl>=3.1
+xlrd==1.2.0

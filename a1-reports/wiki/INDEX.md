@@ -57,11 +57,18 @@ from the PDFs in `pdfs/` (each note cites report + page).
 
 ## Database
 
-`data/financials.duckdb` (`financials` table) holds 10 metrics — revenue, ebitda,
-ebitda_excl_restructuring, ebitda_after_leases, ebit, net_income, capex,
-free_cash_flow, net_debt, employees — with per-row provenance (`source_year`,
-`source_page`, `restated_flag`, `notes`). Loader: `scripts/load_financials.py`;
-schema + conventions: `data/SCHEMA.md`.
+`data/financials.duckdb` (`financials` table) holds, at **group level**, 10 metrics
+— revenue, ebitda, ebitda_excl_restructuring, ebitda_after_leases, ebit, net_income,
+capex, free_cash_flow, net_debt, employees — with per-row provenance (`source_year`,
+`source_page`, `restated_flag`, `notes`). Loader: `scripts/load_financials.py`.
+
+**Per-country segments (FY2010–FY2025):** revenue + ebitda for `austria`, `bulgaria`,
+`croatia`, `belarus`, `slovenia`, `serbia`, `north_macedonia`, plus a `corporate`
+bucket (Corporate/Other & eliminations, incl. A1 Digital). Sourced from the analyst
+**factsheets** (`factsheets/`), loaded by `scripts/load_segments.py`. **Country
+segments do not sum to group** — see `data/SCHEMA.md`. The "rise of International"
+story is in `themes/international-expansion.md` (chart:
+`charts/a1_international_rise.png`).
 
 ## How this wiki grows
 Seeded with the durable pages (overview, timeline), per-year highlights for every

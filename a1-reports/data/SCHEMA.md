@@ -10,11 +10,11 @@ over 25 years. One row = one reported figure.
 |-----------------|-----------|-------------------------------------------------------------|
 | fiscal_year     | INTEGER   | The year the figure *describes* (not publication year).     |
 | metric_name     | VARCHAR   | Canonical snake_case name, e.g. `revenue`, `ebitda`.        |
-| segment         | VARCHAR   | `total`, or a segment label as reported. Default `total`.   |
+| segment         | VARCHAR   | `total`, or a country/segment code (see below). Default `total`. |
 | value           | DOUBLE    | The number, in `unit`. No pre-conversion.                   |
 | unit            | VARCHAR   | e.g. `EUR_million`, `count`, `percent`.                     |
-| source_year     | INTEGER   | Publication year of the report this value was taken from.   |
-| source_page     | INTEGER   | Page in that PDF. Provenance is mandatory.                  |
+| source_year     | INTEGER   | Publication year of the report/factsheet this value came from. |
+| source_page     | INTEGER   | Page in that PDF. NULL for factsheet (Excel) rows — see below. |
 | restated_flag   | BOOLEAN   | TRUE if this is a restated/comparison-column value.         |
 | notes           | VARCHAR   | Anything odd: definition change, footnote, OCR uncertainty. |
 
@@ -26,6 +26,33 @@ Keep this list authoritative; add to it rather than inventing synonyms.
 
 If a report uses a different label, map it to the canonical name and record the
 original wording in `notes`.
+
+## Segments (the `segment` column)
+
+`segment = 'total'` is the consolidated group (the default; sourced from the
+annual reports). Per-country segment rows use these codes:
+
+`austria`, `bulgaria`, `croatia`, `belarus`, `slovenia`, `serbia`,
+`north_macedonia`, and `corporate` (= "Corporate, Others & Eliminations",
+which **includes A1 Digital and intra-group eliminations**).
+
+**Country segments do NOT sum to `total`.** Group = Σ(7 countries) + `corporate`,
+and `corporate` is typically *negative* (eliminations outweigh A1 Digital's
+external revenue). Always include `corporate` when reconciling to the group, or
+filter to country segments only when you specifically want the operating split.
+The annual reports publish only a bundled **"Additional Markets"** aggregate
+(Slovenia + Serbia + Macedonia + Liechtenstein); the individual-country split
+comes from the **analyst factsheets** instead.
+
+Segment revenue + EBITDA are loaded for **FY2010–FY2025** by
+`scripts/load_segments.py`. EBITDA basis matches the group `ebitda` series
+("EBITDA comparable" 2010–15, plain "EBITDA" 2016+).
+
+### Provenance for factsheet (Excel) rows
+Segment rows come from A1's "Analyst Fact Sheets" (`factsheets/*.xls[x]`), not the
+report PDFs, so `source_page` is **NULL** and `notes` carries the factsheet file
+name + sheet (e.g. `A1 analyst factsheet FS_FY2025.xlsx [Operating Results by
+Segment_h]`). `source_year` is still publication year (`fiscal_year + 1`).
 
 ## Why `restated_flag` matters
 

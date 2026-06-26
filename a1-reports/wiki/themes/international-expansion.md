@@ -57,12 +57,47 @@ Bulgaria, Belarus, Croatia, Slovenia, Liechtenstein, Serbia and Macedonia
 clear majority of revenue to 52% (FY2024) and 49% (FY2025)** — CEE now slightly more
 than half the group (`reports/2024`, `reports/2025`).
 
-## Why per-opco financials aren't in the DB (yet)
-The annual reports present **segmented** revenue/EBITDA by country, but the DB
-currently stores only `segment='total'`. Building a per-opco annual series
-(Bulgaria, Belarus, Croatia, …) is a deferred extraction pass — the `segment`
-column already exists in the schema to receive it. For now, opco context is the
-deal economics above plus the qualitative per-year notes.
+## Per-country financials are now in the DB (FY2010–FY2025)
+The `segment` column now carries **per-country revenue and EBITDA** for Austria,
+Bulgaria, Croatia, Belarus, Slovenia, Serbia and North Macedonia — loaded by
+`scripts/load_segments.py` from A1's **analyst factsheets** (the annual reports
+only publish the bundled "Additional Markets" aggregate; the factsheets split the
+individual countries out). See `data/SCHEMA.md` for the segment codes.
+
+> **Caveat (important):** country segments **do not sum to group revenue**. A
+> `corporate` bucket — "Corporate, Others & Eliminations", which **includes A1
+> Digital and intra-group eliminations** — sits outside them and is usually
+> *negative*. Group = Σ(7 countries) + `corporate`.
+
+### The headline: International is now ~half the group
+International (everything except Austria) has risen steadily as a share of
+country-segment revenue, crossing 50% in FY2025:
+
+| | FY2010 | FY2015 | FY2020 | FY2025 |
+|---|---|---|---|---|
+| Austria revenue (€m) | 3,064 | 2,527 | 2,622 | 2,745 |
+| International revenue (€m) | 1,675 | 1,541 | 1,958 | 2,851 |
+| **International % of rev** | 35.3% | 37.9% | 42.7% | **50.9%** |
+| **International % of EBITDA** | 38.4% | 37.0% | 42.7% | **52.8%** |
+
+Austria's revenue is roughly flat-to-down across 15 years while the CEE/SEE
+markets grew — Bulgaria, Croatia and Belarus are now the largest international
+contributors. Chart: `charts/a1_international_rise.png`
+(`scripts/segments_chart.py`).
+
+```sql
+-- International share of country-segment revenue by year
+WITH s AS (SELECT fiscal_year,
+  CASE WHEN segment='austria' THEN 'AT' ELSE 'INTL' END AS g, value
+  FROM financials WHERE metric_name='revenue' AND restated_flag=FALSE
+  AND segment NOT IN ('total','corporate'))
+SELECT fiscal_year,
+  ROUND(100*SUM(value) FILTER (WHERE g='INTL')/SUM(value),1) AS intl_pct
+FROM s GROUP BY 1 ORDER BY 1;
+```
+
+**Earlier years (FY2007–FY2009)** exist in the factsheets too, but only as a
+mobile-segment-by-country split (different basis) — a candidate follow-on load.
 
 ## See also
 `timeline.md` (the four defining events), `reports/2005`, `reports/2007`,
