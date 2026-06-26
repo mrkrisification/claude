@@ -55,6 +55,14 @@ By-segment metric coverage:
 | `mobile_subscribers` | FY2022–FY2025 | thousand | `load_segment_ops.py` | **no** — see note |
 | `fixed_rgus` | FY2021–FY2025 | thousand | `load_segment_ops.py` | yes (Σctry ≈ Group) |
 
+**Pre-2010 (FY2007–FY2009):** the group reported by function, not country, so the
+only per-country split is the *Mobile Communication* segment (mobile-only, excl.
+fixed line). Loaded by `scripts/load_segments_pre2010.py` under distinct metrics
+**`mobile_revenue`** and **`mobile_ebitda`** (EUR_million) — deliberately *not*
+`revenue`/`ebitda`, so they never mix with the FY2010+ total-operations series
+(Austria mobile €1.6 bn in 2009 vs Austria total €3.1 bn in 2010 — different
+basis). Dashboard: `charts/a1_mobile_footprint_2007_2009.png`.
+
 **Mobile-subscriber caveat:** the factsheet's *Group* mobile total includes
 **A1 Digital's IoT/M2M connections**, which are not attributed to any country.
 So Σ(country mobile_subscribers) < Group, and the gap (≈3.8 m in 2022 growing to
