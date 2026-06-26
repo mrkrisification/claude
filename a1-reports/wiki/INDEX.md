@@ -15,6 +15,22 @@ specific file you need.** Do not read every file; pick the right one.
   evolution, how to read the financials.
 - **`timeline.md`** — dated structural events 1998-2025 (the spine), each linked to its year note.
 
+## Themes (cross-year narratives)
+The load-bearing stories that span many years — read these for "the big picture of X"
+rather than reconstructing it from per-year notes.
+
+| Theme | File | Covers |
+|-------|------|--------|
+| International expansion & opcos | `themes/international-expansion.md` | entry-by-entry CEE acquisitions **with deal economics** (MobilTel ≤€1.6 bn, velcom €730 m, AMX 21% ≈ €766 m, …) |
+| Regulation | `themes/regulation.md` | liberalisation, MTR/roaming, civil-servant workforce, Belarus dividend restriction |
+| Spectrum & frequency auctions | `themes/spectrum-auctions.md` | UMTS (2000), the €1.03 bn 2013 Austrian auction (capex spike), the 5G cycle 2019-23 |
+| Spin-offs & restructuring | `themes/spinoffs-and-restructuring.md` | EuroTeleSites (2023), the 2008/2011 restructurings, internal reorganisations |
+
+**Sourcing note:** theme pages cite `report + page` where the annual report carries
+the fact, and tag **external** IR/press sources `[EXT]` (with a list at the page
+foot) where the reports are silent — chiefly **purchase prices** and **auction
+totals**, which the reports usually omit.
+
 ## Reports (per-year highlights, sourced)
 
 Per-year notes live in `reports/<year>/overview.md`. **All 28 fiscal years 1998-2025
