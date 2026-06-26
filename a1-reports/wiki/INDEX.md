@@ -62,12 +62,17 @@ from the PDFs in `pdfs/` (each note cites report + page).
 capex, free_cash_flow, net_debt, employees — with per-row provenance (`source_year`,
 `source_page`, `restated_flag`, `notes`). Loader: `scripts/load_financials.py`.
 
-**Per-country segments (FY2010–FY2025):** revenue + ebitda for `austria`, `bulgaria`,
-`croatia`, `belarus`, `slovenia`, `serbia`, `north_macedonia`, plus a `corporate`
-bucket (Corporate/Other & eliminations, incl. A1 Digital). Sourced from the analyst
-**factsheets** (`factsheets/`), loaded by `scripts/load_segments.py`. **Country
-segments do not sum to group** — see `data/SCHEMA.md`. The "rise of International"
-story is in `themes/international-expansion.md` (chart:
+**Per-country segments:** for `austria`, `bulgaria`, `croatia`, `belarus`, `slovenia`,
+`serbia`, `north_macedonia` (+ a `corporate` bucket = Corporate/Other & eliminations,
+incl. A1 Digital). Sourced from the analyst **factsheets** (`factsheets/`):
+- `revenue`, `ebitda`, `capex` — FY2010–FY2025 (`scripts/load_segments.py`,
+  `scripts/load_segment_ops.py`)
+- `mobile_subscribers` (FY2022–25), `fixed_rgus` (FY2021–25) — in '000
+  (`scripts/load_segment_ops.py`)
+
+**Country segments do not sum to group** (Corporate/eliminations + A1 Digital sit
+outside; mobile subs also exclude A1 Digital IoT) — see `data/SCHEMA.md`. The "rise
+of International" story is in `themes/international-expansion.md` (chart:
 `charts/a1_international_rise.png`).
 
 ## How this wiki grows

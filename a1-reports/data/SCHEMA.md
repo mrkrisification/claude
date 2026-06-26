@@ -21,8 +21,9 @@ over 25 years. One row = one reported figure.
 ### Canonical metric names
 
 Keep this list authoritative; add to it rather than inventing synonyms.
-`revenue`, `ebitda`, `ebit`, `net_income`, `capex`, `free_cash_flow`,
-`total_assets`, `net_debt`, `equity`, `employees`, `ebitda_margin`.
+`revenue`, `ebitda`, `ebitda_excl_restructuring`, `ebitda_after_leases`, `ebit`,
+`net_income`, `capex`, `free_cash_flow`, `total_assets`, `net_debt`, `equity`,
+`employees`, `ebitda_margin`, `mobile_subscribers`, `fixed_rgus`.
 
 If a report uses a different label, map it to the canonical name and record the
 original wording in `notes`.
@@ -44,9 +45,22 @@ The annual reports publish only a bundled **"Additional Markets"** aggregate
 (Slovenia + Serbia + Macedonia + Liechtenstein); the individual-country split
 comes from the **analyst factsheets** instead.
 
-Segment revenue + EBITDA are loaded for **FY2010–FY2025** by
-`scripts/load_segments.py`. EBITDA basis matches the group `ebitda` series
-("EBITDA comparable" 2010–15, plain "EBITDA" 2016+).
+By-segment metric coverage:
+
+| metric | span | unit | loader | reconciles to group? |
+|--------|------|------|--------|----------------------|
+| `revenue` | FY2010–FY2025 | EUR_million | `load_segments.py` | yes (Σctry + corporate) |
+| `ebitda` | FY2010–FY2025 | EUR_million | `load_segments.py` | yes; basis "EBITDA comparable" 2010–15, plain "EBITDA" 2016+ |
+| `capex` | FY2010–FY2025 | EUR_million | `load_segment_ops.py` | yes (Σctry + corporate) |
+| `mobile_subscribers` | FY2022–FY2025 | thousand | `load_segment_ops.py` | **no** — see note |
+| `fixed_rgus` | FY2021–FY2025 | thousand | `load_segment_ops.py` | yes (Σctry ≈ Group) |
+
+**Mobile-subscriber caveat:** the factsheet's *Group* mobile total includes
+**A1 Digital's IoT/M2M connections**, which are not attributed to any country.
+So Σ(country mobile_subscribers) < Group, and the gap (≈3.8 m in 2022 growing to
+≈9.5 m in 2025) is A1 Digital IoT. The per-country figures are the consumer/B2B
+mobile bases as reported. Customer KPIs use unit `thousand` (reported "in '000").
+Serbia had no fixed business until FY2025, so `fixed_rgus` for Serbia starts then.
 
 ### Provenance for factsheet (Excel) rows
 Segment rows come from A1's "Analyst Fact Sheets" (`factsheets/*.xls[x]`), not the
